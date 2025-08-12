@@ -1,5 +1,4 @@
 # Capsule UI
-**Embeddable, white‑label web components with a clear Style API.**  
 Isolated styles by default, instant theming via CSS variables, safe customization via `::part`, and responsive by **container queries**. No runtime CSS-in-JS.
 
 > TL;DR: Treat styling as a *contract* between the host page and the component. Capsule gives you sealed components (Shadow DOM or CSS Modules) plus a tiny, well-documented “Style API” so teams stop renegotiating “how we style” on every project.
@@ -140,29 +139,3 @@ Shadow DOM v1, `::part`, and container queries are supported in all modern everg
 Capsule doesn’t bypass a11y—your components still need focus states, ARIA, contrast, keyboard handling, and reduced-motion respect. The isolation helps keep a11y styles consistent.
 
 ---
-
-## Project structure (suggested)
-```
-capsule-ui/
-  packages/
-    core/                # contracts, lint configs, ADR templates
-    web-components/      # Shadow DOM components
-    css-modules/         # framework components with Modules
-    tokens/              # source tokens -> CSS vars + TS types
-  examples/
-    booking-widget/      # demo component
-  .github/
-    workflows/ci.yml     # lint, build, VRT
-```
-
----
-
-## Contributing
-1. Read the **Style Contract ADR** in `packages/core/docs/adr-style-contract.md`.
-2. Run `pnpm i && pnpm dev` to open examples.
-3. Ensure lint + tests pass: `pnpm test`.
-
----
-
-## License
-MIT (or your preferred OSS license).
