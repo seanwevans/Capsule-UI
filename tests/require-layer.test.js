@@ -37,6 +37,15 @@ test('auto-fixes missing layer', async () => {
   assert.equal(result.output, '@layer components;\na{color:red}');
 });
 
+test('auto-fixes missing layer after @charset', async () => {
+  const result = await lint('@charset "UTF-8";\na{color:red}', { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(
+    result.output,
+    '@charset "UTF-8";\n@layer components;\na{color:red}'
+  );
+});
+
 test('supports custom layer name', async () => {
   const result = await lint('a{color:red}', { config: { name: 'custom' } });
   assert.equal(result.errored, true);
