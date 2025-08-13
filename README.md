@@ -142,6 +142,11 @@ Capsule doesn’t bypass a11y—your components still need focus states, ARIA, c
 
 ## Tokens
 Source tokens live in `tokens/source/tokens.json` using the W3C draft design tokens structure. Run `pnpm tokens:build` to generate `dist/tokens.css`, `dist/tokens.d.ts`, and `dist/tokens.json`. The CSS file exposes custom properties for light and dark themes; toggling `[data-theme="dark"]` on the page swaps the values.
+Use `--watch` to rebuild automatically when editing tokens:
+
+```bash
+pnpm tokens:build -- --watch
+```
 
 ---
 

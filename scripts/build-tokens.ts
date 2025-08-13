@@ -1,7 +1,9 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import chokidar from 'chokidar';
 
 const baseDir = path.dirname(new URL(import.meta.url).pathname);
+const watchMode = process.argv.includes('--watch');
 
 interface TokenNode {
   $type?: string;
@@ -92,4 +94,21 @@ async function build() {
   await fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n');
 }
 
-build().catch(err => { console.error(err); process.exit(1); });
+async function run() {
+  await build();
+  if (watchMode) {
+    const srcDir = path.join(baseDir, '..', 'tokens', 'source');
+    chokidar.watch(srcDir, { ignoreInitial: true }).on('all', async () => {
+      try {
+        await build();
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }
+}
+
+run().catch(err => {
+  console.error(err);
+  if (!watchMode) process.exit(1);
+});

@@ -9,6 +9,7 @@
     "tokens:build": "ts-node scripts/build-tokens.ts"
   },
   "devDependencies": {
+    "chokidar": "^4.0.3",
     "eslint": "^8.57.0",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2"
