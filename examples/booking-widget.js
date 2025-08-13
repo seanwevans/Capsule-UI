@@ -6,14 +6,14 @@ customElements.define("booking-widget", class extends HTMLElement {
       <style>
         @layer reset, base, components;
         :host {
-          --bk-brand: #4f46e5;
-          --bk-text: #0f172a;
+          --bk-brand: var(--color-brand);
+          --bk-text: var(--color-text);
           container-type: inline-size;
           display: block;
           color: var(--bk-text);
         }
         :host([theme="dark"]) {
-          --bk-text: #e6e8ef;
+          --bk-text: var(--color-text);
         }
         @layer base {
           .card {
