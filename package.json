@@ -18,7 +18,9 @@
     "typescript": "^5.9.2",
     "chokidar-cli": "^3.0.0",
     "tsx": "^4.20.4",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "css-tree": "^3.1.0",
+    "@types/css-tree": "^2.3.10"
   },
   "packageManager": "pnpm@10.5.2"
 }
