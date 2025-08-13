@@ -118,6 +118,8 @@ Capsule works best with a few non-negotiables:
   - Require `@layer components` in component CSS files.
 - **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions).
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
+## Architecture Decision Records
+See [docs/adr](docs/adr/README.md) for existing decisions and guidance on writing new ones.
 
 ---
 
