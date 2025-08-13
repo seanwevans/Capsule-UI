@@ -1,0 +1,9 @@
+{
+  "name": "capsule-cli",
+  "version": "0.1.0",
+  "description": "Command line utilities for Capsule UI",
+  "bin": {
+    "capsule": "./bin/capsule.js"
+  },
+  "type": "module"
+}
