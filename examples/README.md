@@ -11,12 +11,12 @@ Include the widget on a page:
 <booking-widget id="w"></booking-widget>
 ```
 
-Theme it at runtime by changing CSS variables or attributes:
+Theme it at runtime by changing CSS variables or the document's theme attribute:
 
 ```js
 const w = document.getElementById('w');
 w.style.setProperty('--bk-brand', '#ff3b3b');
-w.setAttribute('theme', 'dark');
+document.documentElement.setAttribute('data-theme', 'dark');
 ```
 
 Customize exposed parts safely:
