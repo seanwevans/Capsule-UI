@@ -8,8 +8,7 @@ module.exports = {
     'scale-unlimited/declaration-strict-value': [
       ['/color/', 'fill', 'stroke'],
       {
-        ignoreValues: ['transparent', 'inherit', 'currentColor'],
-        ignoreFunctions: ['var']
+        ignoreValues: ['transparent', 'inherit', 'currentColor']
       }
     ],
     'capsule-ui/require-layer': true

@@ -66,7 +66,7 @@ async function build() {
   const defaultTheme = themeNames.has('light')
     ? 'light'
     : Array.from(themeNames)[0];
-  let css = `:root{\n${themes[defaultTheme].join('\n')}\n}`;
+  let css = `@layer components;\n:root{\n${themes[defaultTheme].join('\n')}\n}`;
   for (const theme of themeNames) {
     if (theme === defaultTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;

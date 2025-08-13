@@ -1,3 +1,4 @@
+@layer components;
 :root{
   --color-background: #ffffff;
   --color-text: #0f172a;
@@ -15,4 +16,3 @@
   --spacing-md: 8px;
   --spacing-lg: 16px;
 }
-
