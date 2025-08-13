@@ -43,6 +43,13 @@ tokens
     process.exitCode = runCommand('pnpm', ['run', 'tokens:build']);
   });
 
+tokens
+  .command('watch')
+  .description('Watch design tokens and rebuild on changes')
+  .action(() => {
+    process.exitCode = runCommand('pnpm', ['run', 'tokens:watch']);
+  });
+
 program
   .command('check')
   .description('Run lint checks')
@@ -71,6 +78,13 @@ function runCommand(command, params) {
 
 export async function scaffoldComponent(rawName) {
   try {
+    const validName = /^[a-z0-9_-]+$/i;
+    if (!validName.test(rawName)) {
+      console.error(
+        `Invalid component name "${rawName}". Use only letters, numbers, hyphens, or underscores.`
+      );
+      process.exit(1);
+    }
     const name = toPascalCase(rawName);
     const baseDir = join(process.cwd(), 'packages', 'components', name);
 

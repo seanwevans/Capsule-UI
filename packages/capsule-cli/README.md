@@ -28,5 +28,6 @@ The scaffolding generates the following files:
 ## Other commands
 
 - `tokens build` – build design tokens
+- `tokens watch` – rebuild tokens on source changes
 - `check` – run lint checks
 

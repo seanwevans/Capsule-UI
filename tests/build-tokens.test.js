@@ -35,13 +35,28 @@ test('build tokens validation errors', async () => {
       tokensPath,
       JSON.stringify({ color: { bad: { $type: 'unknown', $value: '#fff' } } }, null, 2)
     );
-    await assert.rejects(runBuild(), /Unknown \$type 'unknown'/);
+    await assert.rejects(
+      runBuild(),
+      /Token schema validation failed: .*must be equal to one of the allowed values/
+    );
 
     await fs.writeFile(
       tokensPath,
       JSON.stringify({ color: { bad: { $type: 'color' } } }, null, 2)
     );
-    await assert.rejects(runBuild(), /missing \$value/);
+    await assert.rejects(
+      runBuild(),
+      /Token schema validation failed: .*must have required property '\$value'/
+    );
+
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ color: { bad: { $value: '#fff' } } }, null, 2)
+    );
+    await assert.rejects(
+      runBuild(),
+      /Token schema validation failed: .*must have required property '\$type'/
+    );
   } finally {
     await fs.writeFile(tokensPath, original);
   }
