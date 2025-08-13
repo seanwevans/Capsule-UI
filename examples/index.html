@@ -18,7 +18,7 @@
       // runtime theming after load
       setTimeout(() => {
         w.style.setProperty('--bk-brand', '#ff3b3b');
-        w.setAttribute('theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
       }, 1000);
     </script>
   </body>

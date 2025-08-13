@@ -17,9 +17,11 @@ program
 
 program
   .command('new')
-  .description('Scaffold a new resource')
+  .description(
+    'Scaffold a new resource (component, style, index and test files are generated)'
+  )
   .argument('<type>', 'Resource type (currently only "component" is supported)')
-  .argument('<name>', 'Name of the component')
+  .argument('<name>', 'Name of the component (kebab- or snake-case allowed)')
   .action(async (type, name) => {
     if (type !== 'component') {
       console.error('Error: only "component" type is supported.');
@@ -69,7 +71,7 @@ function runCommand(command, params) {
 
 export async function scaffoldComponent(rawName) {
   try {
-    const name = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+    const name = toPascalCase(rawName);
     const baseDir = join(process.cwd(), 'packages', 'components', name);
 
     try {
@@ -81,18 +83,35 @@ export async function scaffoldComponent(rawName) {
     }
 
     await mkdir(baseDir, { recursive: true });
+    const testDir = join(baseDir, '__tests__');
+    await mkdir(testDir, { recursive: true });
 
     const componentFile = join(baseDir, `${name}.ts`);
     const styleFile = join(baseDir, 'style.ts');
+    const indexFile = join(baseDir, 'index.ts');
+    const testFile = join(testDir, `${name}.test.ts`);
 
     const componentSrc = `export const ${name} = () => {\n  // TODO: implement ${name} component\n};\n`;
     const styleSrc = `export interface ${name}StyleProps {\n  // TODO: define style props\n}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => {\n  // TODO: implement Style API\n};\n`;
+    const indexSrc = `export * from './${name}';\n`;
+    const testSrc = `describe('${name}', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`;
 
     await writeFile(componentFile, componentSrc, 'utf8');
     await writeFile(styleFile, styleSrc, 'utf8');
+    await writeFile(indexFile, indexSrc, 'utf8');
+    await writeFile(testFile, testSrc, 'utf8');
     console.log(`Scaffolded component at ${baseDir}`);
   } catch (err) {
     console.error('Error scaffolding component:', err);
     process.exit(1);
   }
+}
+
+function toPascalCase(str) {
+  return str
+    .replace(/[-_]+/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(/\s+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join('');
 }

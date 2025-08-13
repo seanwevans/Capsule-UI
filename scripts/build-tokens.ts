@@ -1,8 +1,5 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'node:url';
-
-const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
 interface TokenNode {
   $type?: string;
@@ -10,14 +7,51 @@ interface TokenNode {
   [key: string]: any;
 }
 
+/* eslint-disable no-unused-vars */
 type FlatToken = { name: string; value: any };
+type Validator = (value: any) => void;
+/* eslint-enable no-unused-vars */
+
+function validateToken(name: string, type: string | undefined, value: any) {
+  if (!type) throw new Error(`Token '${name}' is missing $type`);
+
+  const validators: Record<string, Validator> = {
+    color: value => {
+      if (typeof value !== 'string' || !/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(value)) {
+        throw new Error(`Token '${name}' has invalid color value '${value}'`);
+      }
+    },
+    dimension: value => {
+      if (typeof value !== 'string' || !/^\d+(?:\.\d+)?(px|rem|em|%)$/.test(value)) {
+        throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
+      }
+    }
+  };
+
+  const validate = validators[type];
+  if (!validate) throw new Error(`Unknown $type '${type}' for token '${name}'`);
+
+  if (typeof value === 'object') {
+    for (const v of Object.values(value)) {
+      validate(v);
+    }
+  } else {
+    validate(value);
+  }
+}
 
 function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] = []): FlatToken[] {
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
+    const name = [...prefix, key].join('.');
     if (typeof val === 'object' && '$value' in val) {
-      out.push({ name: [...prefix, key].join('.'), value: val.$value });
+      if (val.$value === undefined) throw new Error(`Token '${name}' is missing $value`);
+      validateToken(name, val.$type, val.$value);
+      out.push({ name, value: val.$value });
     } else if (typeof val === 'object') {
+      if ('$type' in val && !('$value' in val)) {
+        throw new Error(`Token '${name}' is missing $value`);
+      }
       flattenTokens(val, [...prefix, key], out);
     }
   }
@@ -25,8 +59,9 @@ function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] =
 }
 
 async function build() {
-  const src = path.join(baseDir, '..', 'tokens', 'source', 'tokens.json');
-  const dist = path.join(baseDir, '..', 'dist');
+  const root = process.cwd();
+  const src = path.join(root, 'tokens', 'source', 'tokens.json');
+  const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
   const raw = JSON.parse(await fs.readFile(src, 'utf8')) as TokenNode;
   const tokens = flattenTokens(raw);

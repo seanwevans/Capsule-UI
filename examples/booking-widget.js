@@ -12,9 +12,6 @@ customElements.define("booking-widget", class extends HTMLElement {
           display: block;
           color: var(--bk-text);
         }
-        :host([theme="dark"]) {
-          --bk-text: var(--color-text);
-        }
         @layer base {
           .card {
             padding: 1rem;
