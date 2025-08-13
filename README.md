@@ -135,7 +135,14 @@ No. Shadow DOM is great for embeddables. For app-internal components, CSS Module
 **Browser support?**  
 Shadow DOM v1, `::part`, and container queries are supported in all modern evergreen browsers. For legacy support, use the CSS Modules flavor and avoid Shadow-only features.
 
-**Accessibility?**  
+**Accessibility?**
 Capsule doesn’t bypass a11y—your components still need focus states, ARIA, contrast, keyboard handling, and reduced-motion respect. The isolation helps keep a11y styles consistent.
 
 ---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+By contributing to Capsule UI, you agree that your contributions will be licensed under the MIT License.
+
