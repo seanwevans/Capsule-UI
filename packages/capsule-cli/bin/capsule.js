@@ -43,6 +43,13 @@ tokens
     process.exitCode = runCommand('pnpm', ['run', 'tokens:build']);
   });
 
+tokens
+  .command('watch')
+  .description('Watch design tokens and rebuild on changes')
+  .action(() => {
+    process.exitCode = runCommand('pnpm', ['run', 'tokens:watch']);
+  });
+
 program
   .command('check')
   .description('Run lint checks')
