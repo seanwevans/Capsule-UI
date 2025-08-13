@@ -29,7 +29,10 @@ function validateToken(name: string, type: string | undefined, value: any) {
       }
     },
     dimension: value => {
-      if (typeof value !== 'string' || !/^\d+(?:\.\d+)?(px|rem|em|%)$/.test(value)) {
+      if (
+        typeof value !== 'string' ||
+        !/^-?\d+(?:\.\d+)?(px|rem|em|%)$/.test(value)
+      ) {
         throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
       }
     }
