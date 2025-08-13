@@ -5,5 +5,8 @@
   "bin": {
     "capsule": "./bin/capsule.js"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "commander": "^14.0.0"
+  }
 }
