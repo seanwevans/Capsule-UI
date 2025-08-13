@@ -5,7 +5,15 @@ module.exports = {
     browser: true,
     node: true
   },
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module'
+  },
   overrides: [
+    {
+      files: ['**/*.{ts,tsx}'],
+      parser: '@typescript-eslint/parser'
+    },
     {
       files: ['packages/components/**/*.{js,jsx,ts,tsx}'],
       rules: {
