@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { mkdtemp, rm, access } = require('node:fs/promises');
+const { mkdtemp, rm, access, readFile } = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
 const { execFile } = require('node:child_process');
@@ -37,6 +37,17 @@ test('scaffolds component with valid name', async () => {
   }
 });
 
+test('scaffolds component with mixed-case name', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const { code } = await run(['new', 'component', 'MY_component'], { cwd: tmp });
+    assert.equal(code, 0);
+    await access(path.join(tmp, 'packages', 'components', 'MyComponent'));
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('rejects invalid component name', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
@@ -64,20 +75,16 @@ test('fails when component already exists', async () => {
   }
 });
 
-
-const originalArgv = process.argv;
-const originalExit = process.exit;
-process.argv = ['node'];
-process.exit = () => {};
-const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
-process.argv = originalArgv;
-process.exit = originalExit;
-
 test('scaffoldComponent generates expected files', async () => {
-  const tempDir = await mkdtemp(path.join(tmpdir(), 'capsule-'));
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   const originalCwd = process.cwd();
   process.chdir(tempDir);
+  const originalArgv = process.argv;
+  const originalExit = process.exit;
+  process.argv = ['node'];
+  process.exit = () => {};
   try {
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
     await scaffoldComponent('example-component');
     const baseDir = path.join(tempDir, 'packages', 'components', 'ExampleComponent');
     const component = await readFile(path.join(baseDir, 'ExampleComponent.ts'), 'utf8');
@@ -99,6 +106,8 @@ test('scaffoldComponent generates expected files', async () => {
       `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
     );
   } finally {
+    process.argv = originalArgv;
+    process.exit = originalExit;
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });
   }
