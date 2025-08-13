@@ -1,6 +1,8 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
+const baseDir = path.dirname(new URL(import.meta.url).pathname);
+
 interface TokenNode {
   $type?: string;
   $value?: any;
@@ -22,8 +24,8 @@ function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] =
 }
 
 async function build() {
-  const src = path.join('tokens', 'source', 'tokens.json');
-  const dist = 'dist';
+  const src = path.join(baseDir, '..', 'tokens', 'source', 'tokens.json');
+  const dist = path.join(baseDir, '..', 'dist');
   await fs.mkdir(dist, { recursive: true });
   const raw = JSON.parse(await fs.readFile(src, 'utf8')) as TokenNode;
   const tokens = flattenTokens(raw);
