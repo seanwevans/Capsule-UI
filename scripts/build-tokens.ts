@@ -17,7 +17,13 @@ function validateToken(name: string, type: string | undefined, value: any) {
 
   const validators: Record<string, Validator> = {
     color: value => {
-      if (typeof value !== 'string' || !/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(value)) {
+      const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+      const rgb = /^rgba?\((\s*\d{1,3}\s*,){2}\s*\d{1,3}(\s*,\s*(0|0?\.\d+|1(?:\.0)?))?\s*\)$/;
+      const hsl = /^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*(0|0?\.\d+|1(?:\.0)?))?\s*\)$/;
+      if (
+        typeof value !== 'string' ||
+        !(hex.test(value) || rgb.test(value) || hsl.test(value))
+      ) {
         throw new Error(`Token '${name}' has invalid color value '${value}'`);
       }
     },
@@ -64,7 +70,7 @@ async function build() {
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
   const raw = JSON.parse(await fs.readFile(src, 'utf8')) as TokenNode;
-  const tokens = flattenTokens(raw);
+  const tokens = flattenTokens(raw).sort((a, b) => a.name.localeCompare(b.name));
 
   // Gather all theme names across tokens
   const themeNames = new Set<string>();
