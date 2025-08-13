@@ -6,8 +6,8 @@
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "npm run lint:css && npm run lint:js",
-    "tokens:build": "npx ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/build-tokens.ts",
-    "test": "node --test"
+    "tokens:build": "tsx scripts/build-tokens.ts",
+    "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.39.1",
@@ -15,7 +15,9 @@
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "chokidar-cli": "^3.0.0",
+    "tsx": "^4.20.4"
   },
   "packageManager": "pnpm@10.5.2"
 }
