@@ -9,10 +9,12 @@
     "tokens:build": "npx ts-node scripts/build-tokens.ts"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^8.39.1",
     "eslint": "^8.57.0",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   },
   "packageManager": "pnpm@10.5.2"
 }
