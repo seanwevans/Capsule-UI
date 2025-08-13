@@ -1,0 +1,38 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const stylelint = require('stylelint');
+const path = require('path');
+
+const pluginPath = path.join(__dirname, '..', 'stylelint', 'require-layer.js');
+
+function lint(code, { fix = false, config = {} } = {}) {
+  return stylelint.lint({
+    code,
+    fix,
+    config: {
+      plugins: [pluginPath],
+      rules: { 'capsule-ui/require-layer': config },
+    },
+  });
+}
+
+test('reports missing layer', async () => {
+  const result = await lint('a{color:red}');
+  assert.equal(result.errored, true);
+  assert.equal(
+    result.results[0].warnings[0].text,
+    "Expected '@layer components' declaration. (capsule-ui/require-layer)"
+  );
+});
+
+test('passes when layer is present', async () => {
+  const result = await lint('@layer components;\na{color:red}');
+  assert.equal(result.errored, false);
+  assert.equal(result.results[0].warnings.length, 0);
+});
+
+test('auto-fixes missing layer', async () => {
+  const result = await lint('a{color:red}', { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(result.output, '@layer components;\na{color:red}');
+});
