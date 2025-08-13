@@ -145,9 +145,23 @@ Source tokens live in `tokens/source/tokens.json` using the W3C draft design tok
 
 ---
 
-## License
 
-This project is licensed under the [MIT License](LICENSE).
+## CLI
 
-By contributing to Capsule UI, you agree that your contributions will be licensed under the MIT License.
+Capsule provides a small command line interface in `packages/capsule-cli`.
 
+### Local development
+
+```bash
+cd packages/capsule-cli
+npm install
+npm link # exposes a global `capsule` command
+```
+
+### Usage
+
+```bash
+capsule new component Button  # scaffolds a new component skeleton
+capsule tokens build          # runs the token pipeline (npm run tokens:build)
+capsule check                 # runs lint tasks (npm run lint)
+```
