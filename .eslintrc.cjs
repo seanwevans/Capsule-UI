@@ -7,7 +7,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/components/**/*.{js,jsx,ts,tsx}'],
+      files: ['packages/components/**/*.{js,jsx,ts,tsx}'],
       rules: {
         'no-restricted-imports': [
           'error',
