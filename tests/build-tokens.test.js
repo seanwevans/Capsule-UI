@@ -62,6 +62,19 @@ test('build tokens validation errors', async () => {
   }
 });
 
+test('tokens with null values are handled gracefully', async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ color: { bad: { $type: 'color', $value: null } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /Token schema validation failed/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('accepts various color formats and outputs sorted tokens', async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
