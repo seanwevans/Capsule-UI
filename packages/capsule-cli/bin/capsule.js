@@ -37,19 +37,33 @@ const tokens = program.command('tokens').description('Design token utilities');
 tokens
   .command('build')
   .description('Build design tokens')
-  .action(() => runCommand('pnpm', ['run', 'tokens:build']));
+  .action(() => {
+    process.exitCode = runCommand('pnpm', ['run', 'tokens:build']);
+  });
 
 program
   .command('check')
   .description('Run lint checks')
-  .action(() => runCommand('pnpm', ['run', 'lint']));
+  .action(() => {
+    process.exitCode = runCommand('pnpm', ['run', 'lint']);
+  });
 
 program.parse(process.argv);
 
 function runCommand(command, params) {
-  const res = spawnSync(command, params, { stdio: 'inherit' });
-  if (res.status !== 0) {
-    process.exit(res.status ?? 1);
+  try {
+    const res = spawnSync(command, params, { stdio: 'inherit' });
+    if (res.error && res.error.code === 'ENOENT') {
+      console.error(`${command} not found; install ${command} or adjust PATH.`);
+      return 1;
+    }
+    return res.status ?? 1;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.error(`${command} not found; install ${command} or adjust PATH.`);
+      return 1;
+    }
+    throw error;
   }
 }
 
