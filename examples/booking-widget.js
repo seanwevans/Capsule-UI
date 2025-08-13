@@ -29,10 +29,14 @@ customElements.define("booking-widget", class extends HTMLElement {
             border-radius: 12px;
             cursor: pointer;
           }
+          .button:focus-visible {
+            outline: 2px solid var(--bk-text);
+            outline-offset: 2px;
+          }
         }
       </style>
       <div class="card" part="card">
-        <button class="button" part="button">Book</button>
+        <button class="button" part="button" aria-label="Book reservation">Book</button>
       </div>
     `;
   }
