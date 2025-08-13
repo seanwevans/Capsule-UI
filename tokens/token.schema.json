@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Capsule UI Tokens Schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" }
+  },
+  "patternProperties": {
+    "^[^$].*$": { "$ref": "#/definitions/token" }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "token": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "enum": ["color", "dimension"]
+        },
+        "$value": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": { "type": "string" }
+            }
+          ]
+        }
+      },
+      "patternProperties": {
+        "^[^$].*$": { "$ref": "#/definitions/token" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "required": ["$value"] },
+          "then": { "required": ["$type"] }
+        },
+        {
+          "if": { "required": ["$type"] },
+          "then": { "required": ["$value"] }
+        }
+      ]
+    }
+  }
+}

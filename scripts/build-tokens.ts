@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import Ajv from 'ajv';
 
 interface TokenNode {
   $type?: string;
@@ -64,6 +65,18 @@ async function build() {
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
   const raw = JSON.parse(await fs.readFile(src, 'utf8')) as TokenNode;
+
+  // Validate source tokens against the JSON schema before further processing
+  const schemaPath = path.join(root, 'tokens', 'token.schema.json');
+  const schema = JSON.parse(await fs.readFile(schemaPath, 'utf8'));
+  const ajv = new Ajv({ allErrors: true });
+  const validate = ajv.compile(schema);
+  if (!validate(raw)) {
+    const msg = (validate.errors || [])
+      .map(e => `${e.instancePath || '/'} ${e.message}`.trim())
+      .join('; ');
+    throw new Error(`Token schema validation failed: ${msg}`);
+  }
   const tokens = flattenTokens(raw);
 
   // Gather all theme names across tokens
