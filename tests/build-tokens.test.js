@@ -61,3 +61,35 @@ test('build tokens validation errors', async () => {
     await fs.writeFile(tokensPath, original);
   }
 });
+
+test('accepts various color formats and outputs sorted tokens', async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        {
+          color: {
+            zeta: { $type: 'color', $value: '#11223344' },
+            alpha: { $type: 'color', $value: 'rgb(0,0,0)' },
+            middle: { $type: 'color', $value: 'hsl(0,0%,0%)' }
+          }
+        },
+        null,
+        2
+      )
+    );
+    await runBuild();
+    const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+    assert.match(css, /--color-alpha: rgb\(0,0,0\);/);
+    assert.match(css, /--color-middle: hsl\(0,0%,0%\);/);
+    assert.match(css, /--color-zeta: #11223344;/);
+    const vars = css
+      .split('\n')
+      .filter(line => line.startsWith('  --'))
+      .map(line => line.match(/^\s{2}(--[^:]+):/)[1]);
+    assert.deepEqual(vars, [...vars].sort());
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
