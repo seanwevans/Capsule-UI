@@ -126,6 +126,9 @@ function toPascalCase(str) {
     .replace(/[-_]+/g, ' ')
     .replace(/([a-z])([A-Z])/g, '$1 $2')
     .split(/\s+/)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w) => {
+      const lower = w.toLowerCase();
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
     .join('');
 }
