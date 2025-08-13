@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Booking Widget Demo</title>
+    <script type="module" src="./booking-widget.js"></script>
+    <style>
+      body { font-family: sans-serif; padding: 2rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Booking Widget Demo</h1>
+    <booking-widget id="w"></booking-widget>
+    <script>
+      const w = document.getElementById('w');
+      // runtime theming after load
+      setTimeout(() => {
+        w.style.setProperty('--bk-brand', '#ff3b3b');
+        w.setAttribute('theme', 'dark');
+      }, 1000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+:root{
+  --color-background: #ffffff;
+  --color-text: #0f172a;
+  --color-brand: #4f46e5;
+  --spacing-sm: 4px;
+  --spacing-md: 8px;
+  --spacing-lg: 16px;
+}
+
+[data-theme="dark"]{
+  --color-background: #0f172a;
+  --color-text: #e6e8ef;
+  --color-brand: #818cf8;
+  --spacing-sm: 4px;
+  --spacing-md: 8px;
+  --spacing-lg: 16px;
+}
+
