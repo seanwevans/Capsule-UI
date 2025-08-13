@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
+import * as csstree from 'css-tree';
 
 interface TokenNode {
   $type?: string;
@@ -18,21 +19,21 @@ function validateToken(name: string, type: string | undefined, value: any) {
 
   const validators: Record<string, Validator> = {
     color: value => {
-      const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-      const rgb = /^rgba?\((\s*\d{1,3}\s*,){2}\s*\d{1,3}(\s*,\s*(0|0?\.\d+|1(?:\.0)?))?\s*\)$/;
-      const hsl = /^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*(0|0?\.\d+|1(?:\.0)?))?\s*\)$/;
-      if (
-        typeof value !== 'string' ||
-        !(hex.test(value) || rgb.test(value) || hsl.test(value))
-      ) {
+      if (typeof value !== 'string') {
+        throw new Error(`Token '${name}' has invalid color value '${value}'`);
+      }
+      const match = csstree.lexer.matchProperty('color', value);
+      if (match.error) {
         throw new Error(`Token '${name}' has invalid color value '${value}'`);
       }
     },
     dimension: value => {
-      if (
-        typeof value !== 'string' ||
-        !/^-?\d+(?:\.\d+)?(px|rem|em|%)$/.test(value)
-      ) {
+      if (typeof value !== 'string') {
+        throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
+      }
+      const isLength = csstree.lexer.matchType('length', value).error === null;
+      const isPercent = csstree.lexer.matchType('percentage', value).error === null;
+      if (!isLength && !isPercent) {
         throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
       }
     }
