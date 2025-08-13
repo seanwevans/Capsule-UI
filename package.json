@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "lint:css": "stylelint \"**/*.{css,scss}\"",
-    "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\""
+    "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "lint": "npm run lint:css && npm run lint:js",
+    "tokens:build": "ts-node scripts/build-tokens.ts"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
