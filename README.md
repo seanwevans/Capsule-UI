@@ -139,3 +139,23 @@ Shadow DOM v1, `::part`, and container queries are supported in all modern everg
 Capsule doesn’t bypass a11y—your components still need focus states, ARIA, contrast, keyboard handling, and reduced-motion respect. The isolation helps keep a11y styles consistent.
 
 ---
+
+## CLI
+
+Capsule provides a small command line interface in `packages/capsule-cli`.
+
+### Local development
+
+```bash
+cd packages/capsule-cli
+npm install
+npm link # exposes a global `capsule` command
+```
+
+### Usage
+
+```bash
+capsule new component Button  # scaffolds a new component skeleton
+capsule tokens build          # runs the token pipeline (npm run tokens:build)
+capsule check                 # runs lint tasks (npm run lint)
+```
