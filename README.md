@@ -135,7 +135,10 @@ No. Shadow DOM is great for embeddables. For app-internal components, CSS Module
 **Browser support?**  
 Shadow DOM v1, `::part`, and container queries are supported in all modern evergreen browsers. For legacy support, use the CSS Modules flavor and avoid Shadow-only features.
 
-**Accessibility?**  
+**Accessibility?**
 Capsule doesn’t bypass a11y—your components still need focus states, ARIA, contrast, keyboard handling, and reduced-motion respect. The isolation helps keep a11y styles consistent.
+
+## Tokens
+Source tokens live in `tokens/source/tokens.json` using the W3C draft design tokens structure. Run `pnpm tokens:build` to generate `dist/tokens.css`, `dist/tokens.d.ts`, and `dist/tokens.json`. The CSS file exposes custom properties for light and dark themes; toggling `[data-theme="dark"]` on the page swaps the values.
 
 ---
