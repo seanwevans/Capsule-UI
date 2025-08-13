@@ -40,7 +40,24 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
 
     if (!hasLayer) {
       if (context && context.fix) {
-        root.prepend(`@layer ${expected};\n`);
+        let insertAfter = null;
+
+        for (const node of root.nodes || []) {
+          if (
+            node.type === 'atrule' &&
+            (node.name === 'charset' || node.name === 'import')
+          ) {
+            insertAfter = node;
+            continue;
+          }
+          break;
+        }
+
+        if (insertAfter) {
+          insertAfter.after(`\n@layer ${expected};\n`);
+        } else {
+          root.prepend(`@layer ${expected};\n`);
+        }
       } else {
         stylelint.utils.report({
           ruleName,
