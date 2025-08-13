@@ -8,5 +8,6 @@
   "type": "module",
   "dependencies": {
     "commander": "^14.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.5.2"
 }
