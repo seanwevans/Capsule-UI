@@ -6,7 +6,8 @@
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "npm run lint:css && npm run lint:js",
-    "tokens:build": "npx ts-node scripts/build-tokens.ts"
+    "tokens:build": "npx ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/build-tokens.ts",
+    "test": "node --test"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.39.1",
