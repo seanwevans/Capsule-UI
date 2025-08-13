@@ -23,10 +23,12 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run tokens:build
-      - run: cp -r dist examples/
+      - run: cp examples/index.html dist/index.html
+      - run: cp examples/booking-widget.js dist/booking-widget.js
+      - run: sed -i 's|./dist/|./|g' dist/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: examples
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
