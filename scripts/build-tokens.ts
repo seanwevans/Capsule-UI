@@ -38,7 +38,7 @@ function validateToken(name: string, type: string | undefined, value: any) {
   const validate = validators[type];
   if (!validate) throw new Error(`Unknown $type '${type}' for token '${name}'`);
 
-  if (typeof value === 'object') {
+  if (value !== null && typeof value === 'object') {
     for (const v of Object.values(value)) {
       validate(v);
     }
@@ -51,11 +51,11 @@ function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] =
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
     const name = [...prefix, key].join('.');
-    if (typeof val === 'object' && '$value' in val) {
+    if (val && typeof val === 'object' && '$value' in val) {
       if (val.$value === undefined) throw new Error(`Token '${name}' is missing $value`);
       validateToken(name, val.$type, val.$value);
       out.push({ name, value: val.$value });
-    } else if (typeof val === 'object') {
+    } else if (val && typeof val === 'object') {
       if ('$type' in val && !('$value' in val)) {
         throw new Error(`Token '${name}' is missing $value`);
       }
