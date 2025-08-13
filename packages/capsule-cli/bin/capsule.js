@@ -25,13 +25,13 @@ switch (cmd) {
     break;
   case 'tokens':
     if (subcmd === 'build') {
-      runCommand('npm', ['run', 'tokens:build']);
+      runCommand('pnpm', ['run', 'tokens:build']);
     } else {
       usage();
     }
     break;
   case 'check':
-    runCommand('npm', ['run', 'lint']);
+    runCommand('pnpm', ['run', 'lint']);
     break;
   default:
     usage();

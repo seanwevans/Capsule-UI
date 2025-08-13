@@ -154,14 +154,14 @@ Capsule provides a small command line interface in `packages/capsule-cli`.
 
 ```bash
 cd packages/capsule-cli
-npm install
-npm link # exposes a global `capsule` command
+pnpm install
+pnpm link # exposes a global `capsule` command
 ```
 
 ### Usage
 
 ```bash
 capsule new component Button  # scaffolds a new component skeleton
-capsule tokens build          # runs the token pipeline (npm run tokens:build)
-capsule check                 # runs lint tasks (npm run lint)
+capsule tokens build          # runs the token pipeline (pnpm run tokens:build)
+capsule check                 # runs lint tasks (pnpm run lint)
 ```
