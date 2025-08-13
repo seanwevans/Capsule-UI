@@ -6,11 +6,13 @@
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "npm run lint:css && npm run lint:js",
-    "tokens:build": "ts-node scripts/build-tokens.ts"
+    "tokens:build": "ts-node scripts/build-tokens.ts",
+    "test": "vitest run"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
     "stylelint": "^15.10.0",
-    "stylelint-declaration-strict-value": "^1.10.2"
+    "stylelint-declaration-strict-value": "^1.10.2",
+    "vitest": "^3.2.4"
   }
 }
