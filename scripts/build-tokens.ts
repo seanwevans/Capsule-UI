@@ -1,7 +1,8 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
-const baseDir = path.dirname(new URL(import.meta.url).pathname);
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
 interface TokenNode {
   $type?: string;
