@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { mkdtemp, rm, access } = require('node:fs/promises');
+const { mkdtemp, rm, access, readFile } = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
 const { execFile } = require('node:child_process');
@@ -74,7 +74,7 @@ process.argv = originalArgv;
 process.exit = originalExit;
 
 test('scaffoldComponent generates expected files', async () => {
-  const tempDir = await mkdtemp(path.join(tmpdir(), 'capsule-'));
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   const originalCwd = process.cwd();
   process.chdir(tempDir);
   try {
