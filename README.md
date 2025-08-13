@@ -1,12 +1,14 @@
 # Capsule UI 💊
 
+## Wut?
 Treat styling as a *contract* between the host page and the component. 
 Capsule gives you sealed components (Shadow DOM or CSS Modules) plus a tiny, well-documented “Style API” so teams stop renegotiating “how we style” on every project.
 Isolated styles by default, instant theming via CSS variables, safe customization via `::part`, and responsive by **container queries**. No runtime CSS-in-JS.
 Inspired by [this article](https://denodell.com/blog/we-keep-reinventing-css).
+
 ---
 
-## Why Capsule?
+## Why?
 - **Isolation by default.** Your host CSS can’t leak in; component CSS can’t leak out.
 - **Theming at runtime.** Flip brands/tenants by setting CSS variables—no rebuilds.
 - **Predictable overrides.** Only what you expose is customizable (`::part`, CSS vars).
