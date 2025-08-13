@@ -22,7 +22,7 @@ function runBuild() {
   });
 }
 
-test('build tokens validation errors', async () => {
+test('build tokens validation errors', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
@@ -62,7 +62,7 @@ test('build tokens validation errors', async () => {
   }
 });
 
-test('tokens with null values are handled gracefully', async () => {
+test('tokens with null values are handled gracefully', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
@@ -75,7 +75,7 @@ test('tokens with null values are handled gracefully', async () => {
   }
 });
 
-test('accepts various color formats and outputs sorted tokens', async () => {
+test('accepts various color formats and outputs sorted tokens', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
@@ -107,7 +107,7 @@ test('accepts various color formats and outputs sorted tokens', async () => {
   }
 });
 
-test('accepts negative dimension values', async () => {
+test('accepts negative dimension values', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
