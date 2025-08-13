@@ -2,40 +2,46 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { Command } from 'commander';
+import pkg from '../package.json' with { type: 'json' };
 
-function usage() {
-  console.log(`Usage:\n  capsule new component <Name>\n  capsule tokens build\n  capsule check`);
-}
+const program = new Command();
 
-const args = process.argv.slice(2);
-if (args.length === 0) {
-  usage();
-  process.exit(0);
-}
+program
+  .name('capsule')
+  .description('Command line utilities for Capsule UI')
+  .version(pkg.version);
 
-const [cmd, subcmd, name] = args;
-
-switch (cmd) {
-  case 'new':
-    if (subcmd === 'component' && name) {
-      scaffoldComponent(name);
-    } else {
-      usage();
+program
+  .command('new')
+  .description('Scaffold a new resource')
+  .argument('<type>', 'Resource type (currently only "component" is supported)')
+  .argument('<name>', 'Name of the component')
+  .action((type, name) => {
+    if (type !== 'component') {
+      console.error('Error: only "component" type is supported.');
+      process.exit(1);
     }
-    break;
-  case 'tokens':
-    if (subcmd === 'build') {
-      runCommand('pnpm', ['run', 'tokens:build']);
-    } else {
-      usage();
+    if (!name) {
+      console.error('Error: component name is required.');
+      process.exit(1);
     }
-    break;
-  case 'check':
-    runCommand('pnpm', ['run', 'lint']);
-    break;
-  default:
-    usage();
-}
+    scaffoldComponent(name);
+  });
+
+const tokens = program.command('tokens').description('Design token utilities');
+
+tokens
+  .command('build')
+  .description('Build design tokens')
+  .action(() => runCommand('pnpm', ['run', 'tokens:build']));
+
+program
+  .command('check')
+  .description('Run lint checks')
+  .action(() => runCommand('pnpm', ['run', 'lint']));
+
+program.parse(process.argv);
 
 function runCommand(command, params) {
   const res = spawnSync(command, params, { stdio: 'inherit' });
