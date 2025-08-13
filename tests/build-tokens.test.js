@@ -93,3 +93,22 @@ test('accepts various color formats and outputs sorted tokens', async () => {
     await fs.writeFile(tokensPath, original);
   }
 });
+
+test('accepts negative dimension values', async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        { spacing: { neg: { $type: 'dimension', $value: '-4px' } } },
+        null,
+        2
+      )
+    );
+    await runBuild();
+    const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+    assert.match(css, /--spacing-neg: -4px;/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
