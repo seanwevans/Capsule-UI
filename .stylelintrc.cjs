@@ -11,6 +11,6 @@ module.exports = {
         ignoreValues: ['transparent', 'inherit', 'currentColor']
       }
     ],
-    'capsule-ui/require-layer': true
+    'capsule-ui/require-layer': { name: 'components' }
   }
 };
