@@ -115,7 +115,7 @@ Capsule works best with a few non-negotiables:
   - Only tokenized colors/spacing (ban raw hex/rgb except in token files).
   - Max specificity `0-1-0`; no `!important` outside `@layer overrides`.
   - Disallow global element styling in component CSS.
-  - Require `@layer components` in component CSS files.
+  - Require `@layer components` (configurable) in component CSS files; missing layers are auto-fixed.
 - **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions).
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
 ## Architecture Decision Records

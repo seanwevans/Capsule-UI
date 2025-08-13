@@ -1,31 +1,54 @@
 const stylelint = require('stylelint');
 
+/**
+ * Stylelint rule enforcing a named `@layer` declaration.
+ *
+ * @param {{name?: string}} [options] configuration with expected layer name (default: "components").
+ * @example
+ * // stylelint config
+ * {
+ *   "rules": { "capsule-ui/require-layer": { "name": "my-layer" } }
+ * }
+ * // Missing layer will be auto-inserted when `--fix` is used.
+ */
 const ruleName = 'capsule-ui/require-layer';
 const messages = stylelint.utils.ruleMessages(ruleName, {
-  expected: "Expected '@layer components' declaration.",
+  expected: (name) => `Expected '@layer ${name}' declaration.`,
 });
 
-module.exports = stylelint.createPlugin(ruleName, function () {
+module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, context) {
   return (root, result) => {
-    const validOptions = stylelint.utils.validateOptions(result, ruleName, {});
+    const validOptions = stylelint.utils.validateOptions(result, ruleName, {
+      actual: options,
+      possible: {
+        name: [String],
+      },
+      optional: true,
+    });
     if (!validOptions) {
       return;
     }
 
+    const expected = options.name || 'components';
+
     let hasLayer = false;
     root.walkAtRules('layer', (rule) => {
-      if (rule.params.trim() === 'components') {
+      if (rule.params.trim() === expected) {
         hasLayer = true;
       }
     });
 
     if (!hasLayer) {
-      stylelint.utils.report({
-        ruleName,
-        result,
-        node: root,
-        message: messages.expected,
-      });
+      if (context && context.fix) {
+        root.prepend(`@layer ${expected};\n`);
+      } else {
+        stylelint.utils.report({
+          ruleName,
+          result,
+          node: root,
+          message: messages.expected(expected),
+        });
+      }
     }
   };
 });
