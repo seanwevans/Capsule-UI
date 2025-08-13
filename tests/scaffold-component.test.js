@@ -79,10 +79,6 @@ test('scaffoldComponent generates expected files', async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   const originalCwd = process.cwd();
   process.chdir(tempDir);
-  const originalArgv = process.argv;
-  const originalExit = process.exit;
-  process.argv = ['node'];
-  process.exit = () => {};
   try {
     const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
     await scaffoldComponent('example-component');
@@ -106,8 +102,6 @@ test('scaffoldComponent generates expected files', async () => {
       `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
     );
   } finally {
-    process.argv = originalArgv;
-    process.exit = originalExit;
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });
   }

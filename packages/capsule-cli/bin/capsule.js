@@ -3,6 +3,7 @@ import { access, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { Command } from 'commander';
 
 const require = createRequire(import.meta.url);
@@ -25,11 +26,13 @@ program
   .action(async (type, name) => {
     if (type !== 'component') {
       console.error('Error: only "component" type is supported.');
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
     if (!name) {
       console.error('Error: component name is required.');
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
     await scaffoldComponent(name);
   });
@@ -57,7 +60,11 @@ program
     process.exitCode = runCommand('pnpm', ['run', 'lint']);
   });
 
-program.parse(process.argv);
+if (
+  import.meta.url === process.argv[1] ||
+  import.meta.url === pathToFileURL(process.argv[1]).href
+)
+  program.parse(process.argv);
 
 function runCommand(command, params) {
   try {
@@ -83,7 +90,8 @@ export async function scaffoldComponent(rawName) {
       console.error(
         `Invalid component name "${rawName}". Use only letters, numbers, hyphens, or underscores.`
       );
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
     const name = toPascalCase(rawName);
     const baseDir = join(process.cwd(), 'packages', 'components', name);
@@ -91,7 +99,8 @@ export async function scaffoldComponent(rawName) {
     try {
       await access(baseDir);
       console.error(`Component "${name}" already exists`);
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     } catch {
       // directory does not exist; continue
     }
@@ -117,7 +126,7 @@ export async function scaffoldComponent(rawName) {
     console.log(`Scaffolded component at ${baseDir}`);
   } catch (err) {
     console.error('Error scaffolding component:', err);
-    process.exit(1);
+    process.exitCode = 1;
   }
 }
 
