@@ -31,6 +31,20 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
 
     const expected = options.name || 'components';
 
+    const source = root.source && root.source.input && root.source.input.css;
+    let newline = '\n';
+    if (source && source.includes('\r\n')) {
+      newline = '\r\n';
+    } else if (root.raws) {
+      for (const key in root.raws) {
+        const value = root.raws[key];
+        if (typeof value === 'string' && value.includes('\r\n')) {
+          newline = '\r\n';
+          break;
+        }
+      }
+    }
+
     let hasLayer = false;
     root.walkAtRules('layer', (rule) => {
       if (rule.parent !== root) {
@@ -59,11 +73,11 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
         }
 
         if (insertAfter) {
-          insertAfter.after(`\n@layer ${expected};\n`);
+          insertAfter.after(`${newline}@layer ${expected};${newline}`);
         } else {
-          root.prepend(`@layer ${expected};\n`);
+          root.prepend(`@layer ${expected};${newline}`);
           if (root.nodes[1]) {
-            root.nodes[1].raws.before = root.nodes[1].raws.before || '\n';
+            root.nodes[1].raws.before = root.nodes[1].raws.before || newline;
           }
         }
       } else {
