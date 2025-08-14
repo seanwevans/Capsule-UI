@@ -36,6 +36,20 @@ function validateToken(name: string, type: string | undefined, value: any) {
       if (!isLength && !isPercent) {
         throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
       }
+    },
+    number: value => {
+      if (typeof value !== 'number' || Number.isNaN(value)) {
+        throw new Error(`Token '${name}' has invalid number value '${value}'`);
+      }
+    },
+    'font-size': value => {
+      if (typeof value !== 'string') {
+        throw new Error(`Token '${name}' has invalid font-size value '${value}'`);
+      }
+      const match = csstree.lexer.matchProperty('font-size', value);
+      if (match.error) {
+        throw new Error(`Token '${name}' has invalid font-size value '${value}'`);
+      }
     }
   };
 
@@ -106,7 +120,7 @@ async function build() {
   for (const theme of themeNames) {
     themes[theme] = [];
   }
-  const jsonOut: Record<string, Record<string, string>> = {};
+  const jsonOut: Record<string, Record<string, string | number>> = {};
 
   for (const t of tokens) {
     const cssVar = '--' + t.name.replace(/\./g, '-');
@@ -146,7 +160,7 @@ async function build() {
   const dts =
     `export type ThemeName = ${themeUnion};\n` +
     `export type TokenName = ${names};\n` +
-    `export type TokenValues = Record<ThemeName, string>;\n` +
+    `export type TokenValues = Record<ThemeName, string | number>;\n` +
     `export const tokens: Record<TokenName, TokenValues>;\n` +
     `export default tokens;\n`;
   await fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n');
