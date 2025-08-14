@@ -33,7 +33,7 @@ customElements.define("booking-widget", class extends HTMLElement {
         }
       </style>
       <div class="card" part="card">
-        <button class="button" part="button" aria-label="Book reservation">Book</button>
+        <button class="button" part="button" type="button" aria-label="Book reservation">Book</button>
       </div>
     `;
   }
