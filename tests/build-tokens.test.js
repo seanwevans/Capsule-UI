@@ -234,3 +234,23 @@ test('rejects invalid number and font-size values', { concurrency: false }, asyn
     await fs.writeFile(tokensPath, original);
   }
 });
+
+test('generates type declarations for tokens', async () => {
+  await runBuild();
+  const dts = await fs.readFile(path.join(root, 'dist', 'tokens.d.ts'), 'utf8');
+
+  assert.match(dts, /export type TokenName/);
+  for (const name of [
+    '--color-background',
+    '--color-text',
+    '--color-brand',
+    '--spacing-sm',
+    '--spacing-md',
+    '--spacing-lg'
+  ]) {
+    assert.match(dts, new RegExp(name));
+  }
+
+  assert.match(dts, /export type ThemeName = 'light' \| 'dark';/);
+  assert.match(dts, /export type TokenValues = Record<ThemeName, string \| number>;/);
+});
