@@ -62,6 +62,20 @@ test('rejects invalid component name', async () => {
   }
 });
 
+test('rejects component name starting with a number', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const { code, stderr } = await run(
+      ['new', 'component', '123abc'],
+      { cwd: tmp }
+    );
+    assert.equal(code, 1);
+    assert.match(stderr, /must start with a letter/i);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('fails when component already exists', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
