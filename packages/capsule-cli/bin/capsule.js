@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, writeFile, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -122,11 +122,28 @@ export async function scaffoldComponent(rawName) {
     await writeFile(styleFile, styleSrc, 'utf8');
     await writeFile(indexFile, indexSrc, 'utf8');
     await writeFile(testFile, testSrc, 'utf8');
+
+    await updateComponentsIndex(name);
     console.log(`Scaffolded component at ${baseDir}`);
     return true;
   } catch (err) {
     console.error('Error scaffolding component:', err);
     return false;
+  }
+}
+
+async function updateComponentsIndex(name) {
+  const componentsDir = join(process.cwd(), 'packages', 'components');
+  await mkdir(componentsDir, { recursive: true });
+  const indexPath = join(componentsDir, 'index.ts');
+  const exportLine = `export * from './${name}/${name}';\n`;
+  try {
+    const current = await readFile(indexPath, 'utf8');
+    if (!current.includes(exportLine)) {
+      await writeFile(indexPath, current + exportLine, 'utf8');
+    }
+  } catch {
+    await writeFile(indexPath, exportLine, 'utf8');
   }
 }
 
