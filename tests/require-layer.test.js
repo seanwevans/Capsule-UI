@@ -46,6 +46,13 @@ test('auto-fixes missing layer after @charset', async () => {
   );
 });
 
+test('preserves CRLF newlines when auto-fixing', async () => {
+  const css = 'a{color:red}\r\n';
+  const result = await lint(css, { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(result.output, '@layer components;\r\n' + css);
+});
+
 test('supports custom layer name', async () => {
   const result = await lint('a{color:red}', { config: { name: 'custom' } });
   assert.equal(result.errored, true);
