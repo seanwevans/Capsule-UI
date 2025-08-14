@@ -1,6 +1,8 @@
 # Booking Widget Example
 
 This directory demonstrates a minimal Capsule widget built with Shadow DOM.
+Its internal action uses a `<button type="button">` element to avoid
+unintended form submissions.
 
 ## Usage
 

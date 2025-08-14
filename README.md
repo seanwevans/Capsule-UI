@@ -102,7 +102,7 @@ customElements.define("booking-widget", class extends HTMLElement {
           .button{ background: var(--bk-brand); color:white; border:0; padding:.7rem 1rem; border-radius:12px; }
         }
       </style>
-      <button class="button" part="button">Book</button>
+      <button class="button" part="button" type="button">Book</button>
     `;
   }
 });
