@@ -15,15 +15,15 @@
       "properties": {
         "$type": {
           "type": "string",
-          "enum": ["color", "dimension"]
+          "enum": ["color", "dimension", "number", "font-size"]
         },
         "$value": {
           "anyOf": [
-            { "type": "string" },
+            { "type": ["string", "number"] },
             {
               "type": "object",
               "minProperties": 1,
-              "additionalProperties": { "type": "string" }
+              "additionalProperties": { "type": ["string", "number"] }
             }
           ]
         }
