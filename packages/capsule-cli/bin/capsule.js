@@ -34,7 +34,8 @@ program
       process.exitCode = 1;
       return;
     }
-    await scaffoldComponent(name);
+    const ok = await scaffoldComponent(name);
+    process.exitCode = ok ? 0 : 1;
   });
 
 const tokens = program.command('tokens').description('Design token utilities');
@@ -90,8 +91,7 @@ export async function scaffoldComponent(rawName) {
       console.error(
         `Invalid component name "${rawName}". Use only letters, numbers, hyphens, or underscores.`
       );
-      process.exitCode = 1;
-      return;
+      return false;
     }
     const name = toPascalCase(rawName);
     const baseDir = join(process.cwd(), 'packages', 'components', name);
@@ -99,8 +99,7 @@ export async function scaffoldComponent(rawName) {
     try {
       await access(baseDir);
       console.error(`Component "${name}" already exists`);
-      process.exitCode = 1;
-      return;
+      return false;
     } catch {
       // directory does not exist; continue
     }
@@ -124,9 +123,10 @@ export async function scaffoldComponent(rawName) {
     await writeFile(indexFile, indexSrc, 'utf8');
     await writeFile(testFile, testSrc, 'utf8');
     console.log(`Scaffolded component at ${baseDir}`);
+    return true;
   } catch (err) {
     console.error('Error scaffolding component:', err);
-    process.exitCode = 1;
+    return false;
   }
 }
 
