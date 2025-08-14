@@ -187,3 +187,50 @@ test('rejects invalid extended formats', async () => {
     await fs.writeFile(tokensPath, original);
   }
 });
+
+test('accepts number and font-size tokens', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        {
+          metrics: { weight: { $type: 'number', $value: 400 } },
+          font: { base: { $type: 'font-size', $value: '16px' } }
+        },
+        null,
+        2
+      )
+    );
+    await runBuild();
+    const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+    assert.match(css, /--metrics-weight: 400;/);
+    assert.match(css, /--font-base: 16px;/);
+    const json = JSON.parse(
+      await fs.readFile(path.join(root, 'dist', 'tokens.json'), 'utf8')
+    );
+    assert.equal(json['--metrics-weight'].light, 400);
+    assert.equal(json['--font-base'].light, '16px');
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
+test('rejects invalid number and font-size values', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ metrics: { bad: { $type: 'number', $value: 'oops' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /invalid number value/);
+
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ font: { bad: { $type: 'font-size', $value: 'huge' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /invalid font-size value/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});

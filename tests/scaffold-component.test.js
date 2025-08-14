@@ -75,13 +75,14 @@ test('fails when component already exists', async () => {
   }
 });
 
-test('scaffoldComponent generates expected files', async () => {
+test('scaffoldComponent returns true and generates expected files', async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   const originalCwd = process.cwd();
   process.chdir(tempDir);
   try {
     const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
-    await scaffoldComponent('example-component');
+    const result = await scaffoldComponent('example-component');
+    assert.equal(result, true);
     const baseDir = path.join(tempDir, 'packages', 'components', 'ExampleComponent');
     const component = await readFile(path.join(baseDir, 'ExampleComponent.ts'), 'utf8');
     const style = await readFile(path.join(baseDir, 'style.ts'), 'utf8');
