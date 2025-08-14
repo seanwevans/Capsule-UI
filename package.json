@@ -6,6 +6,7 @@
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "npm run lint:css && npm run lint:js",
+    "test": "node --test",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
   },
