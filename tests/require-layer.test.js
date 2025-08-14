@@ -61,3 +61,26 @@ test('supports custom layer name', async () => {
   assert.equal(fixed.errored, false);
   assert.equal(fixed.output, '@layer custom;\na{color:red}');
 });
+
+test('passes when layer is comma-separated', async () => {
+  const result = await lint('@layer base, components;\na{color:red}');
+  assert.equal(result.errored, false);
+  assert.equal(result.results[0].warnings.length, 0);
+});
+
+test('ignores nested layer declarations', async () => {
+  const css = '@media print {@layer components{a{color:red}}}';
+  const result = await lint(css);
+  assert.equal(result.errored, true);
+  assert.equal(
+    result.results[0].warnings[0].text,
+    "Expected '@layer components' declaration. (capsule-ui/require-layer)"
+  );
+});
+
+test('auto-fixes when only nested layer exists', async () => {
+  const css = '@media print {@layer components{a{color:red}}}';
+  const result = await lint(css, { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(result.output, '@layer components;\n' + css);
+});

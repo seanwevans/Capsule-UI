@@ -33,7 +33,14 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
 
     let hasLayer = false;
     root.walkAtRules('layer', (rule) => {
-      if (rule.params.trim() === expected) {
+      if (rule.parent !== root) {
+        return;
+      }
+      const layers = rule.params
+        .split(',')
+        .map((l) => l.trim())
+        .filter(Boolean);
+      if (layers.includes(expected)) {
         hasLayer = true;
       }
     });
@@ -41,12 +48,10 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
     if (!hasLayer) {
       if (context && context.fix) {
         let insertAfter = null;
+        const skip = new Set(['charset', 'import', 'namespace']);
 
         for (const node of root.nodes || []) {
-          if (
-            node.type === 'atrule' &&
-            (node.name === 'charset' || node.name === 'import')
-          ) {
+          if (node.type === 'atrule' && skip.has(node.name)) {
             insertAfter = node;
             continue;
           }
@@ -57,6 +62,9 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
           insertAfter.after(`\n@layer ${expected};\n`);
         } else {
           root.prepend(`@layer ${expected};\n`);
+          if (root.nodes[1]) {
+            root.nodes[1].raws.before = root.nodes[1].raws.before || '\n';
+          }
         }
       } else {
         stylelint.utils.report({
