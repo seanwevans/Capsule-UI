@@ -87,7 +87,14 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     const component = await readFile(path.join(baseDir, 'ExampleComponent.ts'), 'utf8');
     const style = await readFile(path.join(baseDir, 'style.ts'), 'utf8');
     const index = await readFile(path.join(baseDir, 'index.ts'), 'utf8');
-    const testFile = await readFile(path.join(baseDir, '__tests__', 'ExampleComponent.test.ts'), 'utf8');
+    const testFile = await readFile(
+      path.join(baseDir, '__tests__', 'ExampleComponent.test.ts'),
+      'utf8'
+    );
+    const rootIndex = await readFile(
+      path.join(tempDir, 'packages', 'components', 'index.ts'),
+      'utf8'
+    );
 
     assert.equal(
       component,
@@ -101,6 +108,32 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     assert.equal(
       testFile,
       `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
+    );
+    assert.equal(
+      rootIndex,
+      `export * from './ExampleComponent/ExampleComponent';\n`
+    );
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('updates root components index on subsequent scaffolds', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    await scaffoldComponent('first-component');
+    await scaffoldComponent('second-component');
+    const rootIndex = await readFile(
+      path.join(tempDir, 'packages', 'components', 'index.ts'),
+      'utf8'
+    );
+    assert.equal(
+      rootIndex,
+      `export * from './FirstComponent/FirstComponent';\nexport * from './SecondComponent/SecondComponent';\n`
     );
   } finally {
     process.chdir(originalCwd);
