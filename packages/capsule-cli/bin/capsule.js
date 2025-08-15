@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { access, mkdir, writeFile, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { Command } from 'commander';
@@ -43,22 +43,22 @@ const tokens = program.command('tokens').description('Design token utilities');
 tokens
   .command('build')
   .description('Build design tokens')
-  .action(() => {
-    process.exitCode = runCommand('pnpm', ['run', 'tokens:build']);
+  .action(async () => {
+    process.exitCode = await runCommand('pnpm', ['run', 'tokens:build']);
   });
 
 tokens
   .command('watch')
   .description('Watch design tokens and rebuild on changes')
-  .action(() => {
-    process.exitCode = runCommand('pnpm', ['run', 'tokens:watch']);
+  .action(async () => {
+    process.exitCode = await runCommand('pnpm', ['run', 'tokens:watch']);
   });
 
 program
   .command('check')
   .description('Run lint checks')
-  .action(() => {
-    process.exitCode = runCommand('pnpm', ['run', 'lint']);
+  .action(async () => {
+    process.exitCode = await runCommand('pnpm', ['run', 'lint']);
   });
 
 if (
@@ -68,20 +68,43 @@ if (
   await program.parseAsync(process.argv);
 
 function runCommand(command, params) {
-  try {
-    const res = spawnSync(command, params, { stdio: 'inherit' });
-    if (res.error && res.error.code === 'ENOENT') {
-      console.error(`${command} not found; install ${command} or adjust PATH.`);
-      return 1;
+  return new Promise((resolve, reject) => {
+    let child;
+    try {
+      child = spawn(command, params, { stdio: 'inherit' });
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        console.error(`${command} not found; install ${command} or adjust PATH.`);
+        return resolve(1);
+      }
+      return reject(err);
     }
-    return res.status ?? 1;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      console.error(`${command} not found; install ${command} or adjust PATH.`);
-      return 1;
-    }
-    throw error;
-  }
+
+    const forward = (signal) => {
+      child.kill(signal);
+    };
+    const signals = ['SIGINT', 'SIGTERM', 'SIGHUP'];
+    signals.forEach((sig) => process.on(sig, forward));
+
+    child.on('close', (code, signal) => {
+      signals.forEach((sig) => process.off(sig, forward));
+      if (signal) {
+        resolve(1);
+      } else {
+        resolve(code ?? 1);
+      }
+    });
+
+    child.on('error', (error) => {
+      signals.forEach((sig) => process.off(sig, forward));
+      if (error.code === 'ENOENT') {
+        console.error(`${command} not found; install ${command} or adjust PATH.`);
+        resolve(1);
+      } else {
+        reject(error);
+      }
+    });
+  });
 }
 
 export async function scaffoldComponent(rawName) {
