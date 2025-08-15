@@ -33,7 +33,15 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
 
     const source = root.source && root.source.input && root.source.input.css;
     let newline = '\n';
-    if (source && source.includes('\r\n')) {
+    if (root.raws && typeof root.raws.after === 'string' && root.raws.after.length > 0) {
+      newline = root.raws.after.includes('\r\n') ? '\r\n' : '\n';
+    } else if (
+      root.raws &&
+      typeof root.raws.semicolon === 'string' &&
+      root.raws.semicolon.length > 0
+    ) {
+      newline = root.raws.semicolon.includes('\r\n') ? '\r\n' : '\n';
+    } else if (source && source.includes('\r\n')) {
       newline = '\r\n';
     } else if (root.raws) {
       for (const key in root.raws) {

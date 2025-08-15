@@ -31,10 +31,17 @@ test('passes when layer is present', async () => {
   assert.equal(result.results[0].warnings.length, 0);
 });
 
-test('auto-fixes missing layer', async () => {
+test('auto-fixes file without trailing newline', async () => {
   const result = await lint('a{color:red}', { fix: true });
   assert.equal(result.errored, false);
   assert.equal(result.output, '@layer components;\na{color:red}');
+});
+
+test('auto-fixes and preserves LF newlines', async () => {
+  const css = 'a{color:red}\n';
+  const result = await lint(css, { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(result.output, '@layer components;\n' + css);
 });
 
 test('auto-fixes missing layer after @charset', async () => {
@@ -46,7 +53,7 @@ test('auto-fixes missing layer after @charset', async () => {
   );
 });
 
-test('preserves CRLF newlines when auto-fixing', async () => {
+test('auto-fixes and preserves CRLF newlines', async () => {
   const css = 'a{color:red}\r\n';
   const result = await lint(css, { fix: true });
   assert.equal(result.errored, false);
