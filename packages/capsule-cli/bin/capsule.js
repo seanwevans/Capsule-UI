@@ -159,15 +159,18 @@ async function updateComponentsIndex(name) {
   const componentsDir = join(process.cwd(), 'packages', 'components');
   await mkdir(componentsDir, { recursive: true });
   const indexPath = join(componentsDir, 'index.ts');
-  const exportLine = `export * from './${name}/${name}';\n`;
+  const exportLine = `export * from './${name}/${name}';`;
+  let lines = [];
   try {
     const current = await readFile(indexPath, 'utf8');
-    if (!current.includes(exportLine)) {
-      await writeFile(indexPath, current + exportLine, 'utf8');
-    }
+    lines = current.split(/\r?\n/).filter(Boolean);
   } catch {
-    await writeFile(indexPath, exportLine, 'utf8');
+    // index.ts does not exist yet
   }
+  lines.push(exportLine);
+  const uniqueSorted = Array.from(new Set(lines)).sort();
+  const content = uniqueSorted.join('\n') + '\n';
+  await writeFile(indexPath, content, 'utf8');
 }
 
 function toPascalCase(str) {
