@@ -109,10 +109,10 @@ function runCommand(command, params) {
 
 export async function scaffoldComponent(rawName) {
   try {
-    const validName = /^[a-z][a-z0-9_-]*$/i;
+    const validName = /^[a-z](?:[a-z0-9]*(?:[-_][a-z0-9]+)*)$/i;
     if (!validName.test(rawName)) {
       console.error(
-        `Invalid component name "${rawName}". Name must start with a letter and may contain only letters, numbers, hyphens, or underscores.`
+        `Invalid component name "${rawName}". Name must start with a letter, may contain letters, numbers, hyphens, or underscores, and cannot have leading/trailing separators or consecutive separators.`
       );
       return false;
     }
