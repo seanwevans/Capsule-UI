@@ -75,6 +75,19 @@ test('rejects invalid token names', { concurrency: false }, async () => {
   }
 });
 
+test('rejects uppercase token names', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ Color: { ok: { $type: 'color', $value: '#fff' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /Invalid token key 'Color'/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('accepts valid token names', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
