@@ -65,7 +65,7 @@ if (
   import.meta.url === process.argv[1] ||
   import.meta.url === pathToFileURL(process.argv[1]).href
 )
-  program.parse(process.argv);
+  await program.parseAsync(process.argv);
 
 function runCommand(command, params) {
   try {
