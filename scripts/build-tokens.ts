@@ -99,7 +99,7 @@ async function build() {
   // Validate source tokens against the JSON schema before further processing
   const schemaPath = path.join(root, 'tokens', 'token.schema.json');
   const schema = JSON.parse(await fs.readFile(schemaPath, 'utf8'));
-  const ajv = new Ajv({ allErrors: true });
+  const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
   const validate = ajv.compile(schema);
   if (!validate(raw)) {
     const msg = (validate.errors || [])
