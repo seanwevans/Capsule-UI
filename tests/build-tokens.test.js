@@ -62,6 +62,38 @@ test('build tokens validation errors', { concurrency: false }, async () => {
   }
 });
 
+test('rejects invalid token names', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ 'bad name': { ok: { $type: 'color', $value: '#fff' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /Invalid token key 'bad name'/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
+test('accepts valid token names', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        { 'good-token_1': { inner_value: { $type: 'color', $value: '#000' } } },
+        null,
+        2
+      )
+    );
+    await runBuild();
+    const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+    assert.match(css, /--good-token_1-inner_value: #000;/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('tokens with null values are handled gracefully', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {

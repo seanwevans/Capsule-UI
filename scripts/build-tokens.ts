@@ -68,6 +68,12 @@ function validateToken(name: string, type: string | undefined, value: any) {
 function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] = []): FlatToken[] {
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
+    if (!/^[A-Za-z0-9_-]+$/.test(key)) {
+      const fullName = [...prefix, key].join('.');
+      throw new Error(
+        `Invalid token key '${fullName}'. Keys may only include letters, digits, hyphen, and underscore.`
+      );
+    }
     const name = [...prefix, key].join('.');
     if (val && typeof val === 'object' && '$value' in val) {
       if (val.$value === undefined) throw new Error(`Token '${name}' is missing $value`);
