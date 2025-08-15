@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { mkdtemp, rm, access, readFile } = require('node:fs/promises');
+const { mkdtemp, rm, access, readFile, writeFile } = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
 const { execFile } = require('node:child_process');
@@ -139,8 +139,8 @@ test('updates root components index on subsequent scaffolds', async () => {
   process.chdir(tempDir);
   try {
     const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
-    await scaffoldComponent('first-component');
     await scaffoldComponent('second-component');
+    await scaffoldComponent('first-component');
     const rootIndex = await readFile(
       path.join(tempDir, 'packages', 'components', 'index.ts'),
       'utf8'
@@ -148,6 +148,31 @@ test('updates root components index on subsequent scaffolds', async () => {
     assert.equal(
       rootIndex,
       `export * from './FirstComponent/FirstComponent';\nexport * from './SecondComponent/SecondComponent';\n`
+    );
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('deduplicates and sorts root components index', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    await scaffoldComponent('beta-component');
+    const indexPath = path.join(tempDir, 'packages', 'components', 'index.ts');
+    // introduce duplicate line
+    await writeFile(
+      indexPath,
+      `export * from './BetaComponent/BetaComponent';\nexport * from './BetaComponent/BetaComponent';\n`
+    );
+    await scaffoldComponent('alpha-component');
+    const rootIndex = await readFile(indexPath, 'utf8');
+    assert.equal(
+      rootIndex,
+      `export * from './AlphaComponent/AlphaComponent';\nexport * from './BetaComponent/BetaComponent';\n`
     );
   } finally {
     process.chdir(originalCwd);
