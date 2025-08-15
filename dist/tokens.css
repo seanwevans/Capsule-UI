@@ -1,18 +1,18 @@
 @layer components;
 :root{
   --color-background: #ffffff;
-  --color-text: #0f172a;
-  --color-brand: #4f46e5;
-  --spacing-sm: 4px;
-  --spacing-md: 8px;
+  --color-brand: #ff0000;
+  --color-text: #000000;
   --spacing-lg: 16px;
+  --spacing-md: 8px;
+  --spacing-sm: 4px;
 }
 
 [data-theme="dark"]{
-  --color-background: #0f172a;
-  --color-text: #e6e8ef;
-  --color-brand: #818cf8;
-  --spacing-sm: 4px;
-  --spacing-md: 8px;
+  --color-background: #000000;
+  --color-brand: #00ff00;
+  --color-text: #ffffff;
   --spacing-lg: 16px;
+  --spacing-md: 8px;
+  --spacing-sm: 4px;
 }
