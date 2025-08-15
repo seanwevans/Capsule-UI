@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Capsule UI Tokens Schema",
+  "description": "Token keys must be lowercase letters, digits, hyphen, and underscore.",
   "type": "object",
   "properties": {
     "$schema": { "type": "string" }
