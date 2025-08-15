@@ -76,6 +76,34 @@ test('rejects component name starting with a number', async () => {
   }
 });
 
+test('rejects component name with trailing separator', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const { code, stderr } = await run(
+      ['new', 'component', 'invalid-'],
+      { cwd: tmp }
+    );
+    assert.equal(code, 1);
+    assert.match(stderr, /Invalid component name/i);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test('rejects component name with repeated separators', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const { code, stderr } = await run(
+      ['new', 'component', 'invalid__name'],
+      { cwd: tmp }
+    );
+    assert.equal(code, 1);
+    assert.match(stderr, /Invalid component name/i);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('fails when component already exists', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
