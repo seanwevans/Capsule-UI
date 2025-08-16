@@ -37,12 +37,17 @@ test('auto-fixes file without trailing newline', async () => {
   assert.equal(result.output, '@layer components;\na{color:red}');
 });
 
-test('auto-fixes and preserves LF newlines', async () => {
-  const css = 'a{color:red}\n';
-  const result = await lint(css, { fix: true });
-  assert.equal(result.errored, false);
-  assert.equal(result.output, '@layer components;\n' + css);
-});
+for (const [name, newline] of [
+  ['LF', '\n'],
+  ['CRLF', '\r\n'],
+]) {
+  test(`auto-fixes and preserves ${name} newlines`, async () => {
+    const css = `a{color:red}${newline}`;
+    const result = await lint(css, { fix: true });
+    assert.equal(result.errored, false);
+    assert.equal(result.output, `@layer components;${newline}` + css);
+  });
+}
 
 test('auto-fixes missing layer after @charset', async () => {
   const result = await lint('@charset "UTF-8";\na{color:red}', { fix: true });
@@ -51,13 +56,6 @@ test('auto-fixes missing layer after @charset', async () => {
     result.output,
     '@charset "UTF-8";\n@layer components;\na{color:red}'
   );
-});
-
-test('auto-fixes and preserves CRLF newlines', async () => {
-  const css = 'a{color:red}\r\n';
-  const result = await lint(css, { fix: true });
-  assert.equal(result.errored, false);
-  assert.equal(result.output, '@layer components;\r\n' + css);
 });
 
 test('supports custom layer name', async () => {
