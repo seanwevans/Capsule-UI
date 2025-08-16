@@ -5,7 +5,8 @@
   "scripts": {
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
-    "lint": "npm run lint:css && npm run lint:js",
+    "lint": "pnpm run lint:css && pnpm run lint:js",
+    "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
     "test": "node --test",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
