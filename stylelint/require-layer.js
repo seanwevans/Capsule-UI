@@ -16,6 +16,17 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
   expected: (name) => `Expected '@layer ${name}' declaration.`,
 });
 
+function getLineEnding(root) {
+  const css = root && root.source && root.source.input && root.source.input.css;
+  if (
+    stylelint.utils &&
+    typeof stylelint.utils.getLineEnding === 'function'
+  ) {
+    return stylelint.utils.getLineEnding(css);
+  }
+  return css && css.includes('\r\n') ? '\r\n' : '\n';
+}
+
 module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, context) {
   return (root, result) => {
     const validOptions = stylelint.utils.validateOptions(result, ruleName, {
@@ -30,28 +41,7 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
     }
 
     const expected = options.name || 'components';
-
-    const source = root.source && root.source.input && root.source.input.css;
-    let newline = '\n';
-    if (root.raws && typeof root.raws.after === 'string' && root.raws.after.length > 0) {
-      newline = root.raws.after.includes('\r\n') ? '\r\n' : '\n';
-    } else if (
-      root.raws &&
-      typeof root.raws.semicolon === 'string' &&
-      root.raws.semicolon.length > 0
-    ) {
-      newline = root.raws.semicolon.includes('\r\n') ? '\r\n' : '\n';
-    } else if (source && source.includes('\r\n')) {
-      newline = '\r\n';
-    } else if (root.raws) {
-      for (const key in root.raws) {
-        const value = root.raws[key];
-        if (typeof value === 'string' && value.includes('\r\n')) {
-          newline = '\r\n';
-          break;
-        }
-      }
-    }
+    const newline = getLineEnding(root);
 
     let hasLayer = false;
     root.walkAtRules('layer', (rule) => {
