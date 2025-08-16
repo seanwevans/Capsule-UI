@@ -1,6 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { mkdtemp, rm, access, readFile, writeFile } = require('node:fs/promises');
+const {
+  mkdtemp,
+  rm,
+  access,
+  readFile,
+  writeFile,
+  mkdir,
+} = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
 const { execFile } = require('node:child_process');
@@ -202,6 +209,26 @@ test('deduplicates and sorts root components index', async () => {
       rootIndex,
       `export * from './AlphaComponent/AlphaComponent';\nexport * from './BetaComponent/BetaComponent';\n`
     );
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('cleans up generated files on failure', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const componentsDir = path.join(tempDir, 'packages', 'components');
+    await mkdir(componentsDir, { recursive: true });
+    const indexPath = path.join(componentsDir, 'index.ts');
+    await mkdir(indexPath, { recursive: true });
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    const result = await scaffoldComponent('broken-component');
+    assert.equal(result, false);
+    const baseDir = path.join(componentsDir, 'BrokenComponent');
+    await assert.rejects(() => access(baseDir));
   } finally {
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });

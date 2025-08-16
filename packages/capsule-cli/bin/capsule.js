@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, mkdir, writeFile, readFile } from 'node:fs/promises';
+import { access, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -141,12 +141,19 @@ export async function scaffoldComponent(rawName) {
     const indexSrc = `export * from './${name}';\n`;
     const testSrc = `describe('${name}', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`;
 
-    await writeFile(componentFile, componentSrc, 'utf8');
-    await writeFile(styleFile, styleSrc, 'utf8');
-    await writeFile(indexFile, indexSrc, 'utf8');
-    await writeFile(testFile, testSrc, 'utf8');
+    try {
+      await writeFile(componentFile, componentSrc, 'utf8');
+      await writeFile(styleFile, styleSrc, 'utf8');
+      await writeFile(indexFile, indexSrc, 'utf8');
+      await writeFile(testFile, testSrc, 'utf8');
 
-    await updateComponentsIndex(name);
+      await updateComponentsIndex(name);
+    } catch (err) {
+      await rm(baseDir, { recursive: true, force: true });
+      console.error('Error scaffolding component:', err);
+      return false;
+    }
+
     console.log(`Scaffolded component at ${baseDir}`);
     return true;
   } catch (err) {
