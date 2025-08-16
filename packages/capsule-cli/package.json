@@ -9,5 +9,8 @@
   "dependencies": {
     "commander": "^14.0.0"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "packageManager": "pnpm@10.5.2"
 }
