@@ -1,7 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
 import * as csstree from 'css-tree';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 interface TokenNode {
   $type?: string;
@@ -90,7 +93,6 @@ function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] =
 }
 
 async function build() {
-  const root = process.cwd();
   const src = path.join(root, 'tokens', 'source', 'tokens.json');
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
