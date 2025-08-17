@@ -55,6 +55,20 @@ test('scaffolds component with mixed-case name', async () => {
   }
 });
 
+test('scaffolds component to custom directory via CLI', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const { code } = await run(
+      ['new', 'component', 'custom-dir-comp', '--dir', 'custom-components'],
+      { cwd: tmp }
+    );
+    assert.equal(code, 0);
+    await access(path.join(tmp, 'custom-components', 'CustomDirComp'));
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('rejects invalid component name', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
@@ -162,6 +176,21 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       rootIndex,
       `export * from './ExampleComponent/ExampleComponent';\n`
     );
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('scaffoldComponent respects custom base directory', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    const result = await scaffoldComponent('custom-base', 'custom-dir');
+    assert.equal(result, true);
+    await access(path.join(tempDir, 'custom-dir', 'CustomBase'));
   } finally {
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });
