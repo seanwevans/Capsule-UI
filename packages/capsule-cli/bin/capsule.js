@@ -69,9 +69,14 @@ if (
 
 function runCommand(command, params) {
   return new Promise((resolve, reject) => {
+    const cmd =
+      process.platform === 'win32' && command === 'pnpm'
+        ? `${command}.cmd`
+        : command;
+
     let child;
     try {
-      child = spawn(command, params, { stdio: 'inherit' });
+      child = spawn(cmd, params, { stdio: 'inherit' });
     } catch (err) {
       if (err.code === 'ENOENT') {
         console.error(`${command} not found; install ${command} or adjust PATH.`);

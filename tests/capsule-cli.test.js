@@ -25,6 +25,31 @@ function run(args, options = {}) {
   });
 }
 
+function runWin(args, options = {}) {
+  return new Promise((resolve) => {
+    const script = [
+      "const path = require('node:path');",
+      "const cli = path.join(process.cwd(), 'packages', 'capsule-cli', 'bin', 'capsule.js');",
+      "Object.defineProperty(process, 'platform', { value: 'win32' });",
+      "process.argv = ['node', cli, ...process.argv.slice(1)];",
+      "(async () => { await import(cli); })();",
+    ].join('\n');
+
+    execFile(
+      process.execPath,
+      ['-e', script, ...args],
+      { cwd: root, env: { ...process.env, ...(options.env || {}) } },
+      (error, stdout, stderr) => {
+        resolve({
+          code: error && typeof error.code === 'number' ? error.code : 0,
+          stdout,
+          stderr,
+        });
+      }
+    );
+  });
+}
+
 test('tokens build surfaces pnpm exit code', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
@@ -57,6 +82,19 @@ test('reports error when pnpm is missing', async () => {
     const { code, stderr } = await run(['tokens', 'build'], { env: { PATH: tmp } });
     assert.equal(code, 1);
     assert.match(stderr, /pnpm not found/);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test('resolves pnpm.cmd on Windows', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    const pnpm = path.join(tmp, 'pnpm.cmd');
+    await writeFile(pnpm, '#!/bin/sh\nexit 0\n');
+    await chmod(pnpm, 0o755);
+    const { code } = await runWin(['tokens', 'build'], { env: { PATH: tmp } });
+    assert.equal(code, 0);
   } finally {
     await rm(tmp, { recursive: true, force: true });
   }
