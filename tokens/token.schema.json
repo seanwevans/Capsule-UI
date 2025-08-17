@@ -16,7 +16,14 @@
       "properties": {
         "$type": {
           "type": "string",
-          "enum": ["color", "dimension", "number", "font-size"]
+          "enum": [
+            "color",
+            "dimension",
+            "number",
+            "font-size",
+            "font-weight",
+            "duration"
+          ]
         },
         "$value": {
           "anyOf": [

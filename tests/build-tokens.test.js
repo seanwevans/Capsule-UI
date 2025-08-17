@@ -233,7 +233,7 @@ test('rejects invalid extended formats', async () => {
   }
 });
 
-test('accepts number and font-size tokens', { concurrency: false }, async () => {
+test('accepts number, font-size, font-weight, and duration tokens', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
@@ -241,7 +241,9 @@ test('accepts number and font-size tokens', { concurrency: false }, async () => 
       JSON.stringify(
         {
           metrics: { weight: { $type: 'number', $value: 400 } },
-          font: { base: { $type: 'font-size', $value: '16px' } }
+          font: { base: { $type: 'font-size', $value: '16px' } },
+          boldness: { text: { $type: 'font-weight', $value: 700 } },
+          motion: { fast: { $type: 'duration', $value: '200ms' } }
         },
         null,
         2
@@ -251,17 +253,21 @@ test('accepts number and font-size tokens', { concurrency: false }, async () => 
     const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
     assert.match(css, /--metrics-weight: 400;/);
     assert.match(css, /--font-base: 16px;/);
+    assert.match(css, /--boldness-text: 700;/);
+    assert.match(css, /--motion-fast: 200ms;/);
     const json = JSON.parse(
       await fs.readFile(path.join(root, 'dist', 'tokens.json'), 'utf8')
     );
     assert.equal(json['--metrics-weight'].light, 400);
     assert.equal(json['--font-base'].light, '16px');
+    assert.equal(json['--boldness-text'].light, 700);
+    assert.equal(json['--motion-fast'].light, '200ms');
   } finally {
     await fs.writeFile(tokensPath, original);
   }
 });
 
-test('rejects invalid number and font-size values', { concurrency: false }, async () => {
+test('rejects invalid number, font-size, font-weight, and duration values', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
     await fs.writeFile(
@@ -275,6 +281,18 @@ test('rejects invalid number and font-size values', { concurrency: false }, asyn
       JSON.stringify({ font: { bad: { $type: 'font-size', $value: 'huge' } } }, null, 2)
     );
     await assert.rejects(runBuild(), /invalid font-size value/);
+
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ weight: { bad: { $type: 'font-weight', $value: 'heavy' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /invalid font-weight value/);
+
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ motion: { bad: { $type: 'duration', $value: 'fast' } } }, null, 2)
+    );
+    await assert.rejects(runBuild(), /invalid duration value/);
   } finally {
     await fs.writeFile(tokensPath, original);
   }
