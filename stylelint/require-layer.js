@@ -3,11 +3,14 @@ const stylelint = require('stylelint');
 /**
  * Stylelint rule enforcing a named `@layer` declaration.
  *
- * @param {{name?: string}} [options] configuration with expected layer name (default: "components").
+ * @param {{name?: string|string[], names?: string|string[]}} [options] configuration with
+ * expected layer name(s) (default: "components").
  * @example
  * // stylelint config
  * {
- *   "rules": { "capsule-ui/require-layer": { "name": "my-layer" } }
+ *   "rules": {
+ *     "capsule-ui/require-layer": { "names": ["layer-a", "layer-b"] }
+ *   }
  * }
  * // Missing layer will be auto-inserted when `--fix` is used.
  */
@@ -27,12 +30,17 @@ function getLineEnding(root) {
   return css && css.includes('\r\n') ? '\r\n' : '\n';
 }
 
+function isStringArray(value) {
+  return Array.isArray(value) && value.every((v) => typeof v === 'string');
+}
+
 module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, context) {
   return (root, result) => {
     const validOptions = stylelint.utils.validateOptions(result, ruleName, {
       actual: options,
       possible: {
-        name: [String],
+        name: [String, isStringArray],
+        names: [String, isStringArray],
       },
       optional: true,
     });
@@ -40,7 +48,10 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
       return;
     }
 
-    const expected = options.name || 'components';
+    let expected = options.names || options.name || 'components';
+    if (!Array.isArray(expected)) {
+      expected = [expected];
+    }
     const newline = getLineEnding(root);
 
     let hasLayer = false;
@@ -52,12 +63,13 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
         .split(',')
         .map((l) => l.trim())
         .filter(Boolean);
-      if (layers.includes(expected)) {
+      if (expected.some((name) => layers.includes(name))) {
         hasLayer = true;
       }
     });
 
     if (!hasLayer) {
+      const first = expected[0];
       if (context && context.fix) {
         let insertAfter = null;
         const skip = new Set(['charset', 'import', 'namespace']);
@@ -71,9 +83,9 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
         }
 
         if (insertAfter) {
-          insertAfter.after(`${newline}@layer ${expected};${newline}`);
+          insertAfter.after(`${newline}@layer ${first};${newline}`);
         } else {
-          root.prepend(`@layer ${expected};${newline}`);
+          root.prepend(`@layer ${first};${newline}`);
           if (root.nodes[1]) {
             root.nodes[1].raws.before = root.nodes[1].raws.before || newline;
           }
@@ -83,7 +95,7 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
           ruleName,
           result,
           node: root,
-          message: messages.expected(expected),
+          message: messages.expected(first),
         });
       }
     }

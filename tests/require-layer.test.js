@@ -74,6 +74,23 @@ test('supports custom layer name', async () => {
   assert.equal(fixed.output, '@layer custom;\na{color:red}');
 });
 
+test('passes when any configured layer name is present', async () => {
+  const result = await lint('@layer utilities;\na{color:red}', {
+    config: { names: ['components', 'utilities'] },
+  });
+  assert.equal(result.errored, false);
+  assert.equal(result.results[0].warnings.length, 0);
+});
+
+test('auto-fixes using first configured layer name', async () => {
+  const result = await lint('a{color:red}', {
+    fix: true,
+    config: { names: ['utilities', 'components'] },
+  });
+  assert.equal(result.errored, false);
+  assert.equal(result.output, '@layer utilities;\na{color:red}');
+});
+
 test('passes when layer is comma-separated', async () => {
   const result = await lint('@layer base, components;\na{color:red}');
   assert.equal(result.errored, false);
