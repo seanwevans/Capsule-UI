@@ -298,22 +298,45 @@ test('rejects invalid number, font-size, font-weight, and duration values', { co
   }
 });
 
-test('generates type declarations for tokens', async () => {
-  await runBuild();
-  const dts = await fs.readFile(path.join(root, 'dist', 'tokens.d.ts'), 'utf8');
+test('generates type declarations for tokens', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(tokensPath, original);
+    await runBuild();
+    const dts = await fs.readFile(path.join(root, 'dist', 'tokens.d.ts'), 'utf8');
 
-  assert.match(dts, /export type TokenName/);
-  for (const name of [
-    '--color-background',
-    '--color-text',
-    '--color-brand',
-    '--spacing-sm',
-    '--spacing-md',
-    '--spacing-lg'
-  ]) {
-    assert.match(dts, new RegExp(name));
+    assert.match(dts, /export type TokenName/);
+    for (const name of [
+      '--color-background',
+      '--color-text',
+      '--color-brand',
+      '--spacing-sm',
+      '--spacing-md',
+      '--spacing-lg'
+    ]) {
+      assert.match(dts, new RegExp(name));
+    }
+
+    assert.match(dts, /export type ThemeName = 'light' \| 'dark';/);
+    assert.match(dts, /export type TokenValues = Record<ThemeName, string \| number>;/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
   }
+});
 
-  assert.match(dts, /export type ThemeName = 'light' \| 'dark';/);
-  assert.match(dts, /export type TokenValues = Record<ThemeName, string \| number>;/);
+test('generates JavaScript module for tokens', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(tokensPath, original);
+    await runBuild();
+    const js = await fs.readFile(path.join(root, 'dist', 'tokens.js'), 'utf8');
+    assert.match(js, /export const tokens/);
+    const mod = await import('../dist/tokens.js');
+    assert.deepEqual(mod.default['--color-background'], {
+      light: '#ffffff',
+      dark: '#000000',
+    });
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
 });

@@ -177,6 +177,11 @@ async function build() {
     JSON.stringify(jsonOut, null, 2) + '\n'
   );
 
+  const js =
+    `export const tokens = ${JSON.stringify(jsonOut, null, 2)};\n` +
+    `export default tokens;\n`;
+  await fs.writeFile(path.join(dist, 'tokens.js'), js);
+
   const names = Object.keys(jsonOut)
     .map(n => `'${n}'`)
     .join(' | ');
