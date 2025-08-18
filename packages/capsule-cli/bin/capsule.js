@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { access, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, isAbsolute } from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -23,7 +23,8 @@ program
   )
   .argument('<type>', 'Resource type (currently only "component" is supported)')
   .argument('<name>', 'Name of the component (kebab- or snake-case allowed)')
-  .action(async (type, name) => {
+  .option('--dir <path>', 'Base directory for components', 'packages/components')
+  .action(async (type, name, options) => {
     if (type !== 'component') {
       console.error('Error: only "component" type is supported.');
       process.exitCode = 1;
@@ -34,7 +35,7 @@ program
       process.exitCode = 1;
       return;
     }
-    const ok = await scaffoldComponent(name);
+    const ok = await scaffoldComponent(name, options.dir);
     process.exitCode = ok ? 0 : 1;
   });
 
@@ -107,7 +108,7 @@ function runCommand(command, params) {
   });
 }
 
-export async function scaffoldComponent(rawName) {
+export async function scaffoldComponent(rawName, baseDir = 'packages/components') {
   try {
     const validName = /^[a-z](?:[a-z0-9]*(?:[-_][a-z0-9]+)*)$/i;
     if (!validName.test(rawName)) {
@@ -117,23 +118,26 @@ export async function scaffoldComponent(rawName) {
       return false;
     }
     const name = toPascalCase(rawName);
-    const baseDir = join(process.cwd(), 'packages', 'components', name);
+    const componentsDir = isAbsolute(baseDir)
+      ? baseDir
+      : join(process.cwd(), baseDir);
+    const componentDir = join(componentsDir, name);
 
     try {
-      await access(baseDir);
+      await access(componentDir);
       console.error(`Component "${name}" already exists`);
       return false;
     } catch {
       // directory does not exist; continue
     }
 
-    await mkdir(baseDir, { recursive: true });
-    const testDir = join(baseDir, '__tests__');
+    await mkdir(componentDir, { recursive: true });
+    const testDir = join(componentDir, '__tests__');
     await mkdir(testDir, { recursive: true });
 
-    const componentFile = join(baseDir, `${name}.ts`);
-    const styleFile = join(baseDir, 'style.ts');
-    const indexFile = join(baseDir, 'index.ts');
+    const componentFile = join(componentDir, `${name}.ts`);
+    const styleFile = join(componentDir, 'style.ts');
+    const indexFile = join(componentDir, 'index.ts');
     const testFile = join(testDir, `${name}.test.ts`);
 
     const componentSrc = `export const ${name} = () => {\n  // TODO: implement ${name} component\n};\n`;
@@ -147,14 +151,14 @@ export async function scaffoldComponent(rawName) {
       await writeFile(indexFile, indexSrc, 'utf8');
       await writeFile(testFile, testSrc, 'utf8');
 
-      await updateComponentsIndex(name);
+      await updateComponentsIndex(name, componentsDir);
     } catch (err) {
-      await rm(baseDir, { recursive: true, force: true });
+      await rm(componentDir, { recursive: true, force: true });
       console.error('Error scaffolding component:', err);
       return false;
     }
 
-    console.log(`Scaffolded component at ${baseDir}`);
+    console.log(`Scaffolded component at ${componentDir}`);
     return true;
   } catch (err) {
     console.error('Error scaffolding component:', err);
@@ -162,8 +166,7 @@ export async function scaffoldComponent(rawName) {
   }
 }
 
-async function updateComponentsIndex(name) {
-  const componentsDir = join(process.cwd(), 'packages', 'components');
+async function updateComponentsIndex(name, componentsDir) {
   await mkdir(componentsDir, { recursive: true });
   const indexPath = join(componentsDir, 'index.ts');
   const exportLine = `export * from './${name}/${name}';`;
