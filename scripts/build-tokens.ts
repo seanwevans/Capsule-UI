@@ -53,6 +53,24 @@ function validateToken(name: string, type: string | undefined, value: any) {
       if (match.error) {
         throw new Error(`Token '${name}' has invalid font-size value '${value}'`);
       }
+    },
+    'font-weight': value => {
+      if (typeof value !== 'string' && typeof value !== 'number') {
+        throw new Error(`Token '${name}' has invalid font-weight value '${value}'`);
+      }
+      const match = csstree.lexer.matchProperty('font-weight', String(value));
+      if (match.error) {
+        throw new Error(`Token '${name}' has invalid font-weight value '${value}'`);
+      }
+    },
+    duration: value => {
+      if (typeof value !== 'string') {
+        throw new Error(`Token '${name}' has invalid duration value '${value}'`);
+      }
+      const isTime = csstree.lexer.matchType('time', value).error === null;
+      if (!isTime) {
+        throw new Error(`Token '${name}' has invalid duration value '${value}'`);
+      }
     }
   };
 
