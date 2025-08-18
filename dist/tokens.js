@@ -1,0 +1,27 @@
+export const tokens = {
+  "--color-background": {
+    "light": "#ffffff",
+    "dark": "#000000"
+  },
+  "--color-brand": {
+    "light": "#ff0000",
+    "dark": "#00ff00"
+  },
+  "--color-text": {
+    "light": "#000000",
+    "dark": "#ffffff"
+  },
+  "--spacing-lg": {
+    "light": "16px",
+    "dark": "16px"
+  },
+  "--spacing-md": {
+    "light": "8px",
+    "dark": "8px"
+  },
+  "--spacing-sm": {
+    "light": "4px",
+    "dark": "4px"
+  }
+};
+export default tokens;
