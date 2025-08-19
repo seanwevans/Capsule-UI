@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
-import * as csstree from 'css-tree';
+import { validators } from './token-validators.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -14,75 +14,20 @@ interface TokenNode {
 
 /* eslint-disable no-unused-vars */
 type FlatToken = { name: string; value: any };
-type Validator = (value: any) => void;
 /* eslint-enable no-unused-vars */
 
 function validateToken(name: string, type: string | undefined, value: any) {
   if (!type) throw new Error(`Token '${name}' is missing $type`);
-
-  const validators: Record<string, Validator> = {
-    color: value => {
-      if (typeof value !== 'string') {
-        throw new Error(`Token '${name}' has invalid color value '${value}'`);
-      }
-      const match = csstree.lexer.matchProperty('color', value);
-      if (match.error) {
-        throw new Error(`Token '${name}' has invalid color value '${value}'`);
-      }
-    },
-    dimension: value => {
-      if (typeof value !== 'string') {
-        throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
-      }
-      const isLength = csstree.lexer.matchType('length', value).error === null;
-      const isPercent = csstree.lexer.matchType('percentage', value).error === null;
-      if (!isLength && !isPercent) {
-        throw new Error(`Token '${name}' has invalid dimension value '${value}'`);
-      }
-    },
-    number: value => {
-      if (typeof value !== 'number' || Number.isNaN(value)) {
-        throw new Error(`Token '${name}' has invalid number value '${value}'`);
-      }
-    },
-    'font-size': value => {
-      if (typeof value !== 'string') {
-        throw new Error(`Token '${name}' has invalid font-size value '${value}'`);
-      }
-      const match = csstree.lexer.matchProperty('font-size', value);
-      if (match.error) {
-        throw new Error(`Token '${name}' has invalid font-size value '${value}'`);
-      }
-    },
-    'font-weight': value => {
-      if (typeof value !== 'string' && typeof value !== 'number') {
-        throw new Error(`Token '${name}' has invalid font-weight value '${value}'`);
-      }
-      const match = csstree.lexer.matchProperty('font-weight', String(value));
-      if (match.error) {
-        throw new Error(`Token '${name}' has invalid font-weight value '${value}'`);
-      }
-    },
-    duration: value => {
-      if (typeof value !== 'string') {
-        throw new Error(`Token '${name}' has invalid duration value '${value}'`);
-      }
-      const isTime = csstree.lexer.matchType('time', value).error === null;
-      if (!isTime) {
-        throw new Error(`Token '${name}' has invalid duration value '${value}'`);
-      }
-    }
-  };
 
   const validate = validators[type];
   if (!validate) throw new Error(`Unknown $type '${type}' for token '${name}'`);
 
   if (value !== null && typeof value === 'object') {
     for (const v of Object.values(value)) {
-      validate(v);
+      validate(name, v);
     }
   } else {
-    validate(value);
+    validate(name, value);
   }
 }
 
