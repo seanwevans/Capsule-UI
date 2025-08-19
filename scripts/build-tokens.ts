@@ -96,10 +96,12 @@ async function build() {
   }
   if (themeNames.size === 0) themeNames.add('light');
 
+  const themesList = [...themeNames].sort();
+
   // Ensure every token with theme-specific values defines all themes
   for (const t of tokens) {
     if (typeof t.value === 'object') {
-      for (const theme of themeNames) {
+      for (const theme of themesList) {
         if (!(theme in t.value)) {
           throw new Error(`Token '${t.name}' is missing theme '${theme}'`);
         }
@@ -109,7 +111,7 @@ async function build() {
 
   // Prepare containers for CSS and JSON outputs
   const themes: Record<string, string[]> = {};
-  for (const theme of themeNames) {
+  for (const theme of themesList) {
     themes[theme] = [];
   }
   const jsonOut: Record<string, Record<string, string | number>> = {};
@@ -120,7 +122,7 @@ async function build() {
       typeof t.value === 'object'
         ? t.value.light ?? Object.values(t.value)[0]
         : t.value;
-    for (const theme of themeNames) {
+    for (const theme of themesList) {
       const val =
         typeof t.value === 'object' ? t.value[theme] ?? defaultVal : defaultVal;
       themes[theme].push(`  ${cssVar}: ${val};`);
@@ -128,12 +130,10 @@ async function build() {
       jsonOut[cssVar][theme] = val;
     }
   }
-
-  const defaultTheme = themeNames.has('light')
-    ? 'light'
-    : Array.from(themeNames)[0];
+ 
+  const defaultTheme = themesList.includes('light') ? 'light' : themesList[0];
   let css = `@layer components;\n:root{\n${themes[defaultTheme].join('\n')}\n}`;
-  for (const theme of themeNames) {
+  for (const theme of themesList) {
     if (theme === defaultTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;
   }
@@ -151,9 +151,7 @@ async function build() {
   const names = Object.keys(jsonOut)
     .map(n => `'${n}'`)
     .join(' | ');
-  const themeUnion = Array.from(themeNames)
-    .map(t => `'${t}'`)
-    .join(' | ');
+  const themeUnion = themesList.map(t => `'${t}'`).join(' | ');
   const dts =
     `export type ThemeName = ${themeUnion};\n` +
     `export type TokenName = ${names};\n` +
