@@ -10,6 +10,7 @@ const {
 } = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
+const process = require('node:process');
 const { execFile } = require('node:child_process');
 
 const cli = path.join(
@@ -23,7 +24,7 @@ const cli = path.join(
 
 function run(args, options = {}) {
   return new Promise((resolve) => {
-    execFile('node', [cli, ...args], options, (error, stdout, stderr) => {
+    execFile(process.execPath, [cli, ...args], options, (error, stdout, stderr) => {
       resolve({
         code: error && typeof error.code === 'number' ? error.code : 0,
         stdout,
