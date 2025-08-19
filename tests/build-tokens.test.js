@@ -113,6 +113,26 @@ test('rejects uppercase token names', { concurrency: false }, async () => {
   }
 });
 
+test('rejects duplicate token names', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        {
+          'color-background': { $type: 'color', $value: '#fff' },
+          color: { background: { $type: 'color', $value: '#000' } }
+        },
+        null,
+        2
+      )
+    );
+    await assert.rejects(runBuild(), /Duplicate token name 'color-background'/);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('accepts valid token names', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {

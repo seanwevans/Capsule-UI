@@ -31,7 +31,12 @@ function validateToken(name: string, type: string | undefined, value: any) {
   }
 }
 
-function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] = []): FlatToken[] {
+function flattenTokens(
+  obj: TokenNode,
+  prefix: string[] = [],
+  out: FlatToken[] = [],
+  seen: Set<string> = new Set()
+): FlatToken[] {
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
     if (!/^[a-z0-9_-]+$/.test(key)) {
@@ -43,13 +48,18 @@ function flattenTokens(obj: TokenNode, prefix: string[] = [], out: FlatToken[] =
     const name = [...prefix, key].join('.');
     if (val && typeof val === 'object' && '$value' in val) {
       if (val.$value === undefined) throw new Error(`Token '${name}' is missing $value`);
+      const nameKey = name.replace(/\./g, '-');
+      if (seen.has(nameKey)) {
+        throw new Error(`Duplicate token name '${nameKey}'`);
+      }
+      seen.add(nameKey);
       validateToken(name, val.$type, val.$value);
       out.push({ name, value: val.$value });
     } else if (val && typeof val === 'object') {
       if ('$type' in val && !('$value' in val)) {
         throw new Error(`Token '${name}' is missing $value`);
       }
-      flattenTokens(val, [...prefix, key], out);
+      flattenTokens(val, [...prefix, key], out, seen);
     }
   }
   return out;
