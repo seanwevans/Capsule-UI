@@ -49,6 +49,13 @@ tokens
   });
 
 tokens
+  .command('validate')
+  .description('Validate design tokens')
+  .action(async () => {
+    process.exitCode = await runCommand('pnpm', ['run', 'tokens:validate']);
+  });
+
+tokens
   .command('watch')
   .description('Watch design tokens and rebuild on changes')
   .action(async () => {
