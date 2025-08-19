@@ -3,14 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
 import { validators } from './token-validators.js';
+import type { TokenNode } from './token-types.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-interface TokenNode {
-  $type?: string;
-  $value?: any;
-  [key: string]: any;
-}
 
 /* eslint-disable no-unused-vars */
 type FlatToken = { name: string; value: any };

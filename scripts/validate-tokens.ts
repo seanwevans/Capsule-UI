@@ -2,10 +2,15 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
+import * as csstree from 'css-tree';
+import type { TokenNode } from './token-types.js';
 import { validators } from './token-validators.js';
-import type { Validator } from './token-validators.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+/* eslint-disable no-unused-vars */
+type Validator = (value: any) => void;
+/* eslint-enable no-unused-vars */
 
 interface TokenNode {
   $type?: string;
