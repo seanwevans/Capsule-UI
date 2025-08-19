@@ -62,6 +62,31 @@ test('build tokens validation errors', { concurrency: false }, async () => {
   }
 });
 
+test('rejects tokens missing theme values', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        {
+          color: {
+            background: { $type: 'color', $value: { light: '#fff', dark: '#000' } },
+            incomplete: { $type: 'color', $value: { light: '#fff' } }
+          }
+        },
+        null,
+        2
+      )
+    );
+    await assert.rejects(
+      runBuild(),
+      /Token 'color\.incomplete' is missing theme 'dark'/
+    );
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('rejects invalid token names', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
