@@ -197,6 +197,41 @@ test('accepts various color formats and outputs sorted tokens', { concurrency: f
   }
 });
 
+test('outputs themes in deterministic order', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify(
+        {
+          color: {
+            background: {
+              $type: 'color',
+              $value: { beta: '#bbb', alpha: '#aaa', gamma: '#ccc' }
+            }
+          }
+        },
+        null,
+        2
+      )
+    );
+    await runBuild();
+    const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+    const themeOrder = Array.from(css.matchAll(/\[data-theme="([^"]+)"\]/g)).map(
+      m => m[1]
+    );
+    assert.deepEqual(themeOrder, ['beta', 'gamma']);
+    assert.match(css, /:root{\n  --color-background: #aaa;\n}/);
+    const json = await fs.readFile(path.join(root, 'dist', 'tokens.json'), 'utf8');
+    const alpha = json.indexOf('"alpha"');
+    const beta = json.indexOf('"beta"');
+    const gamma = json.indexOf('"gamma"');
+    assert(alpha < beta && beta < gamma);
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
 test('accepts negative dimension values', { concurrency: false }, async () => {
   const original = await fs.readFile(tokensPath, 'utf8');
   try {
@@ -362,7 +397,7 @@ test('generates type declarations for tokens', { concurrency: false }, async () 
       assert.match(dts, new RegExp(name));
     }
 
-    assert.match(dts, /export type ThemeName = 'light' \| 'dark';/);
+    assert.match(dts, /export type ThemeName = 'dark' \| 'light';/);
     assert.match(dts, /export type TokenValues = Record<ThemeName, string \| number>;/);
   } finally {
     await fs.writeFile(tokensPath, original);
