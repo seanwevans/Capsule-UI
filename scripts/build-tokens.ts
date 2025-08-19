@@ -141,6 +141,17 @@ async function build() {
   }
   if (themeNames.size === 0) themeNames.add('light');
 
+  // Ensure every token with theme-specific values defines all themes
+  for (const t of tokens) {
+    if (typeof t.value === 'object') {
+      for (const theme of themeNames) {
+        if (!(theme in t.value)) {
+          throw new Error(`Token '${t.name}' is missing theme '${theme}'`);
+        }
+      }
+    }
+  }
+
   // Prepare containers for CSS and JSON outputs
   const themes: Record<string, string[]> = {};
   for (const theme of themeNames) {
