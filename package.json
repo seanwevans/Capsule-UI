@@ -9,6 +9,7 @@
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
     "test": "node --test",
     "tokens:build": "tsx scripts/build-tokens.ts",
+    "tokens:validate": "tsx scripts/validate-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
   },
   "devDependencies": {
