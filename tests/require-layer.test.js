@@ -58,6 +58,26 @@ test('auto-fixes missing layer after @charset', async () => {
   );
 });
 
+test('auto-fixes after top-level comments', async () => {
+  const css = '/* theme */\n/* comment */\na{color:red}';
+  const result = await lint(css, { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(
+    result.output,
+    '/* theme */\n/* comment */\n@layer components;\na{color:red}'
+  );
+});
+
+test('auto-fixes after comments and existing @charset', async () => {
+  const css = '/* theme */\n@charset "UTF-8";\na{color:red}';
+  const result = await lint(css, { fix: true });
+  assert.equal(result.errored, false);
+  assert.equal(
+    result.output,
+    '/* theme */\n@charset "UTF-8";\n@layer components;\na{color:red}'
+  );
+});
+
 test('supports custom layer name', async () => {
   const result = await lint('a{color:red}', { config: { name: 'custom' } });
   assert.equal(result.errored, true);

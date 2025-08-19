@@ -75,7 +75,10 @@ module.exports = stylelint.createPlugin(ruleName, function (options = {}, _, con
         const skip = new Set(['charset', 'import', 'namespace']);
 
         for (const node of root.nodes || []) {
-          if (node.type === 'atrule' && skip.has(node.name)) {
+          if (
+            node.type === 'comment' ||
+            (node.type === 'atrule' && skip.has(node.name))
+          ) {
             insertAfter = node;
             continue;
           }
