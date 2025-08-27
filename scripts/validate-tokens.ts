@@ -2,7 +2,6 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
-import * as csstree from 'css-tree';
 import type { TokenNode } from './token-types.js';
 import { validators } from './token-validators.js';
 
@@ -11,12 +10,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /* eslint-disable no-unused-vars */
 type Validator = (value: any) => void;
 /* eslint-enable no-unused-vars */
-
-interface TokenNode {
-  $type?: string;
-  $value?: any;
-  [key: string]: any;
-}
 
 function validateToken(name: string, type: string | undefined, value: any) {
   if (!type) throw new Error(`Token '${name}' is missing $type`);
