@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
 import type { TokenNode } from './token-types.js';
-import { validators } from './token-validators.js';
+import { traverseTokens } from './token-utils.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -63,7 +63,7 @@ async function validate() {
     throw new Error(`Token schema validation failed: ${msg}`);
   }
 
-  traverse(raw);
+  traverseTokens(raw);
 }
 
 validate()

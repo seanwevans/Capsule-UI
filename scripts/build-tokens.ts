@@ -2,65 +2,12 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Ajv from 'ajv';
-import { validators } from './token-validators.js';
+import { flattenTokens } from './token-utils.js';
 import type { TokenNode } from './token-types.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-/* eslint-disable no-unused-vars */
-type FlatToken = { name: string; value: any };
-/* eslint-enable no-unused-vars */
-
-function validateToken(name: string, type: string | undefined, value: any) {
-  if (!type) throw new Error(`Token '${name}' is missing $type`);
-
-  const validate = validators[type];
-  if (!validate) throw new Error(`Unknown $type '${type}' for token '${name}'`);
-
-  if (value !== null && typeof value === 'object') {
-    for (const v of Object.values(value)) {
-      validate(name, v);
-    }
-  } else {
-    validate(name, value);
-  }
-}
-
-function flattenTokens(
-  obj: TokenNode,
-  prefix: string[] = [],
-  out: FlatToken[] = [],
-  seen: Set<string> = new Set()
-): FlatToken[] {
-  for (const [key, val] of Object.entries(obj)) {
-    if (key.startsWith('$')) continue;
-    if (!/^[a-z0-9_-]+$/.test(key)) {
-      const fullName = [...prefix, key].join('.');
-      throw new Error(
-        `Invalid token key '${fullName}'. Keys may only include lowercase letters, digits, hyphen, and underscore.`
-      );
-    }
-    const name = [...prefix, key].join('.');
-    if (val && typeof val === 'object' && '$value' in val) {
-      if (val.$value === undefined) throw new Error(`Token '${name}' is missing $value`);
-      const nameKey = name.replace(/\./g, '-');
-      if (seen.has(nameKey)) {
-        throw new Error(`Duplicate token name '${nameKey}'`);
-      }
-      seen.add(nameKey);
-      validateToken(name, val.$type, val.$value);
-      out.push({ name, value: val.$value });
-    } else if (val && typeof val === 'object') {
-      if ('$type' in val && !('$value' in val)) {
-        throw new Error(`Token '${name}' is missing $value`);
-      }
-      flattenTokens(val, [...prefix, key], out, seen);
-    }
-  }
-  return out;
-}
-
-async function build() {
+ async function build() {
   const src = path.join(root, 'tokens', 'source', 'tokens.json');
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
@@ -132,16 +79,9 @@ async function build() {
     if (theme === defaultTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;
   }
-  await fs.writeFile(path.join(dist, 'tokens.css'), css + '\n');
-  await fs.writeFile(
-    path.join(dist, 'tokens.json'),
-    JSON.stringify(jsonOut, null, 2) + '\n'
-  );
-
   const js =
     `export const tokens = ${JSON.stringify(jsonOut, null, 2)};\n` +
     `export default tokens;\n`;
-  await fs.writeFile(path.join(dist, 'tokens.js'), js);
 
   const names = Object.keys(jsonOut)
     .map(n => `'${n}'`)
@@ -153,7 +93,16 @@ async function build() {
     `export type TokenValues = Record<ThemeName, string | number>;\n` +
     `export const tokens: Record<TokenName, TokenValues>;\n` +
     `export default tokens;\n`;
-  await fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n');
+
+  await Promise.all([
+    fs.writeFile(path.join(dist, 'tokens.css'), css + '\n'),
+    fs.writeFile(
+      path.join(dist, 'tokens.json'),
+      JSON.stringify(jsonOut, null, 2) + '\n'
+    ),
+    fs.writeFile(path.join(dist, 'tokens.js'), js),
+    fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n')
+  ]);
 }
 
 build().catch(err => { console.error(err); process.exit(1); });

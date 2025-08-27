@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { join, isAbsolute } from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -135,15 +135,16 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
       : join(process.cwd(), baseDir);
     const componentDir = join(componentsDir, name);
 
+    await mkdir(componentsDir, { recursive: true });
     try {
-      await access(componentDir);
-      console.error(`Component "${name}" already exists`);
-      return false;
-    } catch {
-      // directory does not exist; continue
+      await mkdir(componentDir, { recursive: false });
+    } catch (err) {
+      if (err.code === 'EEXIST') {
+        console.error('Component already exists');
+        return false;
+      }
+      throw err;
     }
-
-    await mkdir(componentDir, { recursive: true });
     const testDir = join(componentDir, '__tests__');
     await mkdir(testDir, { recursive: true });
 
