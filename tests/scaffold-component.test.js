@@ -70,6 +70,29 @@ test('scaffolds component to custom directory via CLI', async () => {
   }
 });
 
+test('scaffolds multiple components out of order via CLI', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    let res = await run(['new', 'component', 'beta-component'], { cwd: tmp });
+    assert.equal(res.code, 0);
+    res = await run(['new', 'component', 'gamma-component'], { cwd: tmp });
+    assert.equal(res.code, 0);
+    res = await run(['new', 'component', 'alpha-component'], { cwd: tmp });
+    assert.equal(res.code, 0);
+    const indexPath = path.join(tmp, 'packages', 'components', 'index.ts');
+    const rootIndex = await readFile(indexPath, 'utf8');
+    const lines = rootIndex.trim().split('\n');
+    assert.equal(new Set(lines).size, lines.length);
+    assert.deepEqual(lines, [
+      `export * from './AlphaComponent/AlphaComponent';`,
+      `export * from './BetaComponent/BetaComponent';`,
+      `export * from './GammaComponent/GammaComponent';`,
+    ]);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('rejects invalid component name', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   try {
