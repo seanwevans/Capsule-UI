@@ -132,16 +132,9 @@ async function build() {
     if (theme === defaultTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;
   }
-  await fs.writeFile(path.join(dist, 'tokens.css'), css + '\n');
-  await fs.writeFile(
-    path.join(dist, 'tokens.json'),
-    JSON.stringify(jsonOut, null, 2) + '\n'
-  );
-
   const js =
     `export const tokens = ${JSON.stringify(jsonOut, null, 2)};\n` +
     `export default tokens;\n`;
-  await fs.writeFile(path.join(dist, 'tokens.js'), js);
 
   const names = Object.keys(jsonOut)
     .map(n => `'${n}'`)
@@ -153,7 +146,16 @@ async function build() {
     `export type TokenValues = Record<ThemeName, string | number>;\n` +
     `export const tokens: Record<TokenName, TokenValues>;\n` +
     `export default tokens;\n`;
-  await fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n');
+
+  await Promise.all([
+    fs.writeFile(path.join(dist, 'tokens.css'), css + '\n'),
+    fs.writeFile(
+      path.join(dist, 'tokens.json'),
+      JSON.stringify(jsonOut, null, 2) + '\n'
+    ),
+    fs.writeFile(path.join(dist, 'tokens.js'), js),
+    fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n')
+  ]);
 }
 
 build().catch(err => { console.error(err); process.exit(1); });
