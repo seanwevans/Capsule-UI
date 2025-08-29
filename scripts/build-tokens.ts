@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import Ajv from 'ajv';
 import { flattenTokens } from './token-utils.js';
+import { validateTokens } from './token-schema.js';
 import type { TokenNode } from './token-types.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -14,16 +14,7 @@ export async function build() {
   const raw = JSON.parse(await fs.readFile(src, 'utf8')) as TokenNode;
 
   // Validate source tokens against the JSON schema before further processing
-  const schemaPath = path.join(root, 'tokens', 'token.schema.json');
-  const schema = JSON.parse(await fs.readFile(schemaPath, 'utf8'));
-  const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
-  const validate = ajv.compile(schema);
-  if (!validate(raw)) {
-    const msg = (validate.errors || [])
-      .map(e => `${e.instancePath || '/'} ${e.message}`.trim())
-      .join('; ');
-    throw new Error(`Token schema validation failed: ${msg}`);
-  }
+  await validateTokens(raw);
   
   const tokens = flattenTokens(raw).sort((a, b) => a.name.localeCompare(b.name));
 

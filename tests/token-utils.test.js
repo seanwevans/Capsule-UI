@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-
+require('ts-node').register({ compilerOptions: { module: 'CommonJS' } });
 require('ts-node').register({ transpileOnly: true, compilerOptions: { module: 'CommonJS' } });
 
 const { execFile } = require('child_process');
