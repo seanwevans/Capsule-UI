@@ -13,8 +13,12 @@ function runBuild() {
   return new Promise((resolve, reject) => {
     execFile(
       'npx',
-      ['tsx', script],
-      { cwd: __dirname },
+      [
+        'tsx',
+        '-e',
+        "import('./scripts/build-tokens.ts').then(m => m.build());",
+      ],
+      { cwd: root },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
         else resolve(stdout);
