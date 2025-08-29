@@ -7,7 +7,7 @@ import type { TokenNode } from './token-types.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
- async function build() {
+export async function build() {
   const src = path.join(root, 'tokens', 'source', 'tokens.json');
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
@@ -105,4 +105,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   ]);
 }
 
-build().catch(err => { console.error(err); process.exit(1); });
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+  build().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+}
