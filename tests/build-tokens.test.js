@@ -5,15 +5,18 @@ const path = require('path');
 const { execFile } = require('child_process');
 
 const root = path.join(__dirname, '..');
-const script = path.join(root, 'scripts', 'build-tokens.ts');
 const tokensPath = path.join(root, 'tokens', 'source', 'tokens.json');
 
 function runBuild() {
   return new Promise((resolve, reject) => {
     execFile(
       'npx',
-      ['tsx', script],
-      { cwd: __dirname },
+      [
+        'tsx',
+        '-e',
+        "import('./scripts/build-tokens.ts').then(m => m.build());",
+      ],
+      { cwd: root },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
         else resolve(stdout);
