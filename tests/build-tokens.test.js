@@ -6,6 +6,7 @@ const { execFile } = require('child_process');
 
 const root = path.join(__dirname, '..');
 const script = path.join(root, 'scripts', 'build-tokens.ts');
+const validateScript = path.join(root, 'scripts', 'validate-tokens.ts');
 const tokensPath = path.join(root, 'tokens', 'source', 'tokens.json');
 
 function runBuild() {
@@ -13,6 +14,20 @@ function runBuild() {
     execFile(
       'npx',
       ['tsx', script],
+      { cwd: __dirname },
+      (error, stdout, stderr) => {
+        if (error) reject(new Error(stderr.trim()));
+        else resolve(stdout);
+      }
+    );
+  });
+}
+
+function runValidate() {
+  return new Promise((resolve, reject) => {
+    execFile(
+      'npx',
+      ['tsx', validateScript],
       { cwd: __dirname },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
@@ -57,6 +72,25 @@ test('build tokens validation errors', { concurrency: false }, async () => {
       runBuild(),
       /Token schema validation failed: .*must have required property '\$type'/
     );
+  } finally {
+    await fs.writeFile(tokensPath, original);
+  }
+});
+
+test('validate script uses shared schema validator', { concurrency: false }, async () => {
+  const original = await fs.readFile(tokensPath, 'utf8');
+  try {
+    await fs.writeFile(
+      tokensPath,
+      JSON.stringify({ color: { bad: { $type: 'unknown', $value: '#fff' } } }, null, 2)
+    );
+    const buildErr = await runBuild().catch(e => e);
+    const validateErr = await runValidate().catch(e => e);
+    const sanitize = (msg) =>
+      msg
+        .split('\n')
+        .filter(line => !line.startsWith('npm warn') && line.trim() !== '')[0];
+    assert.equal(sanitize(buildErr.message), sanitize(validateErr.message));
   } finally {
     await fs.writeFile(tokensPath, original);
   }

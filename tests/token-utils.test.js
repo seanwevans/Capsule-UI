@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-require('ts-node/register');
+require('ts-node').register({ compilerOptions: { module: 'CommonJS' } });
 
 const { traverseTokens, flattenTokens, validateToken } = require('../scripts/token-utils.ts');
 
