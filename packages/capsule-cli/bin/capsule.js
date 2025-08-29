@@ -158,6 +158,16 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const indexSrc = `export * from './${name}';\n`;
     const testSrc = `describe('${name}', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`;
 
+    const componentsIndexPath = join(componentsDir, 'index.ts');
+    let previousIndex = '';
+    let indexExisted = true;
+    try {
+      previousIndex = await readFile(componentsIndexPath, 'utf8');
+    } catch {
+      indexExisted = false;
+    }
+
+    let indexUpdated = false;
     try {
       await writeFile(componentFile, componentSrc, 'utf8');
       await writeFile(styleFile, styleSrc, 'utf8');
@@ -165,13 +175,22 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
       await writeFile(testFile, testSrc, 'utf8');
 
       await updateComponentsIndex(name, componentsDir);
+      indexUpdated = true;
+
+      console.log(`Scaffolded component at ${componentDir}`);
     } catch (err) {
+      if (indexUpdated) {
+        if (indexExisted) {
+          await writeFile(componentsIndexPath, previousIndex, 'utf8');
+        } else {
+          await rm(componentsIndexPath, { force: true });
+        }
+      }
       await rm(componentDir, { recursive: true, force: true });
       console.error('Error scaffolding component:', err);
       return false;
     }
 
-    console.log(`Scaffolded component at ${componentDir}`);
     return true;
   } catch (err) {
     console.error('Error scaffolding component:', err);
