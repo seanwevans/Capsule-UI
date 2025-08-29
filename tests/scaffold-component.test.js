@@ -288,3 +288,31 @@ test('cleans up generated files on failure', async () => {
   }
 });
 
+test('restores root index if failure occurs after index update', { concurrency: false }, async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const componentsDir = path.join(tempDir, 'packages', 'components');
+    await mkdir(componentsDir, { recursive: true });
+    const indexPath = path.join(componentsDir, 'index.ts');
+    await writeFile(indexPath, `export * from './Existing/Existing';\n`);
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    const originalLog = console.log;
+    try {
+      console.log = () => {
+        throw new Error('boom');
+      };
+      const result = await scaffoldComponent('new-component');
+      assert.equal(result, false);
+    } finally {
+      console.log = originalLog;
+    }
+    const rootIndex = await readFile(indexPath, 'utf8');
+    assert.equal(rootIndex, `export * from './Existing/Existing';\n`);
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
