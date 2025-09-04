@@ -45,28 +45,48 @@ tokens
   .command('build')
   .description('Build design tokens')
   .action(async () => {
-    process.exitCode = await runCommand('pnpm', ['run', 'tokens:build']);
+    try {
+      process.exitCode = await runCommand('pnpm', ['run', 'tokens:build']);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
   });
 
 tokens
   .command('validate')
   .description('Validate design tokens')
   .action(async () => {
-    process.exitCode = await runCommand('pnpm', ['run', 'tokens:validate']);
+    try {
+      process.exitCode = await runCommand('pnpm', ['run', 'tokens:validate']);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
   });
 
 tokens
   .command('watch')
   .description('Watch design tokens and rebuild on changes')
   .action(async () => {
-    process.exitCode = await runCommand('pnpm', ['run', 'tokens:watch']);
+    try {
+      process.exitCode = await runCommand('pnpm', ['run', 'tokens:watch']);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
   });
 
 program
   .command('check')
   .description('Run lint checks')
   .action(async () => {
-    process.exitCode = await runCommand('pnpm', ['run', 'lint']);
+    try {
+      process.exitCode = await runCommand('pnpm', ['run', 'lint']);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
   });
 
 if (
