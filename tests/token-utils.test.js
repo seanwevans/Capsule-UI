@@ -42,3 +42,15 @@ test('flattenTokens detects duplicate names', async () => {
     /Duplicate token name 'a-b'/
   );
 });
+
+test('traverseTokens rejects array groups', async () => {
+  await assert.rejects(
+    runEval("import { traverseTokens } from './scripts/token-utils.ts'; traverseTokens([]);"),
+    err => {
+      assert.ok(
+        err.message.includes("Token group '(root)' must be an object, not an array")
+      );
+      return true;
+    }
+  );
+});

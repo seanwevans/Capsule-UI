@@ -21,6 +21,10 @@ export function traverseTokens(
   cb: (name: string, token: TokenNode) => void = () => {},
   prefix: string[] = []
 ): void {
+  if (Array.isArray(obj)) {
+    const fullName = prefix.join('.') || '(root)';
+    throw new Error(`Token group '${fullName}' must be an object, not an array`);
+  }
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
     if (!/^[a-z0-9_-]+$/.test(key)) {

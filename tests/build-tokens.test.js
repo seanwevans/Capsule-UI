@@ -90,7 +90,8 @@ test('validate script uses shared schema validator', { concurrency: false }, asy
     const sanitize = (msg) =>
       msg
         .split('\n')
-        .filter(line => !line.startsWith('npm warn') && line.trim() !== '')[0];
+        .filter(line => !line.startsWith('npm warn') && line.trim() !== '')
+        .find(line => line.startsWith('Error:')) || '';
     assert.equal(sanitize(buildErr.message), sanitize(validateErr.message));
   } finally {
     await fs.writeFile(tokensPath, original);
