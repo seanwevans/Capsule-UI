@@ -1,4 +1,4 @@
-import { validators } from './token-validators.ts';
+import { validators } from './token-validators.js';
 import type { TokenNode } from './token-types.js';
 
 export function validateToken(name: string, type: string | undefined, value: any) {
