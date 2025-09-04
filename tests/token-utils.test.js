@@ -1,16 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-require('ts-node').register({ transpileOnly: true, compilerOptions: { module: 'CommonJS' } });
-
 const { execFile } = require('child_process');
 const path = require('path');
+const tsx = require.resolve('tsx');
 const root = path.join(__dirname, '..');
 
 function runEval(code) {
   return new Promise((resolve, reject) => {
     execFile(
-      'npx',
-      ['tsx', '-e', code],
+      process.execPath,
+      ['--import', tsx, '-e', code],
       { cwd: root },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim() || stdout.trim()));
