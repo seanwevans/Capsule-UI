@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { promises: fs } = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
+const tsx = require.resolve('tsx');
 
 const root = path.join(__dirname, '..');
 const script = path.join(root, 'scripts', 'build-tokens.ts');
@@ -12,12 +13,8 @@ const tokensPath = path.join(root, 'tokens', 'source', 'tokens.json');
 function runBuild() {
   return new Promise((resolve, reject) => {
     execFile(
-      'npx',
-      [
-        'tsx',
-        '-e',
-        "import('./scripts/build-tokens.ts').then(m => m.build());",
-      ],
+      process.execPath,
+      ['--import', tsx, script],
       { cwd: root },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
@@ -30,8 +27,8 @@ function runBuild() {
 function runValidate() {
   return new Promise((resolve, reject) => {
     execFile(
-      'npx',
-      ['tsx', validateScript],
+      process.execPath,
+      ['--import', tsx, validateScript],
       { cwd: __dirname },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
