@@ -155,7 +155,7 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
 
     const componentSrc = `export const ${name} = () => {\n  // TODO: implement ${name} component\n};\n`;
     const styleSrc = `export interface ${name}StyleProps {\n  // TODO: define style props\n}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => {\n  // TODO: implement Style API\n};\n`;
-    const indexSrc = `export * from './${name}';\n`;
+    const indexSrc = `export * from './${name}';\nexport * from './style';\n`;
     const testSrc = `describe('${name}', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`;
 
     const componentsIndexPath = join(componentsDir, 'index.ts');
