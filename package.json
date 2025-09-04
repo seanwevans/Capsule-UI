@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint:css": "stylelint \"**/*.{css,scss}\"",
+    "build:stylelint-plugin": "tsc stylelint/require-layer.ts --esModuleInterop --module commonjs --target ES2022 --skipLibCheck",
+    "lint:css": "pnpm run build:stylelint-plugin && stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "pnpm run lint:css && pnpm run lint:js",
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
-    "test": "node --test",
+    "test": "pnpm run build:stylelint-plugin && node --test",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
