@@ -191,7 +191,10 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       style,
       `export interface ExampleComponentStyleProps {\n  // TODO: define style props\n}\n\nexport const createExampleComponentStyles = (_: ExampleComponentStyleProps) => {\n  // TODO: implement Style API\n};\n`
     );
-    assert.equal(index, `export * from './ExampleComponent';\n`);
+    assert.equal(
+      index,
+      `export * from './ExampleComponent';\nexport * from './style';\n`
+    );
     assert.equal(
       testFile,
       `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
