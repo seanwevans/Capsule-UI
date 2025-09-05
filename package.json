@@ -49,7 +49,9 @@
     "jsdom": "^24.0.0",
     "@playwright/test": "^1.48.0",
     "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.29.6"
+    "@changesets/cli": "^2.29.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "engines": {
     "node": ">=18"
