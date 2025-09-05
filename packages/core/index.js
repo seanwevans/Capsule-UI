@@ -5,5 +5,5 @@ export { CapsCard } from './card.js';
 export { CapsTabs } from './tabs.js';
 export { CapsModal } from './modal.js';
 export { CapsSelect } from './select.js';
-export { getLocale, setLocale, onLocaleChange } from './locale.js';
+export { getLocale, setLocale, onLocaleChange, formatNumber, formatDate, setDirection } from './locale.js';
 export { ThemeManager } from './theme-manager.js';

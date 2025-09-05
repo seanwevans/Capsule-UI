@@ -121,6 +121,17 @@ booking-widget::part(card)   { border-radius: 24px; }
 
 ---
 
+## Accessibility & i18n baseline
+
+Capsule components don’t bypass accessibility—they expose focus rings,
+keyboard navigation and ARIA roles by default. CSS custom properties respect
+`prefers-reduced-motion` and `prefers-contrast` so hosts can theme high‑contrast
+or motion‑reduced modes. Locale helpers (`getLocale`, `setLocale`,
+`formatNumber`, `formatDate`) wire up RTL/LTR and locale‑aware formatting.
+See [Component Accessibility Checklist](docs/a11y-checklist.md).
+
+---
+
 ## Example: minimal Capsule widget (Shadow DOM)
 ```js
 customElements.define("booking-widget", class extends HTMLElement {
