@@ -1,0 +1,8 @@
+{
+  "name": "capsule-ui-light-dom-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
