@@ -1,0 +1,15 @@
+{
+  "name": "@capsule-ui/vue",
+  "version": "0.0.1-preview",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": { "import": "./index.js" }
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@capsule-ui/core": "workspace:*"
+  }
+}
