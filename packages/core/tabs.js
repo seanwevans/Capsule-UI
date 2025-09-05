@@ -1,3 +1,5 @@
+import { getLocale, onLocaleChange } from './locale.js';
+
 class CapsTabs extends HTMLElement {
   constructor() {
     super();
@@ -22,7 +24,7 @@ class CapsTabs extends HTMLElement {
         .panels ::slotted([data-active]) { display: block; }
       </style>
       <div class="tabs">
-        <div class="tablist" part="tablist"><slot name="tab"></slot></div>
+        <div class="tablist" part="tablist" role="tablist"><slot name="tab"></slot></div>
         <div class="panels" part="panels"><slot name="panel"></slot></div>
       </div>
     `;
@@ -32,24 +34,53 @@ class CapsTabs extends HTMLElement {
     const tabSlot = this.shadowRoot.querySelector('slot[name="tab"]');
     const panelSlot = this.shadowRoot.querySelector('slot[name="panel"]');
     const handlers = new WeakMap();
+    const keyHandlers = new WeakMap();
     const assign = () => {
       const tabs = tabSlot.assignedElements();
       const panels = panelSlot.assignedElements();
+      const dir = this.getAttribute('dir') || getLocale().dir;
+      const isRtl = dir === 'rtl';
       tabs.forEach((tab, i) => {
         tab.setAttribute('role', 'tab');
+        tab.setAttribute('tabindex', i === 0 ? '0' : '-1');
         tab.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-        const existingHandler = handlers.get(tab);
-        if (existingHandler) {
-          tab.removeEventListener('click', existingHandler);
+        const panel = panels[i];
+        if (panel) {
+          if (!panel.id) panel.id = `caps-panel-${i}`;
+          tab.setAttribute('aria-controls', panel.id);
         }
+        const existingClick = handlers.get(tab);
+        if (existingClick) tab.removeEventListener('click', existingClick);
         const clickHandler = () => {
-          tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-          panels.forEach(p => p.removeAttribute('data-active'));
+          tabs.forEach((t, idx) => {
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+            panels[idx]?.removeAttribute('data-active');
+          });
           tab.setAttribute('aria-selected', 'true');
-          panels[i]?.setAttribute('data-active', '');
+          tab.setAttribute('tabindex', '0');
+          panel?.setAttribute('data-active', '');
+          tab.focus();
         };
         tab.addEventListener('click', clickHandler);
         handlers.set(tab, clickHandler);
+        const existingKey = keyHandlers.get(tab);
+        if (existingKey) tab.removeEventListener('keydown', existingKey);
+        const keyHandler = (e) => {
+          const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+          if (!keys.includes(e.key)) return;
+          e.preventDefault();
+          let idx = tabs.indexOf(tab);
+          if (e.key === 'ArrowRight') idx = isRtl ? idx - 1 : idx + 1;
+          if (e.key === 'ArrowLeft') idx = isRtl ? idx + 1 : idx - 1;
+          if (e.key === 'Home') idx = 0;
+          if (e.key === 'End') idx = tabs.length - 1;
+          if (idx < 0) idx = tabs.length - 1;
+          if (idx >= tabs.length) idx = 0;
+          tabs[idx].click();
+        };
+        tab.addEventListener('keydown', keyHandler);
+        keyHandlers.set(tab, keyHandler);
       });
       panels.forEach((p, i) => {
         p.setAttribute('role', 'tabpanel');
@@ -59,6 +90,17 @@ class CapsTabs extends HTMLElement {
     tabSlot.addEventListener('slotchange', assign);
     panelSlot.addEventListener('slotchange', assign);
     assign();
+    if (!this.hasAttribute('dir')) {
+      this.setAttribute('dir', getLocale().dir);
+      this._unsub = onLocaleChange((loc) => {
+        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
+        assign();
+      });
+    }
+  }
+
+  disconnectedCallback() {
+    this._unsub?.();
   }
 }
 

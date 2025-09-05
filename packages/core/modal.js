@@ -1,3 +1,5 @@
+import { getLocale, onLocaleChange } from './locale.js';
+
 class CapsModal extends HTMLElement {
   static get observedAttributes() { return ['open']; }
 
@@ -12,17 +14,41 @@ class CapsModal extends HTMLElement {
         .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--caps-modal-bg, #fff); padding: 1rem; border-radius: 0.5rem; min-width: 300px; }
       </style>
       <div class="backdrop" part="backdrop"></div>
-      <div class="modal" part="modal"><slot></slot></div>
+      <div class="modal" part="modal" role="dialog" aria-modal="true" tabindex="-1"><slot></slot></div>
     `;
+    this._onKeyDown = (e) => {
+      if (e.key === 'Escape') this.removeAttribute('open');
+    };
   }
 
   connectedCallback() {
     const backdrop = this.shadowRoot.querySelector('.backdrop');
     backdrop?.addEventListener('click', () => this.removeAttribute('open'));
+    if (!this.hasAttribute('dir')) {
+      this.setAttribute('dir', getLocale().dir);
+      this._unsub = onLocaleChange((loc) => {
+        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
+      });
+    }
   }
 
-  attributeChangedCallback() {
-    // styles handle visibility
+  disconnectedCallback() {
+    this._unsub?.();
+    document.removeEventListener('keydown', this._onKeyDown);
+  }
+
+  attributeChangedCallback(name, _old, value) {
+    if (name === 'open') {
+      const modal = this.shadowRoot.querySelector('.modal');
+      if (value !== null) {
+        this._previous = document.activeElement;
+        modal?.focus();
+        document.addEventListener('keydown', this._onKeyDown);
+      } else {
+        document.removeEventListener('keydown', this._onKeyDown);
+        this._previous?.focus();
+      }
+    }
   }
 }
 
