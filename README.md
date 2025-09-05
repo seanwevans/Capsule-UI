@@ -66,6 +66,7 @@ An early preview package `@capsule-ui/core` publishes foundational elements for 
 - `<caps-card>` – surface container
 - `<caps-tabs>` – tabbed interface
 - `<caps-modal>` – modal dialog
+- `<caps-select>` – styled select element
 
 Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
 

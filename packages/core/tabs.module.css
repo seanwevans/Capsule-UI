@@ -1,0 +1,27 @@
+@layer components;
+.tablist {
+  display: flex;
+  gap: 0.25rem;
+}
+.tab {
+  background: var(--caps-tab-bg, transparent);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem 0.375rem 0 0;
+  cursor: pointer;
+}
+.tab:where([aria-selected='true']) {
+  background: var(--caps-tab-active-bg, #fff);
+  font-weight: 600;
+}
+.panels {
+  border: 1px solid var(--caps-tab-border, #e5e7eb);
+  border-radius: 0 0 0.375rem 0.375rem;
+  padding: 1rem;
+}
+.panel {
+  display: none;
+}
+.panel:where([data-active]) {
+  display: block;
+}
