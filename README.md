@@ -6,6 +6,8 @@ Capsule gives you sealed components (Shadow DOM or CSS Modules) plus a tiny, wel
 Isolated styles by default, instant theming via CSS variables, safe customization via `::part`, and responsive by **container queries**. No runtime CSS-in-JS.
 Inspired by [this article](https://denodell.com/blog/we-keep-reinventing-css).
 
+For developers migrating from Tailwind or CSS‑in‑JS, see the [migration and adoption guide](docs/migration-guide.md).
+
 ---
 
 ## Why?
@@ -217,13 +219,32 @@ const stop = onThemeChange(t => console.log('theme', t));
 
 Add a new theme by defining values for it in `tokens/source/tokens.json` and rebuilding with `pnpm tokens:build`. Then call `setTheme('<name>')` or set `<html data-theme="<name>">` at runtime.
 
+For multi-tenant apps, `ThemeManager` can load and switch tenant-specific presets without a page reload:
+
+```js
+import { ThemeManager } from '@capsule-ui/core';
+
+await ThemeManager.load('tenantA', '/themes/tenant-a.json');
+ThemeManager.applyTheme('tenantA', 'dark');
+```
+
 ### Theming lab
 
 Designers can experiment with token values in the [theming lab](docs/theming-lab.md).
 The page updates components live as you tweak CSS variables and can export a JSON preset for reuse.
 
+### Theme registry
+
+Shareable presets can be uploaded to a lightweight [theme registry](docs/theme-registry.md).
+Each upload receives a unique URL that teams can reference at runtime or package for
+distribution on npm. Browse, fetch, and reuse themes without copying token files
+between projects.
+
 ---
 
+
+## Documentation
+A public documentation site built with Docusaurus lives in `website`. Run `pnpm docs:dev` to start a local server or `pnpm docs:build` to generate static files.
 
 ## CLI
 

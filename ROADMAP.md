@@ -138,7 +138,7 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Confident embed story for partner/marketplace scenarios.
 
-**Status:** Not started. Target: October 2026.
+**Status:** In progress — runtime tenant theme utilities, micro-frontend Shadow DOM samples, and initial security audit landed. Target: October 2026.
 
 ---
 

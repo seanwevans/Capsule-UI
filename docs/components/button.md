@@ -28,6 +28,10 @@ Import `button.module.css` and apply the exported `button` class.
 
 Container query: padding grows when the button's container is at least `480px` wide.
 
+## Demo
+
+<iframe src="https://storybook.capsule-ui.com/iframe.html?id=components-button--default" style="width:100%;height:400px;border:1px solid #eee;"></iframe>
+
 ## A11y
 
 - Uses native `<button>` semantics so keyboard and screen-reader behaviour follow platform defaults.
