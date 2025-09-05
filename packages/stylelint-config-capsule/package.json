@@ -1,0 +1,10 @@
+{
+  "name": "stylelint-config-capsule",
+  "version": "0.0.1",
+  "main": "index.cjs",
+  "files": ["index.cjs", "require-layer.js"],
+  "peerDependencies": {
+    "stylelint": "^15.10.0",
+    "stylelint-declaration-strict-value": "^1.10.2"
+  }
+}

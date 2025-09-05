@@ -1,0 +1,10 @@
+{
+  "name": "eslint-config-capsule",
+  "version": "0.0.1",
+  "main": "index.cjs",
+  "files": ["index.cjs"],
+  "peerDependencies": {
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^8.39.1"
+  }
+}
