@@ -177,7 +177,7 @@ Shadow DOM v1, `::part`, and container queries are supported in all modern everg
 Capsule doesn’t bypass a11y—your components still need focus states, ARIA, contrast, keyboard handling, and reduced-motion respect. The isolation helps keep a11y styles consistent.
 
 ## Tokens
-Source tokens live in `tokens/source/tokens.json` using the W3C draft design tokens structure. Run `pnpm tokens:build` to generate `dist/tokens.css`, `dist/tokens.d.ts`, and `dist/tokens.json`. The CSS file exposes custom properties for light and dark themes; toggling `[data-theme="dark"]` on the page swaps the values.
+Source tokens live in `tokens/source/tokens.json` using the W3C draft design tokens structure. The build pipeline is implemented in [`scripts/build-tokens.ts`](./scripts/build-tokens.ts) and runs via `pnpm tokens:build` to generate `dist/tokens.css`, `dist/tokens.d.ts`, and `dist/tokens.json`. The CSS file exposes custom properties for light and dark themes; toggling `[data-theme="dark"]` on the page swaps the values.
 
 For development convenience, `pnpm tokens:watch` monitors `tokens/source/tokens.json` and rebuilds the output whenever it changes.
 
