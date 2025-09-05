@@ -11,6 +11,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** One demo component in both flavors, documented Style API, theming works at runtime.
 
+**Status:** Completed August 2025.
+
 ---
 
 ## Milestone 1 — Tokens Pipeline
@@ -23,6 +25,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Any component can consume tokens without hand-writing vars.
 
+**Status:** Completed September 2025.
+
 ---
 
 ## Milestone 2 — Component Recipes (Variants)
@@ -31,6 +35,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Lint rule to forbid ad‑hoc class soup in callsites; enforce recipes.
 
 **Exit criteria:** All components expose typed variant APIs with autocomplete.
+
+**Status:** Not started. Target: December 2025.
 
 ---
 
@@ -41,6 +47,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** New PRs can’t violate the style contract.
 
+**Status:** In progress — shared ESLint and stylelint configs published. Target: December 2025.
+
 ---
 
 ## Milestone 4 — Adapters
@@ -48,6 +56,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Provide CSS Modules equivalents for app-internal use.
 
 **Exit criteria:** One-liners to consume Capsule in popular frameworks.
+
+**Status:** In progress — React/Vue/Svelte packages live under `packages/` but not yet published to npm. Target: October 2025.
 
 ---
 
@@ -59,6 +69,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Docs and examples cover SSR paths with passing integration tests.
 
+**Status:** Not started. Target: February 2026.
+
 ---
 
 ## Milestone 6 — A11y & i18n Baseline
@@ -67,6 +79,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Axe/Pa11y integration in CI.
 
 **Exit criteria:** Components meet a11y minimums; CI enforces regressions.
+
+**Status:** In progress — Pa11y script (`scripts/a11y-check.mjs`) and RTL demo (`examples/rtl.html`) in place. Target: March 2026.
 
 ---
 
@@ -77,6 +91,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Teams can preview + lock in tenant themes with confidence.
 
+**Status:** Not started. Target: April 2026.
+
 ---
 
 ## Milestone 8 — Core Library (v0.x)
@@ -85,6 +101,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Per-component Style API docs (vars/parts/attributes).
 
 **Exit criteria:** Usable starter library for typical SaaS embeds.
+
+**Status:** In progress — core components (Button, Input, Select, Tabs, Card, Modal) exist in `packages/core`. Target: June 2026.
 
 ---
 
@@ -97,6 +115,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Smooth DX from day 1; fewer footguns.
 
+**Status:** In progress — `capsule-cli` scaffolds components and tokens commands. VS Code snippets pending. Target: June 2026.
+
 ---
 
 ## Milestone 10 — Performance Pass
@@ -105,6 +125,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Prefer `content-visibility`, `contain`, and no forced reflow patterns.
 
 **Exit criteria:** P95 interaction metric targets documented and enforced.
+
+**Status:** Not started. Target: August 2026.
 
 ---
 
@@ -115,6 +137,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Confident embed story for partner/marketplace scenarios.
 
+**Status:** Not started. Target: October 2026.
+
 ---
 
 ## v1.0 Release Criteria
@@ -122,6 +146,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Core component set complete and documented.
 - CI green across lint, unit, a11y, VRT, perf budgets.
 - Migration guide from common stacks (Tailwind, CSS-in-JS).
+
+**ETA:** Q4 2026.
 
 ---
 
