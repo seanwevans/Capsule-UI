@@ -57,6 +57,19 @@ Everything else stays private.
 
 ---
 
+## Preview components
+
+An early preview package `@capsule-ui/core` publishes foundational elements for experimentation:
+
+- `<caps-button>` – styled button element
+- `<caps-input>` – basic text input
+- `<caps-card>` – surface container
+- `<caps-tabs>` – tabbed interface
+- `<caps-modal>` – modal dialog
+
+Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
+
+
 ## Quick start (vanilla, using the demo widget)
 Drop this into any HTML page:
 
