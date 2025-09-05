@@ -35,10 +35,19 @@ class CapsInput extends HTMLElement {
         input.removeAttribute('value');
         input.value = '';
       }
+
     } else {
       if (value !== null) input.setAttribute(name, value);
       else input.removeAttribute(name);
     }
+  }
+
+  get disabled() {
+    return this.hasAttribute('disabled');
+  }
+
+  set disabled(val) {
+    this.toggleAttribute('disabled', Boolean(val));
   }
 
   get value() {
