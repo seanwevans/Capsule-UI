@@ -1,7 +1,7 @@
-import { getLocale, onLocaleChange } from './locale.js';
+import { withLocaleDir } from './withLocaleDir.js';
 import { instrumentComponent } from './instrument.js';
 
-class CapsModal extends HTMLElement {
+class CapsModal extends withLocaleDir(HTMLElement) {
   static get observedAttributes() { return ['open', 'aria-label', 'aria-labelledby']; }
 
   constructor() {
@@ -62,18 +62,13 @@ class CapsModal extends HTMLElement {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     const backdrop = this.shadowRoot.querySelector('.backdrop');
     backdrop?.addEventListener('click', () => this.removeAttribute('open'));
-    if (!this.hasAttribute('dir')) {
-      this.setAttribute('dir', getLocale().dir);
-      this._unsub = onLocaleChange((loc) => {
-        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
-      });
-    }
   }
 
   disconnectedCallback() {
-    this._unsub?.();
+    super.disconnectedCallback();
     document.removeEventListener('keydown', this._onKeyDown);
   }
 

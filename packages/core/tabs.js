@@ -1,8 +1,8 @@
-import { getLocale, onLocaleChange } from './locale.js';
+import { withLocaleDir } from './withLocaleDir.js';
 import { instrumentComponent } from './instrument.js';
 import { sanitizeNode } from './sanitize.js';
 
-class CapsTabs extends HTMLElement {
+class CapsTabs extends withLocaleDir(HTMLElement) {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -57,6 +57,7 @@ class CapsTabs extends HTMLElement {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     const tabSlot = this.shadowRoot.querySelector('slot[name="tab"]');
     const panelSlot = this.shadowRoot.querySelector('slot[name="panel"]');
     const handlers = new WeakMap();
@@ -64,8 +65,7 @@ class CapsTabs extends HTMLElement {
     const assign = () => {
       const tabs = tabSlot.assignedElements();
       const panels = panelSlot.assignedElements();
-      const dir = this.getAttribute('dir') || getLocale().dir;
-      const isRtl = dir === 'rtl';
+      const isRtl = this.getAttribute('dir') === 'rtl';
       tabs.forEach((tab, i) => {
         sanitizeNode(tab);
         tab.setAttribute('role', 'tab');
@@ -118,17 +118,11 @@ class CapsTabs extends HTMLElement {
     tabSlot.addEventListener('slotchange', assign);
     panelSlot.addEventListener('slotchange', assign);
     assign();
-    if (!this.hasAttribute('dir')) {
-      this.setAttribute('dir', getLocale().dir);
-      this._unsub = onLocaleChange((loc) => {
-        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
-        assign();
-      });
-    }
+    this._assign = assign;
   }
 
-  disconnectedCallback() {
-    this._unsub?.();
+  localeDirChanged() {
+    this._assign?.();
   }
 }
 
