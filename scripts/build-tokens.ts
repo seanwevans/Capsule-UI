@@ -1,3 +1,20 @@
+/**
+ * Build the design token artifacts used by Capsule UI.
+ *
+ * This script is what powers the `pnpm tokens:build` command. It reads the
+ * token definition JSON, validates it, and writes the generated CSS, JSON,
+ * JavaScript, and TypeScript outputs to the `dist/` directory so they are easy
+ * to inspect and extend.
+ *
+ * Run with:
+ *
+ * ```bash
+ * pnpm tokens:build [-- --default-theme=<theme>]
+ * ```
+ *
+ * Pass a `--default-theme` flag to control which theme's values populate the
+ * `:root` selector in the generated CSS.
+ */
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
