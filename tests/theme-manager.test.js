@@ -60,3 +60,34 @@ test('ThemeManager loads and switches tenant themes at runtime', async () => {
   assert.ok(style.includes('--caps-btn-bg: black'));
 });
 
+test('ThemeManager sanitizes invalid tenant names', async () => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>');
+  global.window = dom.window;
+  global.document = dom.window.document;
+
+  const { ThemeManager } = await import('../packages/core/theme-manager.js');
+
+  ThemeManager.register('acme!', { 'caps-btn-bg': 'green' });
+  const el = document.createElement('div');
+  ThemeManager.apply('acme!', el);
+  assert.equal(el.getAttribute('data-tenant'), 'acme-');
+  const style = document.getElementById('caps-theme-acme-').textContent;
+  assert.ok(style.includes('[data-tenant="acme-"]'));
+});
+
+test('ThemeManager sanitizes invalid tenant and theme names', async () => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>');
+  global.window = dom.window;
+  global.document = dom.window.document;
+
+  const { ThemeManager } = await import('../packages/core/theme-manager.js');
+
+  ThemeManager.registerTheme('foo bar', 'dark*mode', { 'caps-btn-bg': 'purple' });
+  const el = document.createElement('div');
+  ThemeManager.applyTheme('foo bar', 'dark*mode', el);
+  assert.equal(el.getAttribute('data-tenant'), 'foo-bar');
+  assert.equal(el.getAttribute('data-theme'), 'dark-mode');
+  const style = document.getElementById('caps-theme-foo-bar-dark-mode').textContent;
+  assert.ok(style.includes('[data-tenant="foo-bar"][data-theme="dark-mode"]'));
+});
+
