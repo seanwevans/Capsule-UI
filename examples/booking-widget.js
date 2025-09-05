@@ -233,9 +233,7 @@ class BookingWidget extends HTMLElement {
     `;
 
     // Cache the first focusable field for focus management.
-    this._firstField = this.shadowRoot.querySelector('input, select, textarea, button');
-
-      `;
+    this._firstField = this.shadowRoot.querySelector('input, select, textarea, button');      
 
     const card = document.createElement('div');
     card.className = 'card';
