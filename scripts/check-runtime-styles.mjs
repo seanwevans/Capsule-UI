@@ -6,7 +6,13 @@ if (allow) {
   process.exit(0);
 }
 
-const banned = ['styled-components', '@emotion/react', '@emotion/styled'];
+const banned = [
+  'styled-components',
+  '@emotion/react',
+  '@emotion/styled',
+  'aphrodite',
+  'jss'
+];
 
 for (const pkg of banned) {
   const result = spawnSync('rg', ['-l', pkg, '--glob', '!node_modules/**'], { encoding: 'utf8' });
