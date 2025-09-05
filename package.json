@@ -13,23 +13,29 @@
     "test:a11y": "node scripts/a11y-check.mjs",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
-    "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
+    "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "test:visual": "chromatic --exit-zero-on-changes"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/web-components": "^9.1.4",
     "@types/css-tree": "^2.3.10",
     "@typescript-eslint/parser": "^8.39.1",
     "ajv": "^8.12.0",
     "chokidar-cli": "^3.0.0",
+    "chromatic": "^13.1.4",
     "css-tree": "^3.1.0",
     "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "pa11y": "^6.1.1",
     "postcss": "8.5.6",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "pa11y": "^6.1.1",
-    "jsdom": "^24.0.0"
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=18"
