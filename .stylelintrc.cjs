@@ -8,8 +8,10 @@ const layerRule =
 
 const rules = {
   'selector-max-specificity': '0,1,0',
+  'selector-max-type': 0,
+  'declaration-no-important': true,
   'scale-unlimited/declaration-strict-value': [
-    ['/color/', 'fill', 'stroke'],
+    ['/^color/', '/^background/', 'outline-color', 'fill', 'stroke'],
     {
       ignoreValues: ['transparent', 'inherit', 'currentColor']
     }
@@ -24,6 +26,15 @@ module.exports = {
   plugins: [
     'stylelint-declaration-strict-value',
     './stylelint/require-layer.js'
+  ],
+  ignoreFiles: ['dist/**', 'tokens/**'],
+  overrides: [
+    {
+      files: ['**/overrides/**/*.css'],
+      rules: {
+        'declaration-no-important': null
+      }
+    }
   ],
   rules,
 };

@@ -42,6 +42,14 @@ Use `:where(...)` inside components to keep specificity low and stable.
 ### 4) Variants compile to classes, not runtime CSS
 Props map to **recipes** that produce class names at build time (e.g., CVA, Panda, UnoCSS, stylex’s compiled mode). No runtime styled-components/emotion unless you truly need dynamic computed styles.
 
+Example:
+
+```js
+import { buttonRecipe } from '@capsule-ui/core/button.recipe';
+
+const className = buttonRecipe({ size: 'lg', variant: 'secondary' });
+```
+
 ### 5) Container‑query first
 Components adapt to their container:
 ```css

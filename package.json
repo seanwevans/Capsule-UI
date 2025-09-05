@@ -11,6 +11,7 @@
     "check:runtime-styles": "node scripts/check-runtime-styles.mjs",
     "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run check:bundle-size",
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
+    "new:component": "node scripts/new-component.mjs",
     "test:a11y": "node scripts/a11y-check.mjs",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
@@ -23,17 +24,20 @@
     "chokidar-cli": "^3.0.0",
     "css-tree": "^3.1.0",
     "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "pa11y": "^6.1.1",
     "postcss": "8.5.6",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "pa11y": "^6.1.1",
-    "jsdom": "^24.0.0"
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@10.5.2"
+  "packageManager": "pnpm@10.5.2",
+  "dependencies": {
+    "class-variance-authority": "^0.7.1"
+  }
 }
