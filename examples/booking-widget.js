@@ -14,6 +14,8 @@ class BookingWidget extends HTMLElement {
 
   constructor() {
     super();
+    // Make the host focusable so keyboard users can interact with the widget.
+    this.tabIndex = 0;
     // Attach an open shadow root so host pages can use the ::part API.
     this.attachShadow({ mode: 'open' });
     // Build the widget's shadow DOM without using innerHTML to mitigate
@@ -171,6 +173,68 @@ class BookingWidget extends HTMLElement {
             position: relative;
           }
         }
+
+      </style>
+
+      <div class="card" part="card">
+        <div class="header" part="header">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="17" rx="3" stroke="currentColor" opacity="0.15"></rect>
+            <path d="M3 9h18" stroke="currentColor" opacity="0.25"></path>
+            <circle cx="8.5" cy="13.5" r="1.25" fill="currentColor"></circle>
+            <circle cx="12" cy="13.5" r="1.25" fill="currentColor" opacity="0.6"></circle>
+            <circle cx="15.5" cy="17" r="1.25" fill="currentColor"></circle>
+          </svg>
+          <div>
+            <h2 id="title" class="title" part="title">Book a slot</h2>
+            <p id="subtitle" class="subtitle" part="subtitle">Enter details, pick a date, time & guests</p>
+          </div>
+        </div>
+
+        <form class="form" part="form" aria-labelledby="title subtitle">
+          <div class="row">
+            <label class="field" part="field">
+              <span class="label" part="label">Name</span>
+              <input class="input" part="input text" type="text" name="name" required />
+            </label>
+            <label class="field" part="field">
+              <span class="label" part="label">Date</span>
+              <input class="input" part="input date" type="date" name="date" required />
+            </label>
+            <label class="field" part="field">
+              <span class="label" part="label">Time</span>
+              <select class="input" part="input select" name="time" required>
+                <option value="" disabled selected>Select…</option>
+                <option>09:00</option>
+                <option>10:00</option>
+                <option>11:00</option>
+                <option>13:00</option>
+                <option>14:00</option>
+                <option>15:00</option>
+              </select>
+            </label>
+            <label class="field" part="field">
+              <span class="label" part="label">Guests</span>
+              <input class="input" part="input number" type="number" name="guests" min="1" max="12" value="2" />
+            </label>
+            <label class="field" part="field">
+              <span class="label" part="label">Notes (optional)</span>
+              <input class="input" part="input text" type="text" name="notes" placeholder="Allergies, requests…" />
+            </label>
+          </div>
+          <button class="button" part="button" type="submit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            Book
+          </button>
+        </form>
+      </div>
+    `;
+
+    // Cache the first focusable field for focus management.
+    this._firstField = this.shadowRoot.querySelector('input, select, textarea, button');
+
       `;
 
     const card = document.createElement('div');
@@ -342,6 +406,7 @@ class BookingWidget extends HTMLElement {
     card.appendChild(form);
 
     this.shadowRoot.append(style, card);
+
   }
 
   connectedCallback() {
@@ -358,6 +423,21 @@ class BookingWidget extends HTMLElement {
         this.dispatchEvent(new CustomEvent('book', { detail, bubbles: true }));
       });
     }
+
+    // Move focus inside the widget when it mounts.
+    this._firstField?.focus();
+
+    // Keyboard navigation: Enter focuses the first field when the host is
+    // focused, Escape returns focus back to the host element.
+    this.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target === this) {
+        e.preventDefault();
+        this._firstField?.focus();
+      } else if (e.key === 'Escape' && this.shadowRoot.contains(document.activeElement)) {
+        e.preventDefault();
+        this.focus();
+      }
+    });
   }
 
   attributeChangedCallback() {
