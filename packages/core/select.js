@@ -1,4 +1,5 @@
 import { instrumentComponent } from './instrument.js';
+import { sanitizeNode } from './sanitize.js';
 
 class CapsSelect extends HTMLElement {
   static get observedAttributes() {
@@ -79,7 +80,7 @@ class CapsSelect extends HTMLElement {
     select.innerHTML = '';
     for (const node of slot.assignedNodes()) {
       if (node.nodeName === 'OPTION' || node.nodeName === 'OPTGROUP') {
-        select.appendChild(node);
+        select.appendChild(sanitizeNode(node));
       }
     }
     if (this.hasAttribute('value')) {

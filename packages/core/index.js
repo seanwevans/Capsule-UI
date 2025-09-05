@@ -10,3 +10,4 @@ export { ThemeManager } from './theme-manager.js';
 export { setTheme, getTheme, onThemeChange } from './theme.js';
 export { enableAnalytics, disableAnalytics } from './analytics.js';
 export { enableErrorReporting, disableErrorReporting } from './error-reporting.js';
+export { sanitizeNode, sanitizeHTML } from './sanitize.js';

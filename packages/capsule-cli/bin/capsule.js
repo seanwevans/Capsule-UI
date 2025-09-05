@@ -84,27 +84,60 @@ tokens
     }
   });
 
-  program
-    .command('check')
-    .description('Run lint, test and token checks')
-    .action(async () => {
-      try {
-        const lintCss = await runCommand('pnpm', ['run', 'lint:css']);
-        if (lintCss !== 0) {
-          process.exitCode = lintCss;
-          return;
-        }
-        const lintJs = await runCommand('pnpm', ['run', 'lint:js']);
-        if (lintJs !== 0) {
-          process.exitCode = lintJs;
-          return;
-        }
-        process.exitCode = await runCommand('pnpm', ['test']);
-      } catch (err) {
-        console.error(err);
+program
+  .command('migrate')
+  .description('Run codemods to migrate existing projects to Capsule')
+  .argument('<source>', 'Source to migrate from (tailwind|emotion)')
+  .argument('[paths...]', 'Paths or globs to transform (default: src)')
+  .option('--parser <parser>', 'jscodeshift parser', 'tsx')
+  .action(async (source, paths, options) => {
+    const codemodDir = new URL('../codemods', import.meta.url).pathname;
+    let mod;
+    switch (source) {
+      case 'tailwind':
+        mod = 'tailwind.js';
+        break;
+      case 'emotion':
+        mod = 'emotion.js';
+        break;
+      default:
+        console.error(`Unknown migration source: ${source}`);
         process.exitCode = 1;
+        return;
+    }
+    const targetPaths = paths.length ? paths : ['src'];
+    try {
+      const jscodeshiftBin = require.resolve('jscodeshift/bin/jscodeshift.js');
+      const codemodPath = join(codemodDir, mod);
+      const args = ['-t', codemodPath, '--parser', options.parser, ...targetPaths];
+      process.exitCode = await runCommand('node', [jscodeshiftBin, ...args]);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+  });
+
+program
+  .command('check')
+  .description('Run lint, test and token checks')
+  .action(async () => {
+    try {
+      const lintCss = await runCommand('pnpm', ['run', 'lint:css']);
+      if (lintCss !== 0) {
+        process.exitCode = lintCss;
+        return;
       }
-    });
+      const lintJs = await runCommand('pnpm', ['run', 'lint:js']);
+      if (lintJs !== 0) {
+        process.exitCode = lintJs;
+        return;
+      }
+      process.exitCode = await runCommand('pnpm', ['test']);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+  });
 
   if (
     import.meta.url === process.argv[1] ||

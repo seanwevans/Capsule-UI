@@ -6,10 +6,11 @@
     "capsule": "./bin/capsule.js"
   },
   "type": "module",
-  "files": ["bin"],
+  "files": ["bin", "codemods"],
   "keywords": ["capsule", "cli"],
   "dependencies": {
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "jscodeshift": "^0.15.0"
   },
   "engines": {
     "node": ">=18"

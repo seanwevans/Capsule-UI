@@ -1,5 +1,6 @@
 import { getLocale, onLocaleChange } from './locale.js';
 import { instrumentComponent } from './instrument.js';
+import { sanitizeNode } from './sanitize.js';
 
 class CapsTabs extends HTMLElement {
   constructor() {
@@ -66,11 +67,13 @@ class CapsTabs extends HTMLElement {
       const dir = this.getAttribute('dir') || getLocale().dir;
       const isRtl = dir === 'rtl';
       tabs.forEach((tab, i) => {
+        sanitizeNode(tab);
         tab.setAttribute('role', 'tab');
         tab.setAttribute('tabindex', i === 0 ? '0' : '-1');
         tab.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
         const panel = panels[i];
         if (panel) {
+          sanitizeNode(panel);
           if (!panel.id) panel.id = `caps-panel-${i}`;
           tab.setAttribute('aria-controls', panel.id);
         }

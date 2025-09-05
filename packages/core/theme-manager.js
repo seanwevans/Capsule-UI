@@ -31,8 +31,39 @@ export class ThemeManager {
     style.textContent = `[data-tenant="${tenant}"]{\n${declarations}\n}`;
   }
 
+  static registerTheme(tenant, theme, variables) {
+    if (typeof document === 'undefined') return;
+    const vars = sanitize(variables);
+    const id = `caps-theme-${tenant}-${theme}`;
+    let style = document.getElementById(id);
+    if (!style) {
+      style = document.createElement('style');
+      style.id = id;
+      document.head.appendChild(style);
+    }
+    const declarations = Object.entries(vars)
+      .map(([k, v]) => `  --${k}: ${v};`)
+      .join('\n');
+    style.textContent = `[data-tenant="${tenant}"][data-theme="${theme}"]{\n${declarations}\n}`;
+  }
+
+  static async load(tenant, url) {
+    if (typeof fetch === 'undefined') return;
+    const res = await fetch(url);
+    const themes = await res.json();
+    for (const [theme, vars] of Object.entries(themes)) {
+      this.registerTheme(tenant, theme, vars);
+    }
+  }
+
   static apply(tenant, element = document.documentElement) {
     if (typeof document === 'undefined') return;
     element.setAttribute('data-tenant', tenant);
+  }
+
+  static applyTheme(tenant, theme, element = document.documentElement) {
+    if (typeof document === 'undefined') return;
+    element.setAttribute('data-tenant', tenant);
+    element.setAttribute('data-theme', theme);
   }
 }
