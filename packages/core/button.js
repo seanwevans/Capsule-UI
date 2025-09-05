@@ -26,12 +26,19 @@ class CapsButton extends HTMLElement {
     const btn = this.shadowRoot.querySelector('button');
     if (!btn) return;
     if (name === 'disabled') {
-      if (value !== null) btn.setAttribute('disabled', '');
-      else btn.removeAttribute('disabled');
+      btn.toggleAttribute('disabled', value !== null);
     }
     if (name === 'type') {
       btn.setAttribute('type', value || 'button');
     }
+  }
+
+  get disabled() {
+    return this.hasAttribute('disabled');
+  }
+
+  set disabled(val) {
+    this.toggleAttribute('disabled', Boolean(val));
   }
 }
 

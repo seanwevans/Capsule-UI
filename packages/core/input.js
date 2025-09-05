@@ -25,12 +25,19 @@ class CapsInput extends HTMLElement {
     const input = this.shadowRoot.querySelector('input');
     if (!input) return;
     if (name === 'disabled') {
-      if (value !== null) input.setAttribute('disabled', '');
-      else input.removeAttribute('disabled');
+      input.toggleAttribute('disabled', value !== null);
     } else {
       if (value !== null) input.setAttribute(name, value);
       else input.removeAttribute(name);
     }
+  }
+
+  get disabled() {
+    return this.hasAttribute('disabled');
+  }
+
+  set disabled(val) {
+    this.toggleAttribute('disabled', Boolean(val));
   }
 
   get value() {
