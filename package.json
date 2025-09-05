@@ -19,7 +19,9 @@
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "test:visual": "chromatic --exit-zero-on-changes"
+    "test:visual": "chromatic --exit-zero-on-changes",
+    "changeset": "changeset",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.14",
@@ -41,7 +43,9 @@
     "typescript": "^5.9.2",
     "pa11y": "^6.1.1",
     "jsdom": "^24.0.0",
-    "@playwright/test": "^1.48.0"
+    "@playwright/test": "^1.48.0",
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.29.6"
   },
   "engines": {
     "node": ">=18"
