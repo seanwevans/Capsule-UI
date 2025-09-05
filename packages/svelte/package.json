@@ -4,7 +4,8 @@
   "type": "module",
   "main": "index.js",
   "exports": {
-    ".": { "import": "./index.js" }
+    ".": { "import": "./index.js" },
+    "./css": { "import": "./css/index.js" }
   },
   "peerDependencies": {
     "svelte": "^4.0.0"
