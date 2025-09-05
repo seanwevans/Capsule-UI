@@ -17,8 +17,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--caps-modal-bg, #fff);
-  padding: 1rem;
-  border-radius: 0.5rem;
+  background: var(--color-background);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
   min-width: 300px;
 }

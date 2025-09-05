@@ -6,3 +6,4 @@ export { CapsTabs } from './tabs.js';
 export { CapsModal } from './modal.js';
 export { CapsSelect } from './select.js';
 export { getLocale, setLocale, onLocaleChange } from './locale.js';
+export { getTheme, setTheme, onThemeChange } from './theme.js';
