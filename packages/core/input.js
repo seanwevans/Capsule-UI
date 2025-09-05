@@ -12,26 +12,26 @@ class CapsInput extends HTMLElement {
         }
         input {
           font: inherit;
-          padding: 0.5rem 0.75rem;
-          border: 1px solid var(--caps-input-border, #d1d5db);
-          border-radius: 0.375rem;
-          background: var(--caps-input-bg, #fff);
-          color: var(--caps-input-color, #0f172a);
-          transition: border-color var(--caps-motion);
+          padding: var(--spacing-sm) var(--spacing-md);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          background: var(--color-background);
+          color: var(--color-text);
+          transition: border-color var(--motion-fast);
         }
         :host([variant="outline"]) input { background: transparent; }
         @container (min-width: 480px) {
-          input { padding: 0.75rem 1rem; }
+          input { padding: var(--spacing-md) var(--spacing-lg); }
         }
-        input:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
+        input:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {
-          :host { --caps-motion: 0s; }
+          :host { --motion-fast: 0s; }
         }
         @media (prefers-contrast: more) {
           input {
-            border-color: var(--caps-input-border-contrast, #000);
-            background: var(--caps-input-bg-contrast, #fff);
-            color: var(--caps-input-color-contrast, #000);
+            border-color: var(--color-text);
+            background: var(--color-background);
+            color: var(--color-text);
           }
         }
       </style>

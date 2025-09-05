@@ -9,15 +9,15 @@ class CapsCard extends HTMLElement {
           container-type: inline-size;
         }
         .card {
-          background: var(--caps-card-bg, #fff);
-          border: var(--caps-card-border, 1px solid #e5e7eb);
-          border-radius: var(--caps-card-radius, 0.5rem);
-          padding: var(--caps-card-padding, 1rem);
-          box-shadow: var(--caps-card-shadow, 0 1px 2px rgba(0,0,0,0.05));
+          background: var(--color-background);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          padding: var(--spacing-lg);
+          box-shadow: var(--shadow-sm);
         }
         :host([variant="outline"]) .card { box-shadow: none; }
         @container (min-width: 600px) {
-          .card { padding: calc(var(--caps-card-padding, 1rem) * 1.5); }
+          .card { padding: calc(var(--spacing-lg) * 1.5); }
         }
       </style>
       <div class="card" part="card"><slot></slot></div>

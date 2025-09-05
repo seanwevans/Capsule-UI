@@ -4,7 +4,7 @@
   position: fixed;
   inset: 0;
   container-type: inline-size;
-  --caps-motion: 0.2s;
+  --motion-fast: 0.2s;
 }
 .container:where([open]) {
   display: block;
@@ -12,8 +12,7 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  background: var(--color-text);
-  opacity: 0.5;
+  background: var(--color-overlay);
 }
 .modal {
   position: absolute;
@@ -21,17 +20,17 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-background);
-  padding: 1rem;
-  border-radius: 0.5rem;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
   min-width: 300px;
-  transition: transform var(--caps-motion);
+  transition: transform var(--motion-fast);
 }
 @media (prefers-reduced-motion: reduce) {
-  .container { --caps-motion: 0s; }
+  .container { --motion-fast: 0s; }
 }
 @media (prefers-contrast: more) {
-  .backdrop { background: rgba(0,0,0,0.8); }
-  .modal { background: var(--caps-modal-bg-contrast, #fff); color: var(--caps-modal-color-contrast, #000); }
+  .backdrop { background: var(--color-overlay); }
+  .modal { background: var(--color-background); color: var(--color-text); }
 }
 :where(.container[data-variant="fullscreen"]) .modal {
   inset: 0;

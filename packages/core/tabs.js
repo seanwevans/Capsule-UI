@@ -10,35 +10,40 @@ class CapsTabs extends HTMLElement {
           display: block;
           container-type: inline-size;
         }
-        .tablist { display: flex; gap: 0.25rem; }
+        .tablist { display: flex; gap: var(--spacing-xs); }
         .tablist ::slotted(button) {
-          background: var(--caps-tab-bg, transparent);
+          background: transparent;
           border: none;
-          padding: 0.5rem 0.75rem;
-          border-radius: 0.375rem 0.375rem 0 0;
+          padding: var(--spacing-sm) var(--spacing-md);
+          border-radius: var(--radius-md) var(--radius-md) 0 0;
           cursor: pointer;
-          transition: background var(--caps-motion);
+          transition: background var(--motion-fast);
         }
         :host([variant="pill"]) .tablist ::slotted(button) {
           border-radius: 999px;
         }
         .tablist ::slotted(button[aria-selected='true']) {
-          background: var(--caps-tab-active-bg, #fff);
+          background: var(--color-background);
           font-weight: 600;
         }
-        .panels { border: 1px solid var(--caps-tab-border, #e5e7eb); border-radius: 0 0 0.375rem 0.375rem; padding: 1rem; }
+        .panels {
+          border: 1px solid var(--color-border);
+          border-radius: 0 0 var(--radius-md) var(--radius-md);
+          padding: var(--spacing-lg);
+        }
         .panels ::slotted(*) { display: none; }
         .panels ::slotted([data-active]) { display: block; }
         @container (max-width: 480px) {
           .tablist { flex-direction: column; }
-          .tablist ::slotted(button) { border-radius: 0.375rem; }
+          .tablist ::slotted(button) { border-radius: var(--radius-md); }
+        }
         @media (prefers-reduced-motion: reduce) {
-          :host { --caps-motion: 0s; }
+          :host { --motion-fast: 0s; }
         }
         @media (prefers-contrast: more) {
           .tablist ::slotted(button[aria-selected='true']) {
-            background: var(--caps-tab-active-bg-contrast, #000);
-            color: var(--caps-tab-active-color-contrast, #fff);
+            background: var(--color-text);
+            color: var(--color-background);
           }
         }
       </style>

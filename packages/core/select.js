@@ -14,26 +14,26 @@ class CapsSelect extends HTMLElement {
         }
         select {
           font: inherit;
-          padding: var(--caps-select-padding, 0.5rem 0.75rem);
-          border: var(--caps-select-border, 1px solid #d1d5db);
-          border-radius: var(--caps-select-radius, 0.375rem);
-          background: var(--caps-select-bg, #fff);
-          color: var(--caps-select-color, #0f172a);
-          transition: border-color var(--caps-motion);
+          padding: var(--spacing-sm) var(--spacing-md);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          background: var(--color-background);
+          color: var(--color-text);
+          transition: border-color var(--motion-fast);
         }
         :host([variant="outline"]) select { background: transparent; }
         @container (min-width: 480px) {
-          select { padding: 0.75rem 1rem; }
+          select { padding: var(--spacing-md) var(--spacing-lg); }
         }
-        select:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
+        select:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {
-          :host { --caps-motion: 0s; }
+          :host { --motion-fast: 0s; }
         }
         @media (prefers-contrast: more) {
           select {
-            border: var(--caps-select-border-contrast, 1px solid #000);
-            background: var(--caps-select-bg-contrast, #fff);
-            color: var(--caps-select-color-contrast, #000);
+            border: 1px solid var(--color-text);
+            background: var(--color-background);
+            color: var(--color-text);
           }
         }
       </style>

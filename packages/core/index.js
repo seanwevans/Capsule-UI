@@ -7,3 +7,4 @@ export { CapsModal } from './modal.js';
 export { CapsSelect } from './select.js';
 export { getLocale, setLocale, onLocaleChange, formatNumber, formatDate, setDirection } from './locale.js';
 export { ThemeManager } from './theme-manager.js';
+export { setTheme, getTheme, onThemeChange } from './theme.js';

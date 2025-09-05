@@ -55,5 +55,14 @@ export const validators: Record<string, Validator> = {
     if (!isTime) {
       throw new Error(`Token '${name}' has invalid duration value '${value}'`);
     }
+  },
+  shadow: (name, value) => {
+    if (typeof value !== 'string') {
+      throw new Error(`Token '${name}' has invalid shadow value '${value}'`);
+    }
+    const match = csstree.lexer.matchProperty('box-shadow', value);
+    if (match.error) {
+      throw new Error(`Token '${name}' has invalid shadow value '${value}'`);
+    }
   }
 };

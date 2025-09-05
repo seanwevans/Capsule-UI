@@ -440,7 +440,7 @@ test('generates type declarations for tokens', { concurrency: false }, async () 
       assert.match(dts, new RegExp(name));
     }
 
-    assert.match(dts, /export type ThemeName = 'dark' \| 'light';/);
+    assert.match(dts, /export type ThemeName = 'dark' \| 'light' \| 'ocean';/);
     assert.match(dts, /export type TokenValues = Record<ThemeName, string \| number>;/);
   } finally {
     await fs.writeFile(tokensPath, original);
@@ -458,6 +458,7 @@ test('generates JavaScript module for tokens', { concurrency: false }, async () 
     assert.deepEqual(mod.default['--color-background'], {
       light: '#ffffff',
       dark: '#000000',
+      ocean: '#f0f9ff',
     });
   } finally {
     await fs.writeFile(tokensPath, original);

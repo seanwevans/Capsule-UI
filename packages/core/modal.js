@@ -15,15 +15,15 @@ class CapsModal extends HTMLElement {
           container-type: inline-size;
         }
         :host([open]) { display: block; }
-        .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+        .backdrop { position: absolute; inset: 0; background: var(--color-overlay); }
         .modal {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          background: var(--caps-modal-bg, #fff);
-          padding: 1rem;
-          border-radius: 0.5rem;
+          background: var(--color-background);
+          padding: var(--spacing-lg);
+          border-radius: var(--radius-lg);
           min-width: 300px;
         }
         :host([variant="fullscreen"]) .modal {
