@@ -44,9 +44,16 @@ const tokens = program.command('tokens').description('Design token utilities');
 tokens
   .command('build')
   .description('Build design tokens')
-  .action(async () => {
+  .option('--default-theme <name>', 'Default theme', 'light')
+  .action(async (options) => {
     try {
-      process.exitCode = await runCommand('pnpm', ['run', 'tokens:build']);
+      process.exitCode = await runCommand('pnpm', [
+        'run',
+        'tokens:build',
+        '--',
+        '--default-theme',
+        options.defaultTheme,
+      ]);
     } catch (err) {
       console.error(err);
       process.exitCode = 1;

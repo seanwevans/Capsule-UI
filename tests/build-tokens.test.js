@@ -10,11 +10,11 @@ const script = path.join(root, 'scripts', 'build-tokens.ts');
 const validateScript = path.join(root, 'scripts', 'validate-tokens.ts');
 const tokensPath = path.join(root, 'tokens', 'source', 'tokens.json');
 
-function runBuild() {
+function runBuild(...args) {
   return new Promise((resolve, reject) => {
     execFile(
       process.execPath,
-      ['--import', tsx, script],
+      ['--import', tsx, script, ...args],
       { cwd: root },
       (error, stdout, stderr) => {
         if (error) reject(new Error(stderr.trim()));
@@ -266,6 +266,13 @@ test('outputs themes in deterministic order', { concurrency: false }, async () =
   } finally {
     await fs.writeFile(tokensPath, original);
   }
+});
+
+test('allows setting custom default theme', { concurrency: false }, async () => {
+  await runBuild('--default-theme', 'dark');
+  const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
+  assert.match(css, /:root{\n  --color-background: #000000;/);
+  assert.match(css, /\[data-theme="light"\]{\n  --color-background: #ffffff;/);
 });
 
 test('accepts negative dimension values', { concurrency: false }, async () => {

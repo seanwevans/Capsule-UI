@@ -197,7 +197,11 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     );
     assert.equal(
       testFile,
-      `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
+      "import test from 'node:test';\n" +
+        "import assert from 'node:assert/strict';\n\n" +
+        "test('ExampleComponent', () => {\n" +
+        "  assert.equal(1, 1);\n" +
+        '});\n'
     );
     assert.equal(
       rootIndex,
