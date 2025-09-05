@@ -22,10 +22,10 @@
     "storybook:build": "storybook build",
     "test:visual": "chromatic --exit-zero-on-changes",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "changeset publish",
     "docs:dev": "pnpm --dir website start",
     "docs:build": "pnpm --dir website build",
-    "docs:serve": "pnpm --dir website serve",
+    "docs:serve": "pnpm --dir website serve"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.14",
@@ -49,7 +49,9 @@
     "jsdom": "^24.0.0",
     "@playwright/test": "^1.48.0",
     "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.29.6"
+    "@changesets/cli": "^2.29.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "engines": {
     "node": ">=18"
