@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:stylelint-plugin": "tsc stylelint/require-layer.ts --esModuleInterop --module commonjs --target ES2022 --skipLibCheck",
+    "build:stylelint-plugin": "tsc packages/stylelint-config-capsule/require-layer.ts --esModuleInterop --module commonjs --target ES2022 --skipLibCheck",
     "lint:css": "pnpm run build:stylelint-plugin && stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "pnpm run lint:css && pnpm run lint:js",

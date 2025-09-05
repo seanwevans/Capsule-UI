@@ -3,7 +3,13 @@ const assert = require('node:assert/strict');
 const stylelint = require('stylelint');
 const path = require('path');
 
-const pluginPath = path.join(__dirname, '..', 'stylelint', 'require-layer.js');
+const pluginPath = path.join(
+  __dirname,
+  '..',
+  'packages',
+  'stylelint-config-capsule',
+  'require-layer.js',
+);
 
 function lint(code, { fix = false, config = {} } = {}) {
   return stylelint.lint({

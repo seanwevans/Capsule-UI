@@ -1,0 +1,13 @@
+{
+  "name": "eslint-config-capsule",
+  "version": "0.0.1",
+  "main": "index.js",
+  "peerDependencies": {
+    "eslint": "^8.57.0"
+  },
+  "files": ["index.js", "require-layer.js"],
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.5.2"
+}

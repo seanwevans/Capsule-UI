@@ -1,0 +1,13 @@
+{
+  "name": "stylelint-config-capsule",
+  "version": "0.0.1",
+  "main": "index.js",
+  "peerDependencies": {
+    "stylelint": "^15.10.0"
+  },
+  "files": ["index.js", "require-layer.js", "require-layer.ts"],
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.5.2"
+}

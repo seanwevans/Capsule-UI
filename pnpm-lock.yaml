@@ -54,6 +54,20 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
 
+  packages/core: {}
+
+  packages/eslint-config-capsule:
+    dependencies:
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
+
+  packages/stylelint-config-capsule:
+    dependencies:
+      stylelint:
+        specifier: ^15.10.0
+        version: 15.11.0(typescript@5.9.2)
+
 packages:
 
   '@babel/code-frame@7.27.1':
