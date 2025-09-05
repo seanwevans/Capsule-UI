@@ -18,13 +18,14 @@ class BookingWidget extends HTMLElement {
     this.tabIndex = 0;
     // Attach an open shadow root so host pages can use the ::part API.
     this.attachShadow({ mode: 'open' });
-    // Build the widget's shadow DOM. Note that CSS variables defined on
-    // the host element cascade into the shadow DOM and are used by the
-    // styles below. The @layer directive establishes ordering between
-    // layers – reset, base, components and overrides – similar to the
-    // Capsule UI philosophy.
-    this.shadowRoot.innerHTML = `
-      <style>
+    // Build the widget's shadow DOM without using innerHTML to mitigate
+    // injection risks. CSS variables defined on the host element cascade
+    // into the shadow DOM and are used by the styles below. The @layer
+    // directive establishes ordering between layers – reset, base,
+    // components and overrides – similar to the Capsule UI philosophy.
+
+    const style = document.createElement('style');
+    style.textContent = `
         @layer reset, base, components, overrides;
 
         :host {
@@ -172,6 +173,7 @@ class BookingWidget extends HTMLElement {
             position: relative;
           }
         }
+
       </style>
 
       <div class="card" part="card">
@@ -232,6 +234,179 @@ class BookingWidget extends HTMLElement {
 
     // Cache the first focusable field for focus management.
     this._firstField = this.shadowRoot.querySelector('input, select, textarea, button');
+
+      `;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('part', 'card');
+
+    const header = document.createElement('div');
+    header.className = 'header';
+    header.setAttribute('part', 'header');
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const icon = document.createElementNS(svgNS, 'svg');
+    icon.setAttribute('width', '28');
+    icon.setAttribute('height', '28');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('aria-hidden', 'true');
+
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('x', '3');
+    rect.setAttribute('y', '4');
+    rect.setAttribute('width', '18');
+    rect.setAttribute('height', '17');
+    rect.setAttribute('rx', '3');
+    rect.setAttribute('stroke', 'currentColor');
+    rect.setAttribute('opacity', '0.15');
+    icon.appendChild(rect);
+
+    const topPath = document.createElementNS(svgNS, 'path');
+    topPath.setAttribute('d', 'M3 9h18');
+    topPath.setAttribute('stroke', 'currentColor');
+    topPath.setAttribute('opacity', '0.25');
+    icon.appendChild(topPath);
+
+    const c1 = document.createElementNS(svgNS, 'circle');
+    c1.setAttribute('cx', '8.5');
+    c1.setAttribute('cy', '13.5');
+    c1.setAttribute('r', '1.25');
+    c1.setAttribute('fill', 'currentColor');
+    icon.appendChild(c1);
+
+    const c2 = document.createElementNS(svgNS, 'circle');
+    c2.setAttribute('cx', '12');
+    c2.setAttribute('cy', '13.5');
+    c2.setAttribute('r', '1.25');
+    c2.setAttribute('fill', 'currentColor');
+    c2.setAttribute('opacity', '0.6');
+    icon.appendChild(c2);
+
+    const c3 = document.createElementNS(svgNS, 'circle');
+    c3.setAttribute('cx', '15.5');
+    c3.setAttribute('cy', '17');
+    c3.setAttribute('r', '1.25');
+    c3.setAttribute('fill', 'currentColor');
+    icon.appendChild(c3);
+
+    header.appendChild(icon);
+
+    const headerText = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.setAttribute('part', 'title');
+    title.textContent = 'Book a slot';
+    const subtitle = document.createElement('div');
+    subtitle.className = 'subtitle';
+    subtitle.setAttribute('part', 'subtitle');
+    subtitle.textContent = 'Enter details, pick a date, time & guests';
+    headerText.append(title, subtitle);
+    header.appendChild(headerText);
+
+    card.appendChild(header);
+
+    const form = document.createElement('form');
+    form.className = 'form';
+    form.setAttribute('part', 'form');
+
+    const row = document.createElement('div');
+    row.className = 'row';
+
+    const makeField = (labelText, inputEl) => {
+      const field = document.createElement('label');
+      field.className = 'field';
+      field.setAttribute('part', 'field');
+      const span = document.createElement('span');
+      span.className = 'label';
+      span.setAttribute('part', 'label');
+      span.textContent = labelText;
+      field.append(span, inputEl);
+      return field;
+    };
+
+    const nameInput = document.createElement('input');
+    nameInput.className = 'input';
+    nameInput.setAttribute('part', 'input text');
+    nameInput.type = 'text';
+    nameInput.name = 'name';
+    nameInput.required = true;
+    row.appendChild(makeField('Name', nameInput));
+
+    const dateInput = document.createElement('input');
+    dateInput.className = 'input';
+    dateInput.setAttribute('part', 'input date');
+    dateInput.type = 'date';
+    dateInput.name = 'date';
+    dateInput.required = true;
+    row.appendChild(makeField('Date', dateInput));
+
+    const timeSelect = document.createElement('select');
+    timeSelect.className = 'input';
+    timeSelect.setAttribute('part', 'input select');
+    timeSelect.name = 'time';
+    timeSelect.required = true;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    placeholder.textContent = 'Select…';
+    timeSelect.appendChild(placeholder);
+    ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00'].forEach((t) => {
+      const opt = document.createElement('option');
+      opt.textContent = t;
+      timeSelect.appendChild(opt);
+    });
+    row.appendChild(makeField('Time', timeSelect));
+
+    const guestsInput = document.createElement('input');
+    guestsInput.className = 'input';
+    guestsInput.setAttribute('part', 'input number');
+    guestsInput.type = 'number';
+    guestsInput.name = 'guests';
+    guestsInput.min = '1';
+    guestsInput.max = '12';
+    guestsInput.value = '2';
+    row.appendChild(makeField('Guests', guestsInput));
+
+    const notesInput = document.createElement('input');
+    notesInput.className = 'input';
+    notesInput.setAttribute('part', 'input text');
+    notesInput.type = 'text';
+    notesInput.name = 'notes';
+    notesInput.placeholder = 'Allergies, requests…';
+    row.appendChild(makeField('Notes (optional)', notesInput));
+
+    form.appendChild(row);
+
+    const button = document.createElement('button');
+    button.className = 'button';
+    button.setAttribute('part', 'button');
+    button.type = 'submit';
+
+    const checkSvg = document.createElementNS(svgNS, 'svg');
+    checkSvg.setAttribute('width', '16');
+    checkSvg.setAttribute('height', '16');
+    checkSvg.setAttribute('viewBox', '0 0 24 24');
+    checkSvg.setAttribute('fill', 'none');
+    checkSvg.setAttribute('aria-hidden', 'true');
+
+    const checkPath = document.createElementNS(svgNS, 'path');
+    checkPath.setAttribute('d', 'M5 12l4 4L19 6');
+    checkPath.setAttribute('stroke', 'currentColor');
+    checkPath.setAttribute('stroke-width', '2');
+    checkPath.setAttribute('stroke-linecap', 'round');
+    checkPath.setAttribute('stroke-linejoin', 'round');
+    checkSvg.appendChild(checkPath);
+
+    button.append(checkSvg, 'Book');
+
+    form.appendChild(button);
+    card.appendChild(form);
+
+    this.shadowRoot.append(style, card);
+
   }
 
   connectedCallback() {

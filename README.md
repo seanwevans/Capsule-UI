@@ -57,6 +57,19 @@ Everything else stays private.
 
 ---
 
+## Preview components
+
+An early preview package `@capsule-ui/core` publishes foundational elements for experimentation:
+
+- `<caps-button>` – styled button element
+- `<caps-input>` – basic text input
+- `<caps-card>` – surface container
+- `<caps-tabs>` – tabbed interface
+- `<caps-modal>` – modal dialog
+
+Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
+
+
 ## Quick start (vanilla, using the demo widget)
 Drop this into any HTML page:
 
@@ -89,9 +102,10 @@ booking-widget::part(card)   { border-radius: 24px; }
 ```js
 customElements.define("booking-widget", class extends HTMLElement {
   constructor(){
-    super(); const r = this.attachShadow({mode:"open"});
-    r.innerHTML = `
-      <style>
+    super();
+    const r = this.attachShadow({mode:"open"});
+    const style = document.createElement("style");
+    style.textContent = `
         @layer reset, base, components;
         :host{
           --bk-brand: #4f46e5; --bk-text: #0f172a;
@@ -101,9 +115,13 @@ customElements.define("booking-widget", class extends HTMLElement {
         @layer base {
           .button{ background: var(--bk-brand); color:white; border:0; padding:.7rem 1rem; border-radius:12px; }
         }
-      </style>
-      <button class="button" part="button" type="button">Book</button>
-    `;
+      `;
+    const btn = document.createElement("button");
+    btn.className = "button";
+    btn.setAttribute("part", "button");
+    btn.type = "button";
+    btn.textContent = "Book";
+    r.append(style, btn);
   }
 });
 ```

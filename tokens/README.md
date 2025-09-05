@@ -27,3 +27,14 @@ Example import:
 import tokens from '../dist/tokens.js';
 ```
 
+## Categories & usage
+
+- **Color** – semantic tokens like `background`, `text`, `brand`, `success`, `warning`, and `error`. Each color exposes `light` and `dark` values to support theming.
+- **Spacing** – a consistent scale from `xs` through `2xl` for margin and padding.
+- **Typography** – font sizes, weights, and line heights for text styles.
+- **Radius** – corner rounding options (`none` through `full`).
+- **Z-index** – layering levels for overlays such as dropdowns, modals, and tooltips.
+- **Motion** – standard transition durations (`fast`, `normal`, `slow`).
+
+Reference tokens via CSS custom properties, e.g. `var(--spacing-md)` or `var(--color-success)`. Color tokens swap values based on `[data-theme="dark"]`; other categories share the same value across themes.
+
