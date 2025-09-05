@@ -76,16 +76,20 @@ test('check surfaces pnpm failure exit code', async () => {
   }
 });
 
-test('reports error when pnpm is missing', async () => {
-  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
-  try {
-    const { code, stderr } = await run(['tokens', 'build'], { env: { PATH: tmp } });
-    assert.equal(code, 1);
-    assert.match(stderr, /pnpm not found/);
-  } finally {
-    await rm(tmp, { recursive: true, force: true });
-  }
-});
+  test('reports error when pnpm is missing', async () => {
+    const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+    try {
+      const { code, stderr } = await run(['tokens', 'build'], {
+        env: { PATH: tmp },
+      });
+      assert.equal(code, 1);
+      assert.match(stderr, /pnpm not found/);
+      const lines = stderr.trim().split(/\r?\n/);
+      assert.equal(lines.length, 1);
+    } finally {
+      await rm(tmp, { recursive: true, force: true });
+    }
+  });
 
 test('resolves pnpm.cmd on Windows', async () => {
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));

@@ -84,38 +84,43 @@ tokens
     }
   });
 
-program
-  .command('check')
-  .description('Run lint checks')
-  .action(async () => {
-    try {
-      process.exitCode = await runCommand('pnpm', ['run', 'lint']);
-    } catch (err) {
-      console.error(err);
-      process.exitCode = 1;
-    }
-  });
+  program
+    .command('check')
+    .description('Run lint checks')
+    .action(async () => {
+      try {
+        process.exitCode = await runCommand('pnpm', ['run', 'lint']);
+      } catch (err) {
+        console.error(err);
+        process.exitCode = 1;
+      }
+    });
 
-if (
-  import.meta.url === process.argv[1] ||
-  import.meta.url === pathToFileURL(process.argv[1]).href
-)
-  await program.parseAsync(process.argv);
+  if (
+    import.meta.url === process.argv[1] ||
+    import.meta.url === pathToFileURL(process.argv[1]).href
+  )
+    await program.parseAsync(process.argv);
 
-function runCommand(command, params) {
-  return new Promise((resolve, reject) => {
-    const cmd =
-      process.platform === 'win32' && command === 'pnpm'
-        ? `${command}.cmd`
-        : command;
+  function handleMissingCommand(command, resolve) {
+    console.error(`${command} not found; install ${command} or adjust PATH.`);
+    resolve(1);
+  }
+
+  function runCommand(command, params) {
+    return new Promise((resolve, reject) => {
+      const cmd =
+        process.platform === 'win32' && command === 'pnpm'
+          ? `${command}.cmd`
+          : command;
 
     let child;
     try {
       child = spawn(cmd, params, { stdio: 'inherit' });
     } catch (err) {
       if (err.code === 'ENOENT') {
-        console.error(`${command} not found; install ${command} or adjust PATH.`);
-        return resolve(1);
+        handleMissingCommand(command, resolve);
+        return;
       }
       return reject(err);
     }
@@ -138,8 +143,7 @@ function runCommand(command, params) {
     child.on('error', (error) => {
       signals.forEach((sig) => process.off(sig, forward));
       if (error.code === 'ENOENT') {
-        console.error(`${command} not found; install ${command} or adjust PATH.`);
-        resolve(1);
+        handleMissingCommand(command, resolve);
       } else {
         reject(error);
       }
