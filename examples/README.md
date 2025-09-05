@@ -2,7 +2,8 @@
 
 This directory demonstrates a minimal Capsule widget built with Shadow DOM.
 Its internal action uses a `<button type="button">` element to avoid
-unintended form submissions.
+unintended form submissions. The form collects a name, date, time, guest
+count and optional notes.
 
 ## Usage
 
