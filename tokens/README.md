@@ -28,6 +28,7 @@ to produce:
 
 - `tokens.css` – CSS custom properties for each token.
 - `tokens.json` – token values as JSON.
+- `tokens.js` – JavaScript module exporting the token map.
 - `tokens.d.ts` – TypeScript declarations for the token map.
 
 `pnpm tokens:watch` rebuilds on changes and `pnpm tokens:validate` runs schema checks without writing files.
@@ -38,7 +39,7 @@ Create new categories by adding top-level keys in `tokens/source/tokens.json`. E
 
 ## Themes & brands
 
-Starter themes (`light`, `dark`, and `acme`) are provided. To support additional themes or brand palettes, make a token's `$value` an object whose keys are theme names:
+To support multiple themes or brand palettes, make a token's `$value` an object whose keys are theme names:
 
 ```json
 "color": {
