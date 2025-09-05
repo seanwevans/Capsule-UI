@@ -6,6 +6,13 @@
   "exports": {
     ".": {
       "import": "./index.js"
+    },
+    "./button.recipe": {
+      "import": "./button.recipe.js",
+      "types": "./button.recipe.d.ts"
     }
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1"
   }
 }
