@@ -4,13 +4,18 @@
   "type": "module",
   "main": "index.js",
   "exports": {
-    ".": { "import": "./index.js" },
-    "./css": { "import": "./css/index.js" }
+    ".": {
+      "import": "./index.js"
+    },
+    "./css": {
+      "import": "./css/index.js"
+    }
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "dependencies": {
-    "@capsule-ui/core": "workspace:*"
+    "@capsule-ui/core": "workspace:*",
+    "@capsule-ui/css": "workspace:*"
   }
 }
