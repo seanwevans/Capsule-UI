@@ -8,10 +8,23 @@ const createComponent = (tag, name) =>
       return () => h(tag, { ...attrs, ...props }, slots.default ? slots.default() : undefined);
     }
   });
+const components = [
+  ['caps-button', 'CapsButton'],
+  ['caps-input', 'CapsInput'],
+  ['caps-card', 'CapsCard'],
+  ['caps-tabs', 'CapsTabs'],
+  ['caps-modal', 'CapsModal'],
+  ['caps-select', 'CapsSelect']
+];
 
-export const CapsButton = createComponent('caps-button', 'CapsButton');
-export const CapsInput = createComponent('caps-input', 'CapsInput');
-export const CapsCard = createComponent('caps-card', 'CapsCard');
-export const CapsTabs = createComponent('caps-tabs', 'CapsTabs');
-export const CapsModal = createComponent('caps-modal', 'CapsModal');
-export const CapsSelect = createComponent('caps-select', 'CapsSelect');
+export const {
+  CapsButton,
+  CapsInput,
+  CapsCard,
+  CapsTabs,
+  CapsModal,
+  CapsSelect
+} = components.reduce((acc, [tag, name]) => {
+  acc[name] = createComponent(tag, name);
+  return acc;
+}, {});
