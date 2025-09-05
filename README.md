@@ -6,6 +6,8 @@ Capsule gives you sealed components (Shadow DOM or CSS Modules) plus a tiny, wel
 Isolated styles by default, instant theming via CSS variables, safe customization via `::part`, and responsive by **container queries**. No runtime CSS-in-JS.
 Inspired by [this article](https://denodell.com/blog/we-keep-reinventing-css).
 
+For developers migrating from Tailwind or CSS‑in‑JS, see the [migration and adoption guide](docs/migration-guide.md).
+
 ---
 
 ## Why?
