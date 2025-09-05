@@ -1,0 +1,218 @@
+{
+  "CSS Part Selector": {
+    "scope": "css,scss",
+    "prefix": "part",
+    "body": ["::part(${1:name}) {", "  $0", "}"],
+    "description": "Select a component part"
+  },
+  "Token Color Background": {
+    "scope": "css,scss",
+    "prefix": "token-color-background",
+    "body": ["var(--color-background)"],
+    "description": "Capsule color background token"
+  },
+  "Token Color Text": {
+    "scope": "css,scss",
+    "prefix": "token-color-text",
+    "body": ["var(--color-text)"],
+    "description": "Capsule color text token"
+  },
+  "Token Color Brand": {
+    "scope": "css,scss",
+    "prefix": "token-color-brand",
+    "body": ["var(--color-brand)"],
+    "description": "Capsule color brand token"
+  },
+  "Token Color Success": {
+    "scope": "css,scss",
+    "prefix": "token-color-success",
+    "body": ["var(--color-success)"],
+    "description": "Capsule color success token"
+  },
+  "Token Color Warning": {
+    "scope": "css,scss",
+    "prefix": "token-color-warning",
+    "body": ["var(--color-warning)"],
+    "description": "Capsule color warning token"
+  },
+  "Token Color Error": {
+    "scope": "css,scss",
+    "prefix": "token-color-error",
+    "body": ["var(--color-error)"],
+    "description": "Capsule color error token"
+  },
+  "Token Spacing Xs": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-xs",
+    "body": ["var(--spacing-xs)"],
+    "description": "Capsule spacing xs token"
+  },
+  "Token Spacing Sm": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-sm",
+    "body": ["var(--spacing-sm)"],
+    "description": "Capsule spacing sm token"
+  },
+  "Token Spacing Md": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-md",
+    "body": ["var(--spacing-md)"],
+    "description": "Capsule spacing md token"
+  },
+  "Token Spacing Lg": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-lg",
+    "body": ["var(--spacing-lg)"],
+    "description": "Capsule spacing lg token"
+  },
+  "Token Spacing Xl": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-xl",
+    "body": ["var(--spacing-xl)"],
+    "description": "Capsule spacing xl token"
+  },
+  "Token Spacing 2xl": {
+    "scope": "css,scss",
+    "prefix": "token-spacing-2xl",
+    "body": ["var(--spacing-2xl)"],
+    "description": "Capsule spacing 2xl token"
+  },
+  "Token Radius None": {
+    "scope": "css,scss",
+    "prefix": "token-radius-none",
+    "body": ["var(--radius-none)"],
+    "description": "Capsule radius none token"
+  },
+  "Token Radius Sm": {
+    "scope": "css,scss",
+    "prefix": "token-radius-sm",
+    "body": ["var(--radius-sm)"],
+    "description": "Capsule radius sm token"
+  },
+  "Token Radius Md": {
+    "scope": "css,scss",
+    "prefix": "token-radius-md",
+    "body": ["var(--radius-md)"],
+    "description": "Capsule radius md token"
+  },
+  "Token Radius Lg": {
+    "scope": "css,scss",
+    "prefix": "token-radius-lg",
+    "body": ["var(--radius-lg)"],
+    "description": "Capsule radius lg token"
+  },
+  "Token Radius Full": {
+    "scope": "css,scss",
+    "prefix": "token-radius-full",
+    "body": ["var(--radius-full)"],
+    "description": "Capsule radius full token"
+  },
+  "Token ZIndex Base": {
+    "scope": "css,scss",
+    "prefix": "token-z-index-base",
+    "body": ["var(--z-index-base)"],
+    "description": "Capsule z-index base token"
+  },
+  "Token ZIndex Dropdown": {
+    "scope": "css,scss",
+    "prefix": "token-z-index-dropdown",
+    "body": ["var(--z-index-dropdown)"],
+    "description": "Capsule z-index dropdown token"
+  },
+  "Token ZIndex Modal": {
+    "scope": "css,scss",
+    "prefix": "token-z-index-modal",
+    "body": ["var(--z-index-modal)"],
+    "description": "Capsule z-index modal token"
+  },
+  "Token ZIndex Popover": {
+    "scope": "css,scss",
+    "prefix": "token-z-index-popover",
+    "body": ["var(--z-index-popover)"],
+    "description": "Capsule z-index popover token"
+  },
+  "Token ZIndex Tooltip": {
+    "scope": "css,scss",
+    "prefix": "token-z-index-tooltip",
+    "body": ["var(--z-index-tooltip)"],
+    "description": "Capsule z-index tooltip token"
+  },
+  "Token Motion Duration Fast": {
+    "scope": "css,scss",
+    "prefix": "token-motion-duration-fast",
+    "body": ["var(--motion-duration-fast)"],
+    "description": "Capsule motion duration fast token"
+  },
+  "Token Motion Duration Normal": {
+    "scope": "css,scss",
+    "prefix": "token-motion-duration-normal",
+    "body": ["var(--motion-duration-normal)"],
+    "description": "Capsule motion duration normal token"
+  },
+  "Token Motion Duration Slow": {
+    "scope": "css,scss",
+    "prefix": "token-motion-duration-slow",
+    "body": ["var(--motion-duration-slow)"],
+    "description": "Capsule motion duration slow token"
+  },
+  "Token Typography Font Size Sm": {
+    "scope": "css,scss",
+    "prefix": "token-font-size-sm",
+    "body": ["var(--typography-font-size-sm)"],
+    "description": "Capsule font size sm token"
+  },
+  "Token Typography Font Size Md": {
+    "scope": "css,scss",
+    "prefix": "token-font-size-md",
+    "body": ["var(--typography-font-size-md)"],
+    "description": "Capsule font size md token"
+  },
+  "Token Typography Font Size Lg": {
+    "scope": "css,scss",
+    "prefix": "token-font-size-lg",
+    "body": ["var(--typography-font-size-lg)"],
+    "description": "Capsule font size lg token"
+  },
+  "Token Typography Font Size Xl": {
+    "scope": "css,scss",
+    "prefix": "token-font-size-xl",
+    "body": ["var(--typography-font-size-xl)"],
+    "description": "Capsule font size xl token"
+  },
+  "Token Typography Font Weight Regular": {
+    "scope": "css,scss",
+    "prefix": "token-font-weight-regular",
+    "body": ["var(--typography-font-weight-regular)"],
+    "description": "Capsule font weight regular token"
+  },
+  "Token Typography Font Weight Medium": {
+    "scope": "css,scss",
+    "prefix": "token-font-weight-medium",
+    "body": ["var(--typography-font-weight-medium)"],
+    "description": "Capsule font weight medium token"
+  },
+  "Token Typography Font Weight Bold": {
+    "scope": "css,scss",
+    "prefix": "token-font-weight-bold",
+    "body": ["var(--typography-font-weight-bold)"],
+    "description": "Capsule font weight bold token"
+  },
+  "Token Typography Line Height Sm": {
+    "scope": "css,scss",
+    "prefix": "token-line-height-sm",
+    "body": ["var(--typography-line-height-sm)"],
+    "description": "Capsule line height sm token"
+  },
+  "Token Typography Line Height Md": {
+    "scope": "css,scss",
+    "prefix": "token-line-height-md",
+    "body": ["var(--typography-line-height-md)"],
+    "description": "Capsule line height md token"
+  },
+  "Token Typography Line Height Lg": {
+    "scope": "css,scss",
+    "prefix": "token-line-height-lg",
+    "body": ["var(--typography-line-height-lg)"],
+    "description": "Capsule line height lg token"
+  }
+}

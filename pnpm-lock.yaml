@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
     devDependencies:
       '@storybook/addon-essentials':
         specifier: ^8.6.14
@@ -66,7 +70,56 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+
+  packages/eslint-config-capsule:
+    dependencies:
+      '@typescript-eslint/parser':
+        specifier: ^8.39.1
+        version: 8.39.1(eslint@8.57.1)(typescript@5.9.2)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
+
+  packages/react:
+    dependencies:
+      '@capsule-ui/core':
+        specifier: workspace:*
+        version: link:../core
+      react:
+        specifier: ^18.0.0
+        version: 18.3.1
+
+  packages/stylelint-config-capsule:
+    dependencies:
+      stylelint:
+        specifier: ^15.10.0
+        version: 15.11.0(typescript@5.9.2)
+      stylelint-declaration-strict-value:
+        specifier: ^1.10.2
+        version: 1.10.11(stylelint@15.11.0(typescript@5.9.2))
+
+  packages/svelte:
+    dependencies:
+      '@capsule-ui/core':
+        specifier: workspace:*
+        version: link:../core
+      svelte:
+        specifier: ^4.0.0
+        version: 4.2.20
+
+  packages/vue:
+    dependencies:
+      '@capsule-ui/core':
+        specifier: workspace:*
+        version: link:../core
+      vue:
+        specifier: ^3.0.0
+        version: 3.5.21(typescript@5.9.2)
 
   packages/eslint-config-capsule:
     dependencies:
@@ -802,8 +855,15 @@ packages:
       '@chromatic-com/playwright':
         optional: true
 
+  class-variance-authority@0.7.1:
+    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
+
   cliui@5.0.0:
     resolution: {integrity: sha512-PYeGSEmmHM6zvoef2w8TPzlrnNpXIjTipYK780YswmIP9vjxmd6Y2a3CB2Ks6/AU8NHjZugXvo8w3oWM2qnwXA==}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
@@ -2741,11 +2801,17 @@ snapshots:
 
   chromatic@13.1.4: {}
 
+  class-variance-authority@0.7.1:
+    dependencies:
+      clsx: 2.1.1
+
   cliui@5.0.0:
     dependencies:
       string-width: 3.1.0
       strip-ansi: 5.2.0
       wrap-ansi: 5.1.0
+
+  clsx@2.1.1: {}
 
   code-red@1.0.4:
     dependencies:

@@ -11,6 +11,7 @@ Inspired by [this article](https://denodell.com/blog/we-keep-reinventing-css).
 ## Why?
 - **Isolation by default.** Your host CSS can’t leak in; component CSS can’t leak out.
 - **Theming at runtime.** Flip brands/tenants by setting CSS variables—no rebuilds.
+- **Tenant isolation.** `ThemeManager` scopes tokens per tenant so styles can't leak across boundaries.
 - **Predictable overrides.** Only what you expose is customizable (`::part`, CSS vars).
 - **Fast.** Plain CSS or compile-time utilities; zero runtime styling engine.
 - **Local responsiveness.** Container queries adapt to *the space you give the component*.
@@ -40,6 +41,14 @@ Use `:where(...)` inside components to keep specificity low and stable.
 
 ### 4) Variants compile to classes, not runtime CSS
 Props map to **recipes** that produce class names at build time (e.g., CVA, Panda, UnoCSS, stylex’s compiled mode). No runtime styled-components/emotion unless you truly need dynamic computed styles.
+
+Example:
+
+```js
+import { buttonRecipe } from '@capsule-ui/core/button.recipe';
+
+const className = buttonRecipe({ size: 'lg', variant: 'secondary' });
+```
 
 ### 5) Container‑query first
 Components adapt to their container:
@@ -152,6 +161,7 @@ Capsule works best with a few non-negotiables:
   - Disallow global element styling in component CSS.
   - Require `@layer components` in component CSS files; override the layer name with `CAPSULE_LAYER_NAMES="utilities,components"` or disable with `CAPSULE_LAYER_NAMES=off`.
 - **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions). Set `CAPSULE_ALLOW_RUNTIME_STYLES=true` to permit one-off dynamic styles and use CSS-in-JS only for cases that can’t be expressed with tokens or precompiled utilities.
+- **Bundle budgets:** `pnpm run check:bundle-size` gates bundle size growth in CI.
 - **Governance flags:** `CAPSULE_LAYER_NAMES` and `CAPSULE_ALLOW_RUNTIME_STYLES` are escape hatches. Use them sparingly and see [governance flag guidelines](docs/governance-flags.md) for trade-offs and review practices.
 - Existing CSS-in-JS solutions can interoperate by generating token-based classes and injecting them into `@layer overrides`.
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
@@ -192,20 +202,18 @@ The page updates components live as you tweak CSS variables and can export a JSO
 
 ## CLI
 
-Capsule provides a small command line interface in `packages/capsule-cli`.
+Capsule provides a published command line interface.
 
-### Local development
+### Installation
 
 ```bash
-cd packages/capsule-cli
-pnpm install
-pnpm link # exposes a global `capsule` command
+pnpm add -g capsule-cli
 ```
 
 ### Usage
 
 ```bash
-capsule new component Button  # scaffolds a new component skeleton
+capsule new component Button  # scaffolds component, tests, docs and ADR stub
 capsule tokens build          # runs the token pipeline (pnpm run tokens:build)
-capsule check                 # runs lint tasks (pnpm run lint)
+capsule check                 # runs lint, token and test checks
 ```
