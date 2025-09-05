@@ -463,3 +463,14 @@ test('generates JavaScript module for tokens', { concurrency: false }, async () 
     await fs.writeFile(tokensPath, original);
   }
 });
+
+test('token artifacts are up to date', { concurrency: false }, async () => {
+  await runBuild();
+  const status = await new Promise((resolve, reject) => {
+    execFile('git', ['status', '--porcelain', 'dist'], { cwd: root }, (err, stdout, stderr) => {
+      if (err) reject(new Error(stderr.trim()));
+      else resolve(stdout.trim());
+    });
+  });
+  assert.equal(status, '', 'run `pnpm tokens:build` and commit the updated files in dist/');
+});
