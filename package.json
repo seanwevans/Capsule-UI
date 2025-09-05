@@ -14,17 +14,18 @@
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
   },
   "devDependencies": {
+    "@types/css-tree": "^2.3.10",
     "@typescript-eslint/parser": "^8.39.1",
+    "ajv": "^8.12.0",
+    "chokidar-cli": "^3.0.0",
+    "css-tree": "^3.1.0",
     "eslint": "^8.57.0",
+    "postcss": "8.5.6",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2",
-    "chokidar-cli": "^3.0.0",
     "tsx": "^4.20.4",
-    "ajv": "^8.12.0",
-    "css-tree": "^3.1.0",
-    "@types/css-tree": "^2.3.10"
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=18"
