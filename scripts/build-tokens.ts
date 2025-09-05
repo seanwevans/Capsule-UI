@@ -7,7 +7,7 @@ import type { TokenNode } from './token-types.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-export async function build() {
+export async function build(defaultTheme = 'light') {
   const src = path.join(root, 'tokens', 'source', 'tokens.json');
   const dist = path.join(root, 'dist');
   await fs.mkdir(dist, { recursive: true });
@@ -64,10 +64,10 @@ export async function build() {
     }
   }
  
-  const defaultTheme = themesList.includes('light') ? 'light' : themesList[0];
-  let css = `@layer components;\n:root{\n${themes[defaultTheme].join('\n')}\n}`;
+  const rootTheme = themesList.includes(defaultTheme) ? defaultTheme : themesList[0];
+  let css = `@layer components;\n:root{\n${themes[rootTheme].join('\n')}\n}`;
   for (const theme of themesList) {
-    if (theme === defaultTheme) continue;
+    if (theme === rootTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;
   }
   const js =
@@ -97,7 +97,17 @@ export async function build() {
 }
 
 if (fileURLToPath(import.meta.url) === process.argv[1]) {
-  build().catch(err => {
+  let defaultTheme = 'light';
+  const flag = process.argv.find(arg => arg.startsWith('--default-theme'));
+  if (flag) {
+    const [k, v] = flag.split('=');
+    if (v) defaultTheme = v;
+    else {
+      const idx = process.argv.indexOf(flag);
+      if (idx !== -1 && process.argv[idx + 1]) defaultTheme = process.argv[idx + 1];
+    }
+  }
+  build(defaultTheme).catch(err => {
     console.error(err);
     process.exit(1);
   });
