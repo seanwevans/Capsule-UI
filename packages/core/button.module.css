@@ -9,13 +9,15 @@
   transition: background var(--caps-motion, 0.2s), color var(--caps-motion, 0.2s);
 }
 .button:where(:focus-visible) {
-  outline: 2px solid #000;
+  outline: 2px solid;
+  outline-color: var(--color-text);
   outline-offset: 2px;
 }
 .button:where(:disabled) {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .button { transition: none; }
 }
@@ -24,4 +26,19 @@
     background: var(--caps-btn-bg-contrast, #000);
     color: var(--caps-btn-color-contrast, #fff);
   }
+
+/* size variants */
+.size-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+.size-lg {
+  padding: 0.75rem 1.5rem;
+}
+
+/* visual variants */
+.variant-secondary {
+  background: var(--caps-btn-secondary-bg, #6b7280);
+  color: var(--caps-btn-secondary-color, #fff);
+
 }

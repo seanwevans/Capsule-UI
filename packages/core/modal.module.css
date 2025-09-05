@@ -11,14 +11,15 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: var(--color-text);
+  opacity: 0.5;
 }
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--caps-modal-bg, #fff);
+  background: var(--color-background);
   padding: 1rem;
   border-radius: 0.5rem;
   min-width: 300px;

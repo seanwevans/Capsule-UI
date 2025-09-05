@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  push:
   pull_request:
 
 jobs:
@@ -16,6 +17,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint:css
       - run: pnpm run lint:js
+      - run: pnpm run check:runtime-styles
       - run: pnpm test
 
   a11y:

@@ -6,11 +6,16 @@
     "capsule": "./bin/capsule.js"
   },
   "type": "module",
+  "files": ["bin"],
+  "keywords": ["capsule", "cli"],
   "dependencies": {
     "commander": "^14.0.0"
   },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "packageManager": "pnpm@10.5.2"
 }

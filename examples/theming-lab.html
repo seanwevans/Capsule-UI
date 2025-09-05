@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Theming lab</title>
+    <script type="module" src="../packages/core/index.js"></script>
+    <style>
+      body { font-family: sans-serif; padding: 1rem; }
+      .controls { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+      label { display: flex; flex-direction: column; font-size: 12px; }
+      pre { background: #f3f4f6; padding: 1rem; }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <label>Button bg <input type="color" id="btnBg" value="#4f46e5" /></label>
+      <label>Button text <input type="color" id="btnColor" value="#ffffff" /></label>
+      <button id="exportBtn">Export theme</button>
+    </div>
+    <caps-button>Button</caps-button>
+    <caps-input placeholder="Input"></caps-input>
+    <pre id="output"></pre>
+
+    <script type="module">
+      const root = document.documentElement;
+      document.getElementById('btnBg').addEventListener('input', e => {
+        root.style.setProperty('--caps-btn-bg', e.target.value);
+      });
+      document.getElementById('btnColor').addEventListener('input', e => {
+        root.style.setProperty('--caps-btn-color', e.target.value);
+      });
+      document.getElementById('exportBtn').addEventListener('click', () => {
+        const theme = {
+          color: {
+            button: {
+              background: getComputedStyle(root).getPropertyValue('--caps-btn-bg').trim(),
+              text: getComputedStyle(root).getPropertyValue('--caps-btn-color').trim()
+            }
+          }
+        };
+        document.getElementById('output').textContent = JSON.stringify(theme, null, 2);
+      });
+    </script>
+  </body>
+</html>

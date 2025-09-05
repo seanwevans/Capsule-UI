@@ -9,7 +9,8 @@
   transition: border-color var(--caps-motion, 0.2s);
 }
 .select:where(:focus-visible) {
-  outline: 2px solid #4f46e5;
+  outline: 2px solid;
+  outline-color: var(--color-brand);
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
