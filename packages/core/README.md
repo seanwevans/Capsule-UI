@@ -11,3 +11,16 @@ Preview package containing fundamental Capsule UI components.
 - `<caps-modal>` – modal dialog shown when `open` attribute is present.
 
 These components are early previews for experimentation and feedback.
+
+## Analytics and Error Reporting
+
+Usage metrics and error reporting are disabled by default. To opt in:
+
+```js
+import { enableAnalytics, enableErrorReporting } from '@capsule-ui/core';
+
+enableAnalytics({ endpoint: '/internal/analytics' });
+enableErrorReporting(); // uses window.Sentry.captureException if available
+```
+
+Disable at any time with `disableAnalytics()` and `disableErrorReporting()`.

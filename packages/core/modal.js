@@ -1,4 +1,5 @@
 import { getLocale, onLocaleChange } from './locale.js';
+import { instrumentComponent } from './instrument.js';
 
 class CapsModal extends HTMLElement {
   static get observedAttributes() { return ['open', 'aria-label', 'aria-labelledby']; }
@@ -94,6 +95,8 @@ class CapsModal extends HTMLElement {
     }
   }
 }
+
+instrumentComponent('caps-modal', CapsModal);
 
 if (!customElements.get('caps-modal')) {
   customElements.define('caps-modal', CapsModal);

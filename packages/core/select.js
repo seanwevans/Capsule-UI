@@ -1,3 +1,4 @@
+import { instrumentComponent } from './instrument.js';
 import { sanitizeNode } from './sanitize.js';
 
 class CapsSelect extends HTMLElement {
@@ -109,6 +110,8 @@ class CapsSelect extends HTMLElement {
     this.shadowRoot.querySelector('select')?.focus();
   }
 }
+
+instrumentComponent('caps-select', CapsSelect);
 
 if (!customElements.get('caps-select')) {
   customElements.define('caps-select', CapsSelect);

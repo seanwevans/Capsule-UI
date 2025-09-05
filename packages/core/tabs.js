@@ -1,4 +1,5 @@
 import { getLocale, onLocaleChange } from './locale.js';
+import { instrumentComponent } from './instrument.js';
 import { sanitizeNode } from './sanitize.js';
 
 class CapsTabs extends HTMLElement {
@@ -130,6 +131,8 @@ class CapsTabs extends HTMLElement {
     this._unsub?.();
   }
 }
+
+instrumentComponent('caps-tabs', CapsTabs);
 
 if (!customElements.get('caps-tabs')) {
   customElements.define('caps-tabs', CapsTabs);
