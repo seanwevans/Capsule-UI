@@ -1,26 +1,185 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<!--
+  This example page demonstrates the full Capsule UI booking widget. It offers
+  runtime theming via CSS custom properties and attributes exposed by the
+  component. Controls at the top of the page let you change theme (light
+  vs. dark), variant (solid vs. ghost button style), brand colour and
+  density. When you submit the form the widget dispatches a custom "book"
+  event which the host page listens for and logs to the page.
+-->
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Booking Widget Demo</title>
-    <link rel="stylesheet" href="./dist/tokens.css">
-    <script type="module" src="./booking-widget.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Booking Widget — Style API Demo</title>
     <style>
-      body { font-family: sans-serif; padding: 2rem; }
+      /* Demo page only */
+      :root {
+        /* support light/dark system preferences. The widget itself reads
+           colour values from CSS variables declared on the host page. */
+        color-scheme: light dark;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        font: 14px/1.45 ui-sans-serif, system-ui, -apple-system,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: canvas;
+        color: canvastext;
+      }
+
+      /* Lay out the demo content. */
+      .demo {
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+      }
+
+      /* Controls for live theming. */
+      .controls {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .controls label {
+        display: grid;
+        gap: 0.25rem;
+        font-size: 12px;
+        color: gray;
+      }
+
+      .controls input[type="color"],
+      .controls select {
+        padding: 0.45rem 0.6rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+      }
+
+      .row {
+        display: grid;
+        gap: 1rem;
+      }
+
+      /* Arrange the widgets side-by-side on wider screens. */
+      @media (min-width: 720px) {
+        .row {
+          grid-template-columns: 360px 360px;
+        }
+      }
+
+      /* Host-page customisation for the second widget using CSS variables
+         and the ::part pseudo-element. */
+      .brand-acme booking-widget {
+        --bk-brand: #16a34a; /* green */
+        --bk-radius: 14px;
+      }
+      .brand-acme booking-widget::part(title) {
+        letter-spacing: 0.2px;
+      }
+      .brand-acme booking-widget::part(button) {
+        border-radius: 999px;
+      }
     </style>
+    <!-- Load the booking widget definition. -->
+    <script type="module" src="./booking-widget.js"></script>
   </head>
   <body>
-    <h1>Booking Widget Demo</h1>
-    <p>Use Tab to focus the button; it includes an accessible label, a
-    <code>type="button"</code> attribute, and a focus style.</p>
-    <booking-widget id="w"></booking-widget>
+    <div class="demo">
+      <!-- Live controls to tweak the widget attributes and CSS variables. -->
+      <div class="controls">
+        <label>
+          Theme
+          <select id="theme">
+            <option value="">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label>
+          Variant
+          <select id="variant">
+            <option value="solid">Solid</option>
+            <option value="ghost">Ghost</option>
+          </select>
+        </label>
+        <label>
+          Brand colour
+          <input id="brand" type="color" value="#4f46e5" />
+        </label>
+        <label>
+          Density
+          <select id="density">
+            <option value="default">Default</option>
+            <option value="compact">Compact</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <!-- Primary widget that is controlled via the controls above. -->
+        <booking-widget id="widget"></booking-widget>
+        <!-- A second widget themed entirely by the host page using
+             CSS variables and ::part. -->
+        <div class="brand-acme">
+          <booking-widget theme="dark" variant="ghost"></booking-widget>
+        </div>
+      </div>
+
+      <!-- Output log for booking events. -->
+      <pre id="log" style="margin:0; opacity:0.7"></pre>
+    </div>
+
     <script>
-      const w = document.getElementById('w');
-      // runtime theming after load
-      setTimeout(() => {
-        w.style.setProperty('--bk-brand', '#ff3b3b');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }, 1000);
+      // Grab references to the widget and log. These are used in the event
+      // handlers below to update attributes, CSS variables and the log.
+      const widget = document.getElementById('widget');
+      const log = document.getElementById('log');
+
+      // Update the widget's theme attribute based on the selection. If the
+      // selection is empty (Light), remove the attribute entirely so the
+      // default (light) applies.
+      document.getElementById('theme').addEventListener('change', (e) => {
+        const v = e.target.value;
+        if (v) {
+          widget.setAttribute('theme', v);
+        } else {
+          widget.removeAttribute('theme');
+        }
+      });
+
+      // Update the variant attribute when changed.
+      document.getElementById('variant').addEventListener('change', (e) => {
+        widget.setAttribute('variant', e.target.value);
+      });
+
+      // Toggle the density attribute. Only "compact" sets the attribute; the
+      // default removes it so the component uses its default spacing.
+      document.getElementById('density').addEventListener('change', (e) => {
+        const v = e.target.value;
+        if (v === 'compact') {
+          widget.setAttribute('density', 'compact');
+        } else {
+          widget.removeAttribute('density');
+        }
+      });
+
+      // When the colour picker changes, set the CSS variable on the widget.
+      document.getElementById('brand').addEventListener('input', (e) => {
+        widget.style.setProperty('--bk-brand', e.target.value);
+      });
+
+      // Listen for the custom 'book' event dispatched by the booking-widget
+      // component. When fired we log the form data as JSON.
+      addEventListener('book', (e) => {
+        const d = e.detail;
+        log.textContent = `Booked: ${JSON.stringify(d)}`;
+      });
     </script>
   </body>
 </html>
