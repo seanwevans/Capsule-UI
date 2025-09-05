@@ -152,6 +152,7 @@ Capsule works best with a few non-negotiables:
   - Disallow global element styling in component CSS.
   - Require `@layer components` in component CSS files; override the layer name with `CAPSULE_LAYER_NAMES="utilities,components"` or disable with `CAPSULE_LAYER_NAMES=off`.
 - **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions). Set `CAPSULE_ALLOW_RUNTIME_STYLES=true` to permit one-off dynamic styles and use CSS-in-JS only for cases that can’t be expressed with tokens or precompiled utilities.
+- **Governance flags:** `CAPSULE_LAYER_NAMES` and `CAPSULE_ALLOW_RUNTIME_STYLES` are escape hatches. Use them sparingly and see [governance flag guidelines](docs/governance-flags.md) for trade-offs and review practices.
 - Existing CSS-in-JS solutions can interoperate by generating token-based classes and injecting them into `@layer overrides`.
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
 ## Architecture Decision Records
