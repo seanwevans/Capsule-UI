@@ -19,6 +19,9 @@
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "docs:dev": "pnpm --dir website start",
+    "docs:build": "pnpm --dir website build",
+    "docs:serve": "pnpm --dir website serve",
     "test:visual": "chromatic --exit-zero-on-changes"
   },
   "devDependencies": {

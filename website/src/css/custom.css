@@ -1,0 +1,11 @@
+/* Custom styles for Capsule UI docs site */
+@layer components {
+  :root {
+    --ifm-color-primary: #4f46e5;
+    --ifm-code-font-size: 95%;
+  }
+
+  .hero__title {
+    font-size: 3rem;
+  }
+}
