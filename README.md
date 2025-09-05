@@ -11,6 +11,7 @@ Inspired by [this article](https://denodell.com/blog/we-keep-reinventing-css).
 ## Why?
 - **Isolation by default.** Your host CSS can’t leak in; component CSS can’t leak out.
 - **Theming at runtime.** Flip brands/tenants by setting CSS variables—no rebuilds.
+- **Tenant isolation.** `ThemeManager` scopes tokens per tenant so styles can't leak across boundaries.
 - **Predictable overrides.** Only what you expose is customizable (`::part`, CSS vars).
 - **Fast.** Plain CSS or compile-time utilities; zero runtime styling engine.
 - **Local responsiveness.** Container queries adapt to *the space you give the component*.
@@ -160,6 +161,7 @@ Capsule works best with a few non-negotiables:
   - Disallow global element styling in component CSS.
   - Require `@layer components` in component CSS files; override the layer name with `CAPSULE_LAYER_NAMES="utilities,components"` or disable with `CAPSULE_LAYER_NAMES=off`.
 - **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions). Set `CAPSULE_ALLOW_RUNTIME_STYLES=true` to permit one-off dynamic styles and use CSS-in-JS only for cases that can’t be expressed with tokens or precompiled utilities.
+- **Bundle budgets:** `pnpm run check:bundle-size` gates bundle size growth in CI.
 - **Governance flags:** `CAPSULE_LAYER_NAMES` and `CAPSULE_ALLOW_RUNTIME_STYLES` are escape hatches. Use them sparingly and see [governance flag guidelines](docs/governance-flags.md) for trade-offs and review practices.
 - Existing CSS-in-JS solutions can interoperate by generating token-based classes and injecting them into `@layer overrides`.
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
