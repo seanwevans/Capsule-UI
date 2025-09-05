@@ -11,12 +11,20 @@ Styled select element exposing minimal Style API. Options are provided in light 
   <option value="a">A</option>
   <option value="b">B</option>
 </caps-select>
+<caps-select variant="outline">
+  <option value="a">A</option>
+  <option value="b">B</option>
+</caps-select>
 ```
 
 ### CSS Modules
 
 ```html
 <select class="select">
+  <option value="a">A</option>
+  <option value="b">B</option>
+</select>
+<select class="select" data-variant="outline">
   <option value="a">A</option>
   <option value="b">B</option>
 </select>
@@ -28,7 +36,9 @@ Import `select.module.css` and apply the exported `select` class.
 
 - **CSS vars**: `--caps-select-padding`, `--caps-select-border`, `--caps-select-radius`, `--caps-select-bg`, `--caps-select-color`
 - **Parts**: `select`
-- **Attributes**: `disabled`, `multiple`, `size`, `name`, `value`
+- **Attributes**: `disabled`, `multiple`, `size`, `name`, `value`, `variant`
+
+Padding adjusts when the container is at least `480px` wide.
 
 ## A11y
 

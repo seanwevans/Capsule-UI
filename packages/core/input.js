@@ -6,7 +6,10 @@ class CapsInput extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: inline-block; }
+        :host {
+          display: inline-block;
+          container-type: inline-size;
+        }
         input {
           font: inherit;
           padding: 0.5rem 0.75rem;
@@ -14,6 +17,10 @@ class CapsInput extends HTMLElement {
           border-radius: 0.375rem;
           background: var(--caps-input-bg, #fff);
           color: var(--caps-input-color, #0f172a);
+        }
+        :host([variant="outline"]) input { background: transparent; }
+        @container (min-width: 480px) {
+          input { padding: 0.75rem 1rem; }
         }
         input:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
       </style>

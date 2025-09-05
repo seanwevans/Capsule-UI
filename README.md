@@ -68,7 +68,7 @@ An early preview package `@capsule-ui/core` publishes foundational elements for 
 - `<caps-modal>` – modal dialog
 - `<caps-select>` – styled select element
 
-Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
+Install with `pnpm add @capsule-ui/core` and try them in your project. Early adopters are encouraged to experiment and share feedback while these components evolve.
 
 ### Framework adapters
 

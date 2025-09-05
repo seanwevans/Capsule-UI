@@ -6,7 +6,10 @@ class CapsTabs extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; }
+        :host {
+          display: block;
+          container-type: inline-size;
+        }
         .tablist { display: flex; gap: 0.25rem; }
         .tablist ::slotted(button) {
           background: var(--caps-tab-bg, transparent);
@@ -15,6 +18,9 @@ class CapsTabs extends HTMLElement {
           border-radius: 0.375rem 0.375rem 0 0;
           cursor: pointer;
         }
+        :host([variant="pill"]) .tablist ::slotted(button) {
+          border-radius: 999px;
+        }
         .tablist ::slotted(button[aria-selected='true']) {
           background: var(--caps-tab-active-bg, #fff);
           font-weight: 600;
@@ -22,6 +28,10 @@ class CapsTabs extends HTMLElement {
         .panels { border: 1px solid var(--caps-tab-border, #e5e7eb); border-radius: 0 0 0.375rem 0.375rem; padding: 1rem; }
         .panels ::slotted(*) { display: none; }
         .panels ::slotted([data-active]) { display: block; }
+        @container (max-width: 480px) {
+          .tablist { flex-direction: column; }
+          .tablist ::slotted(button) { border-radius: 0.375rem; }
+        }
       </style>
       <div class="tabs">
         <div class="tablist" part="tablist" role="tablist"><slot name="tab"></slot></div>

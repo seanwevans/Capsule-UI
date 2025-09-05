@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Capsule Core Components</title>
+  <script type="module">
+    import '../packages/core/button.js';
+    import '../packages/core/input.js';
+    import '../packages/core/select.js';
+    import '../packages/core/card.js';
+    import '../packages/core/tabs.js';
+    import '../packages/core/modal.js';
+  </script>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    .demo { display: grid; gap: 1rem; max-width: 620px; margin: auto; }
+    .tabs-demo { border: 1px dashed #ccc; padding: 0.5rem; width: 260px; }
+    .tabs-demo.wide { width: 520px; }
+  </style>
+</head>
+<body>
+  <div class="demo">
+    <caps-button id="open">Open modal</caps-button>
+    <caps-button variant="outline">Outline</caps-button>
+    <caps-input placeholder="Type..."></caps-input>
+    <caps-select>
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </caps-select>
+    <caps-card>Card content</caps-card>
+    <div class="tabs-demo">
+      <caps-tabs>
+        <button slot="tab">One</button>
+        <button slot="tab">Two</button>
+        <div slot="panel">Panel 1</div>
+        <div slot="panel">Panel 2</div>
+      </caps-tabs>
+    </div>
+    <div class="tabs-demo wide">
+      <caps-tabs>
+        <button slot="tab">One</button>
+        <button slot="tab">Two</button>
+        <div slot="panel">Panel 1</div>
+        <div slot="panel">Panel 2</div>
+      </caps-tabs>
+    </div>
+    <caps-modal id="m">
+      <p>Modal content</p>
+    </caps-modal>
+  </div>
+  <script>
+    const m = document.getElementById('m');
+    document.getElementById('open').addEventListener('click', () => m.setAttribute('open', ''));
+  </script>
+</body>
+</html>
