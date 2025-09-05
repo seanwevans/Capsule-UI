@@ -70,6 +70,19 @@ An early preview package `@capsule-ui/core` publishes foundational elements for 
 
 Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
 
+### Framework adapters
+
+Prefer to stay in a framework? Tiny adapters wrap the Web Components so
+they behave like native React, Vue, or Svelte components:
+
+- `@capsule-ui/react`
+- `@capsule-ui/vue`
+- `@capsule-ui/svelte`
+
+Each forwards attributes and events and keeps the same Style API for
+`::part`, CSS variables, and attributes. See
+[framework adapter docs](docs/framework-adapters.md) for usage examples.
+
 
 ## Quick start (vanilla, using the demo widget)
 Drop this into any HTML page:

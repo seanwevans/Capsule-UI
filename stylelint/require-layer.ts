@@ -14,7 +14,10 @@ export interface RequireLayerOptions {
 }
 
 export const ruleName = 'capsule-ui/require-layer';
-const utils: Utils & { getLineEnding?: (input: string) => string } = stylelint.utils;
+/* eslint-disable no-unused-vars */
+type LineEndingFn = (input: string) => string;
+/* eslint-enable no-unused-vars */
+const utils: Utils & { getLineEnding?: LineEndingFn } = stylelint.utils;
 
 export const messages = utils.ruleMessages(ruleName, {
   expected: (name: string) => `Expected '@layer ${name}' declaration.`,

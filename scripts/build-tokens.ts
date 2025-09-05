@@ -100,7 +100,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
   let defaultTheme = 'light';
   const flag = process.argv.find(arg => arg.startsWith('--default-theme'));
   if (flag) {
-    const [k, v] = flag.split('=');
+    const [, v] = flag.split('=');
     if (v) defaultTheme = v;
     else {
       const idx = process.argv.indexOf(flag);
