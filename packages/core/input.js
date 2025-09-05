@@ -27,6 +27,14 @@ class CapsInput extends HTMLElement {
     if (name === 'disabled') {
       if (value !== null) input.setAttribute('disabled', '');
       else input.removeAttribute('disabled');
+    } else if (name === 'value') {
+      if (value !== null) {
+        input.setAttribute('value', value);
+        input.value = value;
+      } else {
+        input.removeAttribute('value');
+        input.value = '';
+      }
     } else {
       if (value !== null) input.setAttribute(name, value);
       else input.removeAttribute(name);
