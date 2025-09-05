@@ -87,8 +87,11 @@ class CapsInput extends withLocaleDir(HTMLElement) {
   }
 
   set value(v) {
-    const input = this.shadowRoot.querySelector('input');
-    if (input) input.value = v;
+    if (v) {
+      this.setAttribute('value', v);
+    } else {
+      this.removeAttribute('value');
+    }
   }
 }
 

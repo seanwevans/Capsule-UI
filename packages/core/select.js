@@ -102,8 +102,11 @@ class CapsSelect extends HTMLElement {
   }
 
   set value(v) {
-    const select = this.shadowRoot.querySelector('select');
-    if (select) select.value = v;
+    if (v) {
+      this.setAttribute('value', v);
+    } else {
+      this.removeAttribute('value');
+    }
   }
 
   focus() {
