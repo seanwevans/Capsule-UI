@@ -6,5 +6,8 @@
   "peerDependencies": {
     "eslint": "^8.57.0",
     "@typescript-eslint/parser": "^8.39.1"
+  },
+  "dependencies": {
+    "eslint-plugin-capsule": "workspace:*"
   }
 }

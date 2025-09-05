@@ -1,0 +1,10 @@
+{
+  "name": "Capsule Token Sync",
+  "id": "capsule-token-sync",
+  "api": "1.0.0",
+  "main": "code.js",
+  "menu": [
+    { "name": "Pull tokens", "command": "pull" },
+    { "name": "Push tokens", "command": "push" }
+  ]
+}

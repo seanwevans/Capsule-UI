@@ -9,6 +9,10 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
+  plugins: ['capsule'],
+  rules: {
+    'capsule/no-unknown-token': 'warn'
+  },
   overrides: [
     {
       files: ['**/*.{ts,tsx}'],
