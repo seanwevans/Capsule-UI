@@ -219,6 +219,15 @@ const stop = onThemeChange(t => console.log('theme', t));
 
 Add a new theme by defining values for it in `tokens/source/tokens.json` and rebuilding with `pnpm tokens:build`. Then call `setTheme('<name>')` or set `<html data-theme="<name>">` at runtime.
 
+For multi-tenant apps, `ThemeManager` can load and switch tenant-specific presets without a page reload:
+
+```js
+import { ThemeManager } from '@capsule-ui/core';
+
+await ThemeManager.load('tenantA', '/themes/tenant-a.json');
+ThemeManager.applyTheme('tenantA', 'dark');
+```
+
 ### Theming lab
 
 Designers can experiment with token values in the [theming lab](docs/theming-lab.md).
