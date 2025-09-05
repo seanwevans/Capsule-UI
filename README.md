@@ -222,6 +222,13 @@ Add a new theme by defining values for it in `tokens/source/tokens.json` and reb
 Designers can experiment with token values in the [theming lab](docs/theming-lab.md).
 The page updates components live as you tweak CSS variables and can export a JSON preset for reuse.
 
+### Theme registry
+
+Shareable presets can be uploaded to a lightweight [theme registry](docs/theme-registry.md).
+Each upload receives a unique URL that teams can reference at runtime or package for
+distribution on npm. Browse, fetch, and reuse themes without copying token files
+between projects.
+
 ---
 
 
