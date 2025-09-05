@@ -227,6 +227,9 @@ The page updates components live as you tweak CSS variables and can export a JSO
 ---
 
 
+## Documentation
+A public documentation site built with Docusaurus lives in `website`. Run `pnpm docs:dev` to start a local server or `pnpm docs:build` to generate static files.
+
 ## CLI
 
 Capsule provides a published command line interface.
