@@ -1,7 +1,7 @@
-import { getLocale, onLocaleChange } from './locale.js';
+import { withLocaleDir } from './withLocaleDir.js';
 import { instrumentComponent } from './instrument.js';
 
-class CapsButton extends HTMLElement {
+class CapsButton extends withLocaleDir(HTMLElement) {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -62,19 +62,6 @@ class CapsButton extends HTMLElement {
       if (value !== null) btn.setAttribute(name, value);
       else btn.removeAttribute(name);
     }
-  }
-
-  connectedCallback() {
-    if (!this.hasAttribute('dir')) {
-      this.setAttribute('dir', getLocale().dir);
-      this._unsub = onLocaleChange((loc) => {
-        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
-      });
-    }
-  }
-
-  disconnectedCallback() {
-    this._unsub?.();
   }
 
   focus() {
