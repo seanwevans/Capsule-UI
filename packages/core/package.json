@@ -1,0 +1,11 @@
+{
+  "name": "@capsule-ui/core",
+  "version": "0.0.1-preview",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  }
+}
