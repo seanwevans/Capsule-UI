@@ -1,6 +1,10 @@
 import 'svelte/register';
 import express from 'express';
-import App from './App.svelte';
+
+global.HTMLElement = class {};
+global.customElements = { define() {}, get() { return undefined; } };
+
+const App = (await import('./App.svelte')).default;
 
 const app = express();
 
@@ -14,6 +18,13 @@ app.get('/', (req, res) => {
   <meta charset="UTF-8" />
   <title>Svelte SSR Example</title>
   ${head}
+  <style>
+    caps-button[variant="ghost"]::part(button) {
+      background: transparent;
+      border: 1px solid #4f46e5;
+      color: #4f46e5;
+    }
+  </style>
 </head>
 <body>
   <div id="svelte">${html}</div>

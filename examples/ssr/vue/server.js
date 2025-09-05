@@ -1,7 +1,11 @@
 import express from 'express';
 import { createSSRApp } from 'vue';
 import { renderToString } from '@vue/server-renderer';
-import App from './App.js';
+
+global.HTMLElement = class {};
+global.customElements = { define() {}, get() { return undefined; } };
+
+const App = (await import('./App.js')).default;
 
 const app = express();
 
@@ -16,6 +20,13 @@ app.get('/', async (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <title>Vue SSR Example</title>
+  <style>
+    caps-button[variant="ghost"]::part(button) {
+      background: transparent;
+      border: 1px solid #4f46e5;
+      color: #4f46e5;
+    }
+  </style>
 </head>
 <body>
   <div id="app">${appHtml}</div>

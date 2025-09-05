@@ -8,6 +8,8 @@
   "dependencies": {
     "@vue/server-renderer": "^3.4.21",
     "express": "^4.18.2",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "@capsule-ui/vue": "file:../../packages/vue",
+    "@capsule-ui/core": "file:../../packages/core"
   }
 }
