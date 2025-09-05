@@ -12,6 +12,9 @@
 .select:where([data-variant="outline"]) {
   background: transparent;
 }
+.variant-outline {
+  background: transparent;
+}
 @container (min-width: 480px) {
   .select { padding: var(--spacing-md) var(--spacing-lg); }
 }

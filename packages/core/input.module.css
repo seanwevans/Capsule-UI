@@ -12,6 +12,9 @@
 .input:where([data-variant="outline"]) {
   background: transparent;
 }
+.variant-outline {
+  background: transparent;
+}
 @container (min-width: 480px) {
   .input { padding: var(--spacing-md) var(--spacing-lg); }
 }

@@ -48,9 +48,13 @@ Example:
 
 ```js
 import { buttonRecipe } from '@capsule-ui/core/button.recipe';
+import { cardRecipe } from '@capsule-ui/core/card.recipe';
 
-const className = buttonRecipe({ size: 'lg', variant: 'secondary' });
+const btnClass = buttonRecipe({ size: 'lg', variant: 'secondary' });
+const cardClass = cardRecipe({ variant: 'outline' });
 ```
+
+Each core component ships with a matching recipe (e.g., `inputRecipe`, `selectRecipe`, `tabsRecipe`, `modalRecipe`) for CSS Module workflows.
 
 ### 5) Container‑query first
 Components adapt to their container:

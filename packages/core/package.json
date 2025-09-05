@@ -10,6 +10,26 @@
     "./button.recipe": {
       "import": "./button.recipe.js",
       "types": "./button.recipe.d.ts"
+    },
+    "./card.recipe": {
+      "import": "./card.recipe.js",
+      "types": "./card.recipe.d.ts"
+    },
+    "./input.recipe": {
+      "import": "./input.recipe.js",
+      "types": "./input.recipe.d.ts"
+    },
+    "./tabs.recipe": {
+      "import": "./tabs.recipe.js",
+      "types": "./tabs.recipe.d.ts"
+    },
+    "./modal.recipe": {
+      "import": "./modal.recipe.js",
+      "types": "./modal.recipe.d.ts"
+    },
+    "./select.recipe": {
+      "import": "./select.recipe.js",
+      "types": "./select.recipe.d.ts"
     }
   },
   "dependencies": {
