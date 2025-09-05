@@ -89,9 +89,10 @@ booking-widget::part(card)   { border-radius: 24px; }
 ```js
 customElements.define("booking-widget", class extends HTMLElement {
   constructor(){
-    super(); const r = this.attachShadow({mode:"open"});
-    r.innerHTML = `
-      <style>
+    super();
+    const r = this.attachShadow({mode:"open"});
+    const style = document.createElement("style");
+    style.textContent = `
         @layer reset, base, components;
         :host{
           --bk-brand: #4f46e5; --bk-text: #0f172a;
@@ -101,9 +102,13 @@ customElements.define("booking-widget", class extends HTMLElement {
         @layer base {
           .button{ background: var(--bk-brand); color:white; border:0; padding:.7rem 1rem; border-radius:12px; }
         }
-      </style>
-      <button class="button" part="button" type="button">Book</button>
-    `;
+      `;
+    const btn = document.createElement("button");
+    btn.className = "button";
+    btn.setAttribute("part", "button");
+    btn.type = "button";
+    btn.textContent = "Book";
+    r.append(style, btn);
   }
 });
 ```
