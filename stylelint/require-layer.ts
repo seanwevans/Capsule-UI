@@ -4,10 +4,7 @@ import stylelint, {
   type Utils,
   type PostcssResult,
 } from 'stylelint';
-
-type Root = any;
-type AtRule = any;
-type Node = any;
+import type { Root, AtRule, Node } from 'postcss';
 
 type Result = PostcssResult;
 
