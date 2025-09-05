@@ -1,0 +1,15 @@
+{
+  "name": "@capsule-ui/css",
+  "version": "0.0.1-preview",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@capsule-ui/core": "workspace:*"
+  }
+}
