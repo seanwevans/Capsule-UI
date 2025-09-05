@@ -4,13 +4,13 @@ class CapsCard extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
+        @layer components;
         :host { display: block; }
         .card {
-          background: var(--caps-card-bg, #fff);
-          border: var(--caps-card-border, 1px solid #e5e7eb);
-          border-radius: var(--caps-card-radius, 0.5rem);
-          padding: var(--caps-card-padding, 1rem);
-          box-shadow: var(--caps-card-shadow, 0 1px 2px rgba(0,0,0,0.05));
+          background: var(--color-background);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          padding: var(--spacing-lg);
         }
       </style>
       <div class="card" part="card"><slot></slot></div>
