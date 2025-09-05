@@ -3,8 +3,8 @@
  *
  * This script is what powers the `pnpm tokens:build` command. It reads the
  * token definition JSON, validates it, and writes the generated CSS, JSON,
- * and TypeScript outputs to the `dist/` directory so they are easy to inspect
- * and extend.
+ * JavaScript, and TypeScript outputs to the `dist/` directory so they are easy
+ * to inspect and extend.
  *
  * Run with:
  *
@@ -87,6 +87,10 @@ export async function build(defaultTheme = 'light') {
     if (theme === rootTheme) continue;
     css += `\n\n[data-theme="${theme}"]{\n${themes[theme].join('\n')}\n}`;
   }
+  const js =
+    `export const tokens = ${JSON.stringify(jsonOut, null, 2)};\n` +
+    `export default tokens;\n`;
+
   const names = Object.keys(jsonOut)
     .map(n => `'${n}'`)
     .join(' | ');
@@ -104,6 +108,7 @@ export async function build(defaultTheme = 'light') {
       path.join(dist, 'tokens.json'),
       JSON.stringify(jsonOut, null, 2) + '\n'
     ),
+    fs.writeFile(path.join(dist, 'tokens.js'), js),
     fs.writeFile(path.join(dist, 'tokens.d.ts'), dts + '\n')
   ]);
 }

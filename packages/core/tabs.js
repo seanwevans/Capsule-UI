@@ -6,21 +6,20 @@ class CapsTabs extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        @layer components;
         :host { display: block; }
-        .tablist { display: flex; gap: var(--spacing-sm); }
+        .tablist { display: flex; gap: 0.25rem; }
         .tablist ::slotted(button) {
-          background: transparent;
+          background: var(--caps-tab-bg, transparent);
           border: none;
-          padding: var(--spacing-md) var(--spacing-lg);
-          border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.375rem 0.375rem 0 0;
           cursor: pointer;
         }
         .tablist ::slotted(button[aria-selected='true']) {
-          background: var(--color-background);
-          font-weight: var(--typography-font-weight-bold);
+          background: var(--caps-tab-active-bg, #fff);
+          font-weight: 600;
         }
-        .panels { border: 1px solid var(--color-border); border-radius: 0 0 var(--radius-sm) var(--radius-sm); padding: var(--spacing-lg); }
+        .panels { border: 1px solid var(--caps-tab-border, #e5e7eb); border-radius: 0 0 0.375rem 0.375rem; padding: 1rem; }
         .panels ::slotted(*) { display: none; }
         .panels ::slotted([data-active]) { display: block; }
       </style>

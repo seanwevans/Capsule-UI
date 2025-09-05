@@ -1,4 +1,4 @@
-{
+export const tokens = {
   "--color-background": {
     "dark": "#000000",
     "light": "#ffffff"
@@ -139,4 +139,5 @@
     "dark": 1300,
     "light": 1300
   }
-}
+};
+export default tokens;
