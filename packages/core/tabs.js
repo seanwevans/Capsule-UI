@@ -6,7 +6,7 @@ class CapsTabs extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; }
+        :host { display: block; --caps-motion: 0.2s; }
         .tablist { display: flex; gap: 0.25rem; }
         .tablist ::slotted(button) {
           background: var(--caps-tab-bg, transparent);
@@ -14,7 +14,9 @@ class CapsTabs extends HTMLElement {
           padding: 0.5rem 0.75rem;
           border-radius: 0.375rem 0.375rem 0 0;
           cursor: pointer;
+          transition: background var(--caps-motion);
         }
+        .tablist ::slotted(button:focus-visible) { outline: 2px solid #000; outline-offset: 2px; }
         .tablist ::slotted(button[aria-selected='true']) {
           background: var(--caps-tab-active-bg, #fff);
           font-weight: 600;
@@ -22,6 +24,15 @@ class CapsTabs extends HTMLElement {
         .panels { border: 1px solid var(--caps-tab-border, #e5e7eb); border-radius: 0 0 0.375rem 0.375rem; padding: 1rem; }
         .panels ::slotted(*) { display: none; }
         .panels ::slotted([data-active]) { display: block; }
+        @media (prefers-reduced-motion: reduce) {
+          :host { --caps-motion: 0s; }
+        }
+        @media (prefers-contrast: more) {
+          .tablist ::slotted(button[aria-selected='true']) {
+            background: var(--caps-tab-active-bg-contrast, #000);
+            color: var(--caps-tab-active-color-contrast, #fff);
+          }
+        }
       </style>
       <div class="tabs">
         <div class="tablist" part="tablist" role="tablist"><slot name="tab"></slot></div>

@@ -6,7 +6,7 @@ class CapsButton extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: inline-block; }
+        :host { display: inline-block; --caps-motion: 0.2s; }
         button {
           font: inherit;
           padding: 0.5rem 1rem;
@@ -14,9 +14,19 @@ class CapsButton extends HTMLElement {
           border-radius: 0.375rem;
           background: var(--caps-btn-bg, #4f46e5);
           color: var(--caps-btn-color, #fff);
+          transition: background var(--caps-motion), color var(--caps-motion);
         }
         button:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
         button[disabled] { opacity: 0.6; cursor: not-allowed; }
+        @media (prefers-reduced-motion: reduce) {
+          :host { --caps-motion: 0s; }
+        }
+        @media (prefers-contrast: more) {
+          button {
+            background: var(--caps-btn-bg-contrast, #000);
+            color: var(--caps-btn-color-contrast, #fff);
+          }
+        }
       </style>
       <button part="button" type="button"><slot></slot></button>
     `;

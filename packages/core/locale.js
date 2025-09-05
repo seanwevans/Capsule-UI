@@ -26,3 +26,32 @@ export function onLocaleChange(callback) {
   window.addEventListener(EVENT, handler);
   return () => window.removeEventListener(EVENT, handler);
 }
+
+const numberFormatCache = new Map();
+const dateFormatCache = new Map();
+
+export function formatNumber(value, options = {}) {
+  const lang = current.lang;
+  const key = lang + JSON.stringify(options);
+  let formatter = numberFormatCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(lang, options);
+    numberFormatCache.set(key, formatter);
+  }
+  return formatter.format(value);
+}
+
+export function formatDate(value, options = {}) {
+  const lang = current.lang;
+  const key = lang + JSON.stringify(options);
+  let formatter = dateFormatCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(lang, options);
+    dateFormatCache.set(key, formatter);
+  }
+  return formatter.format(value);
+}
+
+export function setDirection(dir) {
+  setLocale({ dir });
+}

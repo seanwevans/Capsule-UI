@@ -9,20 +9,30 @@
     "lint": "pnpm run lint:css && pnpm run lint:js",
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
     "check:runtime-styles": "node scripts/check-runtime-styles.mjs",
-    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run test:e2e",
+    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run test:e2e",    
+    "check:bundle-size": "node scripts/check-bundle-size.mjs",
+    "new:component": "node scripts/new-component.mjs",
     "test:a11y": "node scripts/a11y-check.mjs",
     "test:e2e": "playwright test",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
-    "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\""
+    "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "test:visual": "chromatic --exit-zero-on-changes"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/web-components": "^9.1.4",
     "@types/css-tree": "^2.3.10",
     "@typescript-eslint/parser": "^8.39.1",
     "ajv": "^8.12.0",
     "chokidar-cli": "^3.0.0",
+    "chromatic": "^13.1.4",
     "css-tree": "^3.1.0",
     "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "pa11y": "^6.1.1",
     "postcss": "8.5.6",
     "stylelint": "^15.10.0",
     "stylelint-declaration-strict-value": "^1.10.2",
@@ -36,5 +46,8 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@10.5.2"
+  "packageManager": "pnpm@10.5.2",
+  "dependencies": {
+    "class-variance-authority": "^0.7.1"
+  }
 }
