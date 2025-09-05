@@ -1,3 +1,5 @@
+import { instrumentComponent } from './instrument.js';
+
 class CapsCard extends HTMLElement {
   constructor() {
     super();
@@ -24,6 +26,7 @@ class CapsCard extends HTMLElement {
     `;
   }
 }
+instrumentComponent('caps-card', CapsCard);
 
 if (!customElements.get('caps-card')) {
   customElements.define('caps-card', CapsCard);

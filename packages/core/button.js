@@ -1,4 +1,5 @@
 import { getLocale, onLocaleChange } from './locale.js';
+import { instrumentComponent } from './instrument.js';
 
 class CapsButton extends HTMLElement {
   constructor() {
@@ -88,6 +89,8 @@ class CapsButton extends HTMLElement {
     this.toggleAttribute('disabled', Boolean(val));
   }
 }
+
+instrumentComponent('caps-button', CapsButton);
 
 if (!customElements.get('caps-button')) {
   customElements.define('caps-button', CapsButton);

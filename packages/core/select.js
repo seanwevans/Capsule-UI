@@ -1,3 +1,5 @@
+import { instrumentComponent } from './instrument.js';
+
 class CapsSelect extends HTMLElement {
   static get observedAttributes() {
     return ['disabled', 'multiple', 'name', 'size', 'value', 'aria-label', 'aria-describedby', 'role'];
@@ -107,6 +109,8 @@ class CapsSelect extends HTMLElement {
     this.shadowRoot.querySelector('select')?.focus();
   }
 }
+
+instrumentComponent('caps-select', CapsSelect);
 
 if (!customElements.get('caps-select')) {
   customElements.define('caps-select', CapsSelect);

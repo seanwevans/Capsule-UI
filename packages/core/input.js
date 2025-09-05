@@ -1,4 +1,5 @@
 import { getLocale, onLocaleChange } from './locale.js';
+import { instrumentComponent } from './instrument.js';
 
 class CapsInput extends HTMLElement {
   constructor() {
@@ -103,6 +104,8 @@ class CapsInput extends HTMLElement {
     if (input) input.value = v;
   }
 }
+
+instrumentComponent('caps-input', CapsInput);
 
 if (!customElements.get('caps-input')) {
   customElements.define('caps-input', CapsInput);
