@@ -186,6 +186,14 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       path.join(tempDir, 'packages', 'components', 'index.ts'),
       'utf8'
     );
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
+    );
+    const adr = await readFile(
+      path.join(tempDir, 'docs', 'adr', '001-example-component.md'),
+      'utf8'
+    );
 
     assert.equal(
       component,
@@ -210,6 +218,14 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     assert.equal(
       rootIndex,
       `export * from './ExampleComponent/ExampleComponent';\n`
+    );
+    assert.equal(
+      doc,
+      `# ExampleComponent\n\nShort description of ExampleComponent.\n\n## Usage\n\n\`\`\`html\n<ExampleComponent />\n\`\`\`\n\n## Props\n\n<!-- TODO: document component props -->\n\n## Slots\n\n<!-- TODO: document component slots -->\n`
+    );
+    assert.equal(
+      adr,
+      `# ADR 001: ExampleComponent Style Contract\n\n## Status\nDraft\n\n## Context\nExplain why this style decision is needed and what problem it addresses.\n\n## Rationale\nDiscuss alternative approaches and why this solution was chosen.\n\n## Decision\nDetail the style contract including scope by default, token usage, layer ordering, and variant strategy.\n\n## Consequences\nNote any trade-offs, follow-up work, or implications of this decision.\n`
     );
   } finally {
     process.chdir(originalCwd);
