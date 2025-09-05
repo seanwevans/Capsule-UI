@@ -14,30 +14,30 @@ class CapsButton extends HTMLElement {
 
         button {
           font: inherit;
-          padding: 0.5rem 1rem;
+          padding: var(--spacing-sm) var(--spacing-lg);
           border: none;
-          border-radius: 0.375rem;
-          background: var(--caps-btn-bg, #4f46e5);
-          color: var(--caps-btn-color, #fff);
-          transition: background var(--caps-motion), color var(--caps-motion);
+          border-radius: var(--radius-md);
+          background: var(--color-brand);
+          color: var(--color-text);
+          transition: background var(--motion-fast), color var(--motion-fast);
         }
         :host([variant="outline"]) button {
           background: transparent;
-          border: 1px solid var(--caps-btn-bg, #4f46e5);
-          color: var(--caps-btn-bg, #4f46e5);
+          border: 1px solid var(--color-brand);
+          color: var(--color-brand);
         }
         @container (min-width: 480px) {
-          button { padding: 0.75rem 1.25rem; }
+          button { padding: var(--spacing-md) var(--spacing-xl); }
         }
-        button:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+        button:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
         button[disabled] { opacity: 0.6; cursor: not-allowed; }
         @media (prefers-reduced-motion: reduce) {
-          :host { --caps-motion: 0s; }
+          :host { --motion-fast: 0s; }
         }
         @media (prefers-contrast: more) {
           button {
-            background: var(--caps-btn-bg-contrast, #000);
-            color: var(--caps-btn-color-contrast, #fff);
+            background: var(--color-text);
+            color: var(--color-background);
           }
         }
       </style>

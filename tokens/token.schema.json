@@ -22,7 +22,8 @@
             "number",
             "font-size",
             "font-weight",
-            "duration"
+            "duration",
+            "shadow"
           ]
         },
         "$value": {
