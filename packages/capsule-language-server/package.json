@@ -1,0 +1,14 @@
+{
+  "name": "@capsule-ui/language-server",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/server.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.7"
+  }
+}
