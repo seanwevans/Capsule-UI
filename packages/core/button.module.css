@@ -15,3 +15,18 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* size variants */
+.size-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+.size-lg {
+  padding: 0.75rem 1.5rem;
+}
+
+/* visual variants */
+.variant-secondary {
+  background: var(--caps-btn-secondary-bg, #6b7280);
+  color: var(--caps-btn-secondary-color, #fff);
+}

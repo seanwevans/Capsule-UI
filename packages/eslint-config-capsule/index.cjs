@@ -44,6 +44,14 @@ module.exports = {
             ]
           }
         ]
+        ,
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: "JSXAttribute[name.name='className'] Literal",
+            message: 'Ad-hoc class names are not allowed. Use a component recipe instead.'
+          }
+        ]
       }
     }
   ]
