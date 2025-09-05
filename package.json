@@ -8,7 +8,8 @@
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "pnpm run lint:css && pnpm run lint:js",
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
-    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y",
+    "check:runtime-styles": "node scripts/check-runtime-styles.mjs",
+    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles",
     "test:a11y": "node scripts/a11y-check.mjs",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
@@ -27,7 +28,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",
-    "pa11y": "^6.1.1"
+    "pa11y": "^6.1.1",
+    "jsdom": "^24.0.0"
   },
   "engines": {
     "node": ">=18"

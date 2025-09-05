@@ -66,8 +66,22 @@ An early preview package `@capsule-ui/core` publishes foundational elements for 
 - `<caps-card>` – surface container
 - `<caps-tabs>` – tabbed interface
 - `<caps-modal>` – modal dialog
+- `<caps-select>` – styled select element
 
 Install with `pnpm add @capsule-ui/core` and try them in your project. Feedback is welcome while these components evolve.
+
+### Framework adapters
+
+Prefer to stay in a framework? Tiny adapters wrap the Web Components so
+they behave like native React, Vue, or Svelte components:
+
+- `@capsule-ui/react`
+- `@capsule-ui/vue`
+- `@capsule-ui/svelte`
+
+Each forwards attributes and events and keeps the same Style API for
+`::part`, CSS variables, and attributes. See
+[framework adapter docs](docs/framework-adapters.md) for usage examples.
 
 
 ## Quick start (vanilla, using the demo widget)
@@ -136,8 +150,9 @@ Capsule works best with a few non-negotiables:
   - Only tokenized colors/spacing (ban raw hex/rgb except in token files).
   - Max specificity `0-1-0`; no `!important` outside `@layer overrides`.
   - Disallow global element styling in component CSS.
-  - Require `@layer components` (configurable) in component CSS files; missing layers are auto-fixed.
-- **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions).
+  - Require `@layer components` in component CSS files; override the layer name with `CAPSULE_LAYER_NAMES="utilities,components"` or disable with `CAPSULE_LAYER_NAMES=off`.
+- **Build checks:** fail if runtime CSS-in-JS packages are imported in components (allow-list exceptions). Set `CAPSULE_ALLOW_RUNTIME_STYLES=true` to permit one-off dynamic styles and use CSS-in-JS only for cases that can’t be expressed with tokens or precompiled utilities.
+- Existing CSS-in-JS solutions can interoperate by generating token-based classes and injecting them into `@layer overrides`.
 - **Storybook + VRT:** each component shows theme × density × locale, with visual regression tests.
 ## Architecture Decision Records
 See [docs/adr](docs/adr/README.md) for existing decisions and guidance on writing new ones.

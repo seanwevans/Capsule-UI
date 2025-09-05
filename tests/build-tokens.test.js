@@ -257,7 +257,7 @@ test('outputs themes in deterministic order', { concurrency: false }, async () =
       m => m[1]
     );
     assert.deepEqual(themeOrder, ['beta', 'gamma']);
-    assert.match(css, /:root{\n  --color-background: #aaa;\n}/);
+    assert.match(css, /:root{\n\s{2}--color-background: #aaa;\n}/);
     const json = await fs.readFile(path.join(root, 'dist', 'tokens.json'), 'utf8');
     const alpha = json.indexOf('"alpha"');
     const beta = json.indexOf('"beta"');
@@ -271,8 +271,8 @@ test('outputs themes in deterministic order', { concurrency: false }, async () =
 test('allows setting custom default theme', { concurrency: false }, async () => {
   await runBuild('--default-theme', 'dark');
   const css = await fs.readFile(path.join(root, 'dist', 'tokens.css'), 'utf8');
-  assert.match(css, /:root{\n  --color-background: #000000;/);
-  assert.match(css, /\[data-theme="light"\]{\n  --color-background: #ffffff;/);
+  assert.match(css, /:root{\n\s{2}--color-background: #000000;/);
+  assert.match(css, /\[data-theme="light"\]{\n\s{2}--color-background: #ffffff;/);
 });
 
 test('accepts negative dimension values', { concurrency: false }, async () => {
@@ -462,4 +462,15 @@ test('generates JavaScript module for tokens', { concurrency: false }, async () 
   } finally {
     await fs.writeFile(tokensPath, original);
   }
+});
+
+test('token artifacts are up to date', { concurrency: false }, async () => {
+  await runBuild();
+  const status = await new Promise((resolve, reject) => {
+    execFile('git', ['status', '--porcelain', 'dist'], { cwd: root }, (err, stdout, stderr) => {
+      if (err) reject(new Error(stderr.trim()));
+      else resolve(stdout.trim());
+    });
+  });
+  assert.equal(status, '', 'run `pnpm tokens:build` and commit the updated files in dist/');
 });

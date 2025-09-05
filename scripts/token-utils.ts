@@ -16,9 +16,13 @@ export function validateToken(name: string, type: string | undefined, value: any
   }
 }
 
+/* eslint-disable no-unused-vars */
+type TokenCallback = (name: string, token: TokenNode) => void;
+/* eslint-enable no-unused-vars */
+
 export function traverseTokens(
   obj: TokenNode,
-  cb: (name: string, token: TokenNode) => void = () => {},
+  cb: TokenCallback = () => {},
   prefix: string[] = []
 ): void {
   if (Array.isArray(obj)) {
