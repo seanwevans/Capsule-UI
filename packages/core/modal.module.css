@@ -3,6 +3,7 @@
   display: none;
   position: fixed;
   inset: 0;
+  --caps-motion: 0.2s;
 }
 .container:where([open]) {
   display: block;
@@ -21,4 +22,12 @@
   padding: 1rem;
   border-radius: 0.5rem;
   min-width: 300px;
+  transition: transform var(--caps-motion);
+}
+@media (prefers-reduced-motion: reduce) {
+  .container { --caps-motion: 0s; }
+}
+@media (prefers-contrast: more) {
+  .backdrop { background: rgba(0,0,0,0.8); }
+  .modal { background: var(--caps-modal-bg-contrast, #fff); color: var(--caps-modal-color-contrast, #000); }
 }

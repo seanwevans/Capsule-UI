@@ -9,6 +9,11 @@
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem 0.375rem 0 0;
   cursor: pointer;
+  transition: background var(--caps-motion, 0.2s);
+}
+.tab:where(:focus-visible) {
+  outline: 2px solid #000;
+  outline-offset: 2px;
 }
 .tab:where([aria-selected='true']) {
   background: var(--caps-tab-active-bg, #fff);
@@ -24,4 +29,13 @@
 }
 .panel:where([data-active]) {
   display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab { transition: none; }
+}
+@media (prefers-contrast: more) {
+  .tab:where([aria-selected='true']) {
+    background: var(--caps-tab-active-bg-contrast, #000);
+    color: var(--caps-tab-active-color-contrast, #fff);
+  }
 }
