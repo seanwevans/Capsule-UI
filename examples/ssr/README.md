@@ -1,7 +1,8 @@
 # SSR Framework Examples
 
 This directory contains reference integrations for server-side rendering with React, Vue and Svelte.
-Each example renders a simple message on the server and hydrates on the client.
+Each example renders a Capsule button on the server, hydrates it on the client and
+demonstrates variant styling and basic accessibility attributes.
 
 ## Running an Example
 
@@ -12,4 +13,4 @@ pnpm install
 pnpm run dev
 ```
 
-Then visit `http://localhost:3000` in a browser to see the hydrated output.
+Then visit `http://localhost:3000` in a browser to see the hydrated Capsule component.

@@ -1,5 +1,6 @@
 <script>
+  import { CapsButton } from '@capsule-ui/svelte';
   export let message;
 </script>
 
-<h1>{message}</h1>
+<CapsButton variant="ghost" aria-label={message}>{message}</CapsButton>
