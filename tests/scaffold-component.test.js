@@ -7,6 +7,7 @@ const {
   readFile,
   writeFile,
   mkdir,
+  readdir,
 } = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
@@ -40,6 +41,9 @@ test('scaffolds component with valid name', async () => {
     const { code } = await run(['new', 'component', 'valid-name'], { cwd: tmp });
     assert.equal(code, 0);
     await access(path.join(tmp, 'packages', 'components', 'ValidName'));
+    await access(path.join(tmp, 'docs', 'components', 'valid-name.md'));
+    const adrFiles = await readdir(path.join(tmp, 'docs', 'adr'));
+    assert.ok(adrFiles.some((f) => /valid-name\.md$/.test(f)));
   } finally {
     await rm(tmp, { recursive: true, force: true });
   }
@@ -289,6 +293,10 @@ test('cleans up generated files on failure', async () => {
     assert.equal(result, false);
     const baseDir = path.join(componentsDir, 'BrokenComponent');
     await assert.rejects(() => access(baseDir));
+    await assert.rejects(() => access(path.join(tempDir, 'docs', 'components', 'broken-component.md')));
+    const adrDir = path.join(tempDir, 'docs', 'adr');
+    const entries = await readdir(adrDir);
+    assert.ok(!entries.some((f) => /broken-component\.md$/.test(f)));
   } finally {
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });

@@ -197,20 +197,18 @@ For development convenience, `pnpm tokens:watch` monitors `tokens/source/tokens.
 
 ## CLI
 
-Capsule provides a small command line interface in `packages/capsule-cli`.
+Capsule provides a published command line interface.
 
-### Local development
+### Installation
 
 ```bash
-cd packages/capsule-cli
-pnpm install
-pnpm link # exposes a global `capsule` command
+pnpm add -g capsule-cli
 ```
 
 ### Usage
 
 ```bash
-capsule new component Button  # scaffolds a new component skeleton
+capsule new component Button  # scaffolds component, tests, docs and ADR stub
 capsule tokens build          # runs the token pipeline (pnpm run tokens:build)
-capsule check                 # runs lint tasks (pnpm run lint)
+capsule check                 # runs lint, token and test checks
 ```
