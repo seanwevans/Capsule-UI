@@ -30,3 +30,8 @@ booking-widget::part(card) { border-radius: 24px; }
 ```
 
 Open `index.html` in a modern browser to see the widget and runtime theming in action.
+
+## RTL and i18n demo
+
+`rtl.html` showcases locale switching and right‑to‑left support for core
+components using the exported `setLocale` helper.

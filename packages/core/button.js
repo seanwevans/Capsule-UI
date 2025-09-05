@@ -1,3 +1,5 @@
+import { getLocale, onLocaleChange } from './locale.js';
+
 class CapsButton extends HTMLElement {
   constructor() {
     super();
@@ -20,17 +22,39 @@ class CapsButton extends HTMLElement {
     `;
   }
 
-  static get observedAttributes() { return ['disabled', 'type']; }
+  static get observedAttributes() {
+    return ['disabled', 'type', 'aria-label', 'aria-haspopup', 'aria-expanded', 'role'];
+  }
 
   attributeChangedCallback(name, _old, value) {
     const btn = this.shadowRoot.querySelector('button');
     if (!btn) return;
     if (name === 'disabled') {
       btn.toggleAttribute('disabled', value !== null);
-    }
-    if (name === 'type') {
+      btn.setAttribute('aria-disabled', value !== null ? 'true' : 'false');
+    } else if (name === 'type') {
       btn.setAttribute('type', value || 'button');
+    } else if (name.startsWith('aria-') || name === 'role') {
+      if (value !== null) btn.setAttribute(name, value);
+      else btn.removeAttribute(name);
     }
+  }
+
+  connectedCallback() {
+    if (!this.hasAttribute('dir')) {
+      this.setAttribute('dir', getLocale().dir);
+      this._unsub = onLocaleChange((loc) => {
+        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
+      });
+    }
+  }
+
+  disconnectedCallback() {
+    this._unsub?.();
+  }
+
+  focus() {
+    this.shadowRoot.querySelector('button')?.focus();
   }
 
   get disabled() {

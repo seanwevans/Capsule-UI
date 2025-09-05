@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Capsule RTL/i18n demo</title>
+    <script type="module" src="../packages/core/index.js"></script>
+  </head>
+  <body>
+    <p>
+      <button id="to-ar">Arabic RTL</button>
+      <button id="to-en">English LTR</button>
+    </p>
+    <caps-button id="demo-btn" aria-label="Demo">Button</caps-button>
+    <caps-input placeholder="Type" aria-label="input"></caps-input>
+    <caps-tabs id="t">
+      <button slot="tab">One</button>
+      <button slot="tab">Two</button>
+      <div slot="panel">First panel</div>
+      <div slot="panel">Second panel</div>
+    </caps-tabs>
+    <script type="module">
+      import { setLocale } from '../packages/core/locale.js';
+      document.getElementById('to-ar').addEventListener('click', () => {
+        setLocale({ lang: 'ar', dir: 'rtl' });
+      });
+      document.getElementById('to-en').addEventListener('click', () => {
+        setLocale({ lang: 'en', dir: 'ltr' });
+      });
+    </script>
+  </body>
+</html>

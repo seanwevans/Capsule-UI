@@ -1,3 +1,5 @@
+import { getLocale, onLocaleChange } from './locale.js';
+
 class CapsInput extends HTMLElement {
   constructor() {
     super();
@@ -19,14 +21,21 @@ class CapsInput extends HTMLElement {
     `;
   }
 
-  static get observedAttributes() { return ['value', 'type', 'placeholder', 'disabled']; }
+  static get observedAttributes() {
+    return ['value', 'type', 'placeholder', 'disabled', 'aria-label', 'aria-describedby', 'role'];
+  }
 
   attributeChangedCallback(name, _old, value) {
     const input = this.shadowRoot.querySelector('input');
     if (!input) return;
     if (name === 'disabled') {
-      if (value !== null) input.setAttribute('disabled', '');
-      else input.removeAttribute('disabled');
+      if (value !== null) {
+        input.setAttribute('disabled', '');
+        input.setAttribute('aria-disabled', 'true');
+      } else {
+        input.removeAttribute('disabled');
+        input.removeAttribute('aria-disabled');
+      }
     } else if (name === 'value') {
       if (value !== null) {
         input.setAttribute('value', value);
@@ -35,11 +44,27 @@ class CapsInput extends HTMLElement {
         input.removeAttribute('value');
         input.value = '';
       }
-
-    } else {
+    } else if (name.startsWith('aria-') || name === 'role' || name === 'placeholder' || name === 'type') {
       if (value !== null) input.setAttribute(name, value);
       else input.removeAttribute(name);
     }
+  }
+
+  connectedCallback() {
+    if (!this.hasAttribute('dir')) {
+      this.setAttribute('dir', getLocale().dir);
+      this._unsub = onLocaleChange((loc) => {
+        if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
+      });
+    }
+  }
+
+  disconnectedCallback() {
+    this._unsub?.();
+  }
+
+  focus() {
+    this.shadowRoot.querySelector('input')?.focus();
   }
 
   get disabled() {
