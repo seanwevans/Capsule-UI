@@ -27,7 +27,10 @@ function loadTokens() {
     const tokenPath = path.resolve(__dirname, '../../tokens/source/tokens.json');
     const data = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
     return flattenTokens(data);
-  } catch {
+  } catch (err) {
+    console.warn(
+      "eslint-plugin-capsule: unable to load design tokens; 'no-unknown-token' rule disabled"
+    );
     return [];
   }
 }
@@ -45,6 +48,7 @@ module.exports = {
         schema: []
       },
       create(context) {
+        if (tokenNames.length === 0) return {};
         return {
           JSXAttribute(node) {
             if (!node.name || node.name.name !== 'theme') return;
