@@ -8,16 +8,35 @@ class CapsModal extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: none; position: fixed; inset: 0; --caps-motion: 0.2s; }
+        :host {
+          display: none;
+          position: fixed;
+          inset: 0;
+          container-type: inline-size;
+        }
         :host([open]) { display: block; }
         .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
-        .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--caps-modal-bg, #fff); padding: 1rem; border-radius: 0.5rem; min-width: 300px; transition: transform var(--caps-motion); }
-        @media (prefers-reduced-motion: reduce) {
-          :host { --caps-motion: 0s; }
+        .modal {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: var(--caps-modal-bg, #fff);
+          padding: 1rem;
+          border-radius: 0.5rem;
+          min-width: 300px;
         }
-        @media (prefers-contrast: more) {
-          .backdrop { background: rgba(0,0,0,0.8); }
-          .modal { background: var(--caps-modal-bg-contrast, #fff); color: var(--caps-modal-color-contrast, #000); }
+        :host([variant="fullscreen"]) .modal {
+          inset: 0;
+          top: 0;
+          left: 0;
+          transform: none;
+          width: 100%;
+          height: 100%;
+          border-radius: 0;
+        }
+        @container (min-width: 600px) {
+          .modal { min-width: 500px; }
         }
       </style>
       <div class="backdrop" part="backdrop"></div>

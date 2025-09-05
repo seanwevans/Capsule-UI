@@ -6,7 +6,10 @@ class CapsTabs extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; --caps-motion: 0.2s; }
+        :host {
+          display: block;
+          container-type: inline-size;
+        }
         .tablist { display: flex; gap: 0.25rem; }
         .tablist ::slotted(button) {
           background: var(--caps-tab-bg, transparent);
@@ -16,7 +19,9 @@ class CapsTabs extends HTMLElement {
           cursor: pointer;
           transition: background var(--caps-motion);
         }
-        .tablist ::slotted(button:focus-visible) { outline: 2px solid #000; outline-offset: 2px; }
+        :host([variant="pill"]) .tablist ::slotted(button) {
+          border-radius: 999px;
+        }
         .tablist ::slotted(button[aria-selected='true']) {
           background: var(--caps-tab-active-bg, #fff);
           font-weight: 600;
@@ -24,6 +29,9 @@ class CapsTabs extends HTMLElement {
         .panels { border: 1px solid var(--caps-tab-border, #e5e7eb); border-radius: 0 0 0.375rem 0.375rem; padding: 1rem; }
         .panels ::slotted(*) { display: none; }
         .panels ::slotted([data-active]) { display: block; }
+        @container (max-width: 480px) {
+          .tablist { flex-direction: column; }
+          .tablist ::slotted(button) { border-radius: 0.375rem; }
         @media (prefers-reduced-motion: reduce) {
           :host { --caps-motion: 0s; }
         }

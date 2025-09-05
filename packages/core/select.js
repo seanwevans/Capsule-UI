@@ -8,7 +8,10 @@ class CapsSelect extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: inline-block; --caps-motion: 0.2s; }
+        :host {
+          display: inline-block;
+          container-type: inline-size;
+        }
         select {
           font: inherit;
           padding: var(--caps-select-padding, 0.5rem 0.75rem);
@@ -17,6 +20,10 @@ class CapsSelect extends HTMLElement {
           background: var(--caps-select-bg, #fff);
           color: var(--caps-select-color, #0f172a);
           transition: border-color var(--caps-motion);
+        }
+        :host([variant="outline"]) select { background: transparent; }
+        @container (min-width: 480px) {
+          select { padding: 0.75rem 1rem; }
         }
         select:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {

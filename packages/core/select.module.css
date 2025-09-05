@@ -6,6 +6,13 @@
   border-radius: var(--caps-select-radius, 0.375rem);
   background: var(--caps-select-bg, #fff);
   color: var(--caps-select-color, #0f172a);
+  container-type: inline-size;
+}
+.select:where([data-variant="outline"]) {
+  background: transparent;
+}
+@container (min-width: 480px) {
+  .select { padding: 0.75rem 1rem; }
   transition: border-color var(--caps-motion, 0.2s);
 }
 .select:where(:focus-visible) {
