@@ -24,11 +24,21 @@ The scaffolding generates the following files:
 - `style.ts` – style API stub
 - `index.ts` – re-export of the component
 - `__tests__/MyButton.test.ts` – placeholder test
+- `docs/components/my-button.md` – documentation stub
+- `docs/adr/NNN-my-button.md` – ADR template using the style contract
 
 ## Other commands
 
 - `tokens build` – build design tokens
 - `tokens validate` – validate design tokens
 - `tokens watch` – rebuild tokens on source changes
-- `check` – run lint checks
+- `check` – run lint, token and test checks
+
+## Installation
+
+```bash
+pnpm add -g capsule-cli
+```
+
+This exposes a global `capsule` command.
 

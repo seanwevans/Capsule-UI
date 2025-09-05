@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdir, writeFile, readFile, rm } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, rm, readdir } from 'node:fs/promises';
 import { join, isAbsolute } from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -19,7 +19,7 @@ program
 program
   .command('new')
   .description(
-    'Scaffold a new resource (component, style, index and test files are generated)'
+    'Scaffold a new resource (component, style, index, test, docs and ADR files are generated)'
   )
   .argument('<type>', 'Resource type (currently only "component" is supported)')
   .argument('<name>', 'Name of the component (kebab- or snake-case allowed)')
@@ -86,10 +86,20 @@ tokens
 
   program
     .command('check')
-    .description('Run lint checks')
+    .description('Run lint, test and token checks')
     .action(async () => {
       try {
-        process.exitCode = await runCommand('pnpm', ['run', 'lint']);
+        const lintCss = await runCommand('pnpm', ['run', 'lint:css']);
+        if (lintCss !== 0) {
+          process.exitCode = lintCss;
+          return;
+        }
+        const lintJs = await runCommand('pnpm', ['run', 'lint:js']);
+        if (lintJs !== 0) {
+          process.exitCode = lintJs;
+          return;
+        }
+        process.exitCode = await runCommand('pnpm', ['test']);
       } catch (err) {
         console.error(err);
         process.exitCode = 1;
@@ -161,9 +171,9 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
       return false;
     }
     const name = toPascalCase(rawName);
-    const componentsDir = isAbsolute(baseDir)
-      ? baseDir
-      : join(process.cwd(), baseDir);
+    const kebab = toKebabCase(rawName);
+    const cwd = process.cwd();
+    const componentsDir = isAbsolute(baseDir) ? baseDir : join(cwd, baseDir);
     const componentDir = join(componentsDir, name);
 
     await mkdir(componentsDir, { recursive: true });
@@ -183,11 +193,31 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const styleFile = join(componentDir, 'style.ts');
     const indexFile = join(componentDir, 'index.ts');
     const testFile = join(testDir, `${name}.test.ts`);
+    const docsDir = join(cwd, 'docs', 'components');
+    const docFile = join(docsDir, `${kebab}.md`);
+    const adrDir = join(cwd, 'docs', 'adr');
+    const adrNumber = await nextAdrNumber(adrDir);
+    const adrFile = join(adrDir, `${adrNumber}-${kebab}.md`);
 
     const componentSrc = `export const ${name} = () => {\n  // TODO: implement ${name} component\n};\n`;
     const styleSrc = `export interface ${name}StyleProps {\n  // TODO: define style props\n}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => {\n  // TODO: implement Style API\n};\n`;
     const indexSrc = `export * from './${name}';\nexport * from './style';\n`;
     const testSrc = `import test from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('${name}', () => {\n  assert.equal(1, 1);\n});\n`;
+    const docSrc = `# ${name}\n\nDocumentation stub for ${name}.\n`;
+    const templatePath = join(adrDir, '000-style-contract-template.md');
+    let adrSrc = '';
+    try {
+      adrSrc = await readFile(templatePath, 'utf8');
+      adrSrc = adrSrc.replace(
+        /^# ADR 000: Style Contract Template/,
+        `# ADR ${adrNumber}: ${name} Style Contract`
+      );
+    } catch {
+      adrSrc = `# ADR ${adrNumber}: ${name} Style Contract\n`;
+    }
+
+    await mkdir(docsDir, { recursive: true });
+    await mkdir(adrDir, { recursive: true });
 
     const componentsIndexPath = join(componentsDir, 'index.ts');
     let previousIndex = '';
@@ -204,6 +234,8 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
       await writeFile(styleFile, styleSrc, 'utf8');
       await writeFile(indexFile, indexSrc, 'utf8');
       await writeFile(testFile, testSrc, 'utf8');
+      await writeFile(docFile, docSrc, 'utf8');
+      await writeFile(adrFile, adrSrc, 'utf8');
 
       await updateComponentsIndex(name, componentsDir);
       indexUpdated = true;
@@ -218,6 +250,8 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
         }
       }
       await rm(componentDir, { recursive: true, force: true });
+      await rm(docFile, { force: true });
+      await rm(adrFile, { force: true });
       console.error('Error scaffolding component:', err);
       return false;
     }
@@ -256,4 +290,22 @@ function toPascalCase(str) {
       return lower.charAt(0).toUpperCase() + lower.slice(1);
     })
     .join('');
+}
+
+function toKebabCase(str) {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[_\s]+/g, '-')
+    .toLowerCase();
+}
+
+async function nextAdrNumber(dir) {
+  await mkdir(dir, { recursive: true });
+  const files = await readdir(dir);
+  const nums = files
+    .map((f) => f.match(/^(\d+)-/))
+    .filter(Boolean)
+    .map((m) => parseInt(m[1], 10));
+  const next = (nums.length ? Math.max(...nums) + 1 : 1).toString().padStart(3, '0');
+  return next;
 }
