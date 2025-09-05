@@ -183,12 +183,16 @@ class BookingWidget extends HTMLElement {
           </svg>
           <div>
             <div class="title" part="title">Book a slot</div>
-            <div class="subtitle" part="subtitle">Pick a date, time & guests</div>
+            <div class="subtitle" part="subtitle">Enter details, pick a date, time & guests</div>
           </div>
         </div>
 
         <form class="form" part="form">
           <div class="row">
+            <label class="field" part="field">
+              <span class="label" part="label">Name</span>
+              <input class="input" part="input text" type="text" name="name" required />
+            </label>
             <label class="field" part="field">
               <span class="label" part="label">Date</span>
               <input class="input" part="input date" type="date" name="date" required />
