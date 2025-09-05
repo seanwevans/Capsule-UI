@@ -72,6 +72,9 @@ importers:
       commander:
         specifier: ^14.0.0
         version: 14.0.0
+      jscodeshift:
+        specifier: ^0.15.0
+        version: 0.15.2
 
   packages/capsule-language-server:
     dependencies:
