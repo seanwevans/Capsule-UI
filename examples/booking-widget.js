@@ -14,6 +14,8 @@ class BookingWidget extends HTMLElement {
 
   constructor() {
     super();
+    // Make the host focusable so keyboard users can interact with the widget.
+    this.tabIndex = 0;
     // Attach an open shadow root so host pages can use the ::part API.
     this.attachShadow({ mode: 'open' });
     // Build the widget's shadow DOM. Note that CSS variables defined on
@@ -182,12 +184,12 @@ class BookingWidget extends HTMLElement {
             <circle cx="15.5" cy="17" r="1.25" fill="currentColor"></circle>
           </svg>
           <div>
-            <div class="title" part="title">Book a slot</div>
-            <div class="subtitle" part="subtitle">Enter details, pick a date, time & guests</div>
+            <h2 id="title" class="title" part="title">Book a slot</h2>
+            <p id="subtitle" class="subtitle" part="subtitle">Enter details, pick a date, time & guests</p>
           </div>
         </div>
 
-        <form class="form" part="form">
+        <form class="form" part="form" aria-labelledby="title subtitle">
           <div class="row">
             <label class="field" part="field">
               <span class="label" part="label">Name</span>
@@ -227,6 +229,9 @@ class BookingWidget extends HTMLElement {
         </form>
       </div>
     `;
+
+    // Cache the first focusable field for focus management.
+    this._firstField = this.shadowRoot.querySelector('input, select, textarea, button');
   }
 
   connectedCallback() {
@@ -243,6 +248,21 @@ class BookingWidget extends HTMLElement {
         this.dispatchEvent(new CustomEvent('book', { detail, bubbles: true }));
       });
     }
+
+    // Move focus inside the widget when it mounts.
+    this._firstField?.focus();
+
+    // Keyboard navigation: Enter focuses the first field when the host is
+    // focused, Escape returns focus back to the host element.
+    this.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target === this) {
+        e.preventDefault();
+        this._firstField?.focus();
+      } else if (e.key === 'Escape' && this.shadowRoot.contains(document.activeElement)) {
+        e.preventDefault();
+        this.focus();
+      }
+    });
   }
 
   attributeChangedCallback() {
