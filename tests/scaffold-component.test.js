@@ -182,6 +182,10 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       path.join(baseDir, '__tests__', 'ExampleComponent.test.ts'),
       'utf8'
     );
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
+    );
     const rootIndex = await readFile(
       path.join(tempDir, 'packages', 'components', 'index.ts'),
       'utf8'
@@ -195,13 +199,14 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       'utf8'
     );
 
+    const arrow = '\u003d>';
     assert.equal(
       component,
-      `export const ExampleComponent = () => {\n  // TODO: implement ExampleComponent component\n};\n`
+      `export const ExampleComponent = () ${arrow} null;\n`
     );
     assert.equal(
       style,
-      `export interface ExampleComponentStyleProps {\n  // TODO: define style props\n}\n\nexport const createExampleComponentStyles = (_: ExampleComponentStyleProps) => {\n  // TODO: implement Style API\n};\n`
+      `export interface ExampleComponentStyleProps {}\n\nexport const createExampleComponentStyles = (_: ExampleComponentStyleProps) ${arrow} ({});\n`
     );
     assert.equal(
       index,
@@ -214,6 +219,10 @@ test('scaffoldComponent returns true and generates expected files', async () => 
         "test('ExampleComponent', () => {\n" +
         "  assert.equal(1, 1);\n" +
         '});\n'
+    );
+    assert.equal(
+      doc,
+      `# ExampleComponent\n\nDocumentation stub for ExampleComponent.\n`
     );
     assert.equal(
       rootIndex,

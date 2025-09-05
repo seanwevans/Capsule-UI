@@ -232,8 +232,8 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const adrNumber = await nextAdrNumber(adrDir);
     const adrFile = join(adrDir, `${adrNumber}-${kebab}.md`);
 
-    const componentSrc = `export const ${name} = () => {\n  // TODO: implement ${name} component\n};\n`;
-    const styleSrc = `export interface ${name}StyleProps {\n  // TODO: define style props\n}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => {\n  // TODO: implement Style API\n};\n`;
+    const componentSrc = `export const ${name} = () => null;\n`;
+    const styleSrc = `export interface ${name}StyleProps {}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => ({});\n`;
     const indexSrc = `export * from './${name}';\nexport * from './style';\n`;
     const testSrc = `import test from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('${name}', () => {\n  assert.equal(1, 1);\n});\n`;
     const docSrc = `# ${name}\n\nShort description of ${name}.\n\n## Usage\n\n\`\`\`html\n<${name} />\n\`\`\`\n\n## Props\n\n<!-- TODO: document component props -->\n\n## Slots\n\n<!-- TODO: document component slots -->\n`;
