@@ -192,6 +192,11 @@ Source tokens live in `tokens/source/tokens.json` using the W3C draft design tok
 
 For development convenience, `pnpm tokens:watch` monitors `tokens/source/tokens.json` and rebuilds the output whenever it changes.
 
+### Theming lab
+
+Designers can experiment with token values in the [theming lab](docs/theming-lab.md).
+The page updates components live as you tweak CSS variables and can export a JSON preset for reuse.
+
 ---
 
 
