@@ -1,10 +1,19 @@
 import 'svelte/register';
 import express from 'express';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 
 global.HTMLElement = class {};
 global.customElements = { define() {}, get() { return undefined; } };
 
 const App = (await import('./App.svelte')).default;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const baseCss = readFileSync(
+  resolve(__dirname, '../../../packages/core/button.module.css'),
+  'utf8'
+);
 
 const app = express();
 
@@ -19,6 +28,7 @@ app.get('/', (req, res) => {
   <title>Svelte SSR Example</title>
   ${head}
   <style>
+  ${baseCss}
     caps-button[variant="ghost"]::part(button) {
       background: transparent;
       border: 1px solid #4f46e5;

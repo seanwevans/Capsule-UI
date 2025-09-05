@@ -4,6 +4,30 @@ Capsule ships tiny wrappers so its Web Components fit naturally into
 popular frameworks. Each adapter forwards attributes and events and
 exposes the same Style API – CSS variables, `::part`, and attributes.
 
+Need just the styles? Import CSS Modules from each adapter's `/css`
+entry and use them like regular framework classes:
+
+```jsx
+import { button } from '@capsule-ui/react/css';
+<button className={button.button}>Save</button>;
+```
+
+```vue
+<script setup>
+import { button } from '@capsule-ui/vue/css';
+</script>
+
+<button :class="button.button">Save</button>
+```
+
+```svelte
+<script>
+  import { button } from '@capsule-ui/svelte/css';
+</script>
+
+<button class={button.button}>Save</button>
+```
+
 ## React
 
 ```bash

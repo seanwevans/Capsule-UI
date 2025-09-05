@@ -4,6 +4,7 @@
   position: fixed;
   inset: 0;
   container-type: inline-size;
+  --caps-motion: 0.2s;
 }
 .container:where([open]) {
   display: block;
@@ -11,17 +12,26 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: var(--color-text);
+  opacity: 0.5;
 }
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--caps-modal-bg, #fff);
+  background: var(--color-background);
   padding: 1rem;
   border-radius: 0.5rem;
   min-width: 300px;
+  transition: transform var(--caps-motion);
+}
+@media (prefers-reduced-motion: reduce) {
+  .container { --caps-motion: 0s; }
+}
+@media (prefers-contrast: more) {
+  .backdrop { background: rgba(0,0,0,0.8); }
+  .modal { background: var(--caps-modal-bg-contrast, #fff); color: var(--caps-modal-color-contrast, #000); }
 }
 :where(.container[data-variant="fullscreen"]) .modal {
   inset: 0;

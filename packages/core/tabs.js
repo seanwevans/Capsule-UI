@@ -17,6 +17,7 @@ class CapsTabs extends HTMLElement {
           padding: 0.5rem 0.75rem;
           border-radius: 0.375rem 0.375rem 0 0;
           cursor: pointer;
+          transition: background var(--caps-motion);
         }
         :host([variant="pill"]) .tablist ::slotted(button) {
           border-radius: 999px;
@@ -31,6 +32,14 @@ class CapsTabs extends HTMLElement {
         @container (max-width: 480px) {
           .tablist { flex-direction: column; }
           .tablist ::slotted(button) { border-radius: 0.375rem; }
+        @media (prefers-reduced-motion: reduce) {
+          :host { --caps-motion: 0s; }
+        }
+        @media (prefers-contrast: more) {
+          .tablist ::slotted(button[aria-selected='true']) {
+            background: var(--caps-tab-active-bg-contrast, #000);
+            color: var(--caps-tab-active-color-contrast, #fff);
+          }
         }
       </style>
       <div class="tabs">

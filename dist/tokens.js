@@ -4,60 +4,16 @@ export const tokens = {
     "light": "#ffffff"
   },
   "--color-brand": {
-    "dark": "#00ff00",
-    "light": "#ff0000"
-  },
-  "--color-error": {
-    "dark": "#ef4444",
-    "light": "#dc2626"
-  },
-  "--color-success": {
-    "dark": "#22c55e",
-    "light": "#16a34a"
+    "dark": "#6366f1",
+    "light": "#4f46e5"
   },
   "--color-text": {
     "dark": "#ffffff",
     "light": "#000000"
   },
-  "--color-warning": {
-    "dark": "#f59e0b",
-    "light": "#d97706"
-  },
-  "--motion-duration-fast": {
-    "dark": "100ms",
-    "light": "100ms"
-  },
-  "--motion-duration-normal": {
-    "dark": "200ms",
-    "light": "200ms"
-  },
-  "--motion-duration-slow": {
-    "dark": "400ms",
-    "light": "400ms"
-  },
-  "--radius-full": {
-    "dark": "9999px",
-    "light": "9999px"
-  },
-  "--radius-lg": {
-    "dark": "16px",
-    "light": "16px"
-  },
-  "--radius-md": {
-    "dark": "8px",
-    "light": "8px"
-  },
-  "--radius-none": {
-    "dark": "0px",
-    "light": "0px"
-  },
-  "--radius-sm": {
-    "dark": "4px",
-    "light": "4px"
-  },
-  "--spacing-2xl": {
-    "dark": "32px",
-    "light": "32px"
+  "--good-token_1-inner_value": {
+    "dark": "#000",
+    "light": "#000"
   },
   "--spacing-lg": {
     "dark": "16px",
@@ -70,74 +26,6 @@ export const tokens = {
   "--spacing-sm": {
     "dark": "4px",
     "light": "4px"
-  },
-  "--spacing-xl": {
-    "dark": "24px",
-    "light": "24px"
-  },
-  "--spacing-xs": {
-    "dark": "2px",
-    "light": "2px"
-  },
-  "--typography-font-size-lg": {
-    "dark": "20px",
-    "light": "20px"
-  },
-  "--typography-font-size-md": {
-    "dark": "16px",
-    "light": "16px"
-  },
-  "--typography-font-size-sm": {
-    "dark": "12px",
-    "light": "12px"
-  },
-  "--typography-font-size-xl": {
-    "dark": "24px",
-    "light": "24px"
-  },
-  "--typography-font-weight-bold": {
-    "dark": 700,
-    "light": 700
-  },
-  "--typography-font-weight-medium": {
-    "dark": 500,
-    "light": 500
-  },
-  "--typography-font-weight-regular": {
-    "dark": 400,
-    "light": 400
-  },
-  "--typography-line-height-lg": {
-    "dark": 1.8,
-    "light": 1.8
-  },
-  "--typography-line-height-md": {
-    "dark": 1.5,
-    "light": 1.5
-  },
-  "--typography-line-height-sm": {
-    "dark": 1.2,
-    "light": 1.2
-  },
-  "--z-index-base": {
-    "dark": 0,
-    "light": 0
-  },
-  "--z-index-dropdown": {
-    "dark": 1000,
-    "light": 1000
-  },
-  "--z-index-modal": {
-    "dark": 1100,
-    "light": 1100
-  },
-  "--z-index-popover": {
-    "dark": 1200,
-    "light": 1200
-  },
-  "--z-index-tooltip": {
-    "dark": 1300,
-    "light": 1300
   }
 };
 export default tokens;

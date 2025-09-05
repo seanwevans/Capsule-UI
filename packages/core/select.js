@@ -1,6 +1,6 @@
 class CapsSelect extends HTMLElement {
   static get observedAttributes() {
-    return ['disabled', 'multiple', 'name', 'size', 'value'];
+    return ['disabled', 'multiple', 'name', 'size', 'value', 'aria-label', 'aria-describedby', 'role'];
   }
 
   constructor() {
@@ -19,12 +19,23 @@ class CapsSelect extends HTMLElement {
           border-radius: var(--caps-select-radius, 0.375rem);
           background: var(--caps-select-bg, #fff);
           color: var(--caps-select-color, #0f172a);
+          transition: border-color var(--caps-motion);
         }
         :host([variant="outline"]) select { background: transparent; }
         @container (min-width: 480px) {
           select { padding: 0.75rem 1rem; }
         }
         select:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) {
+          :host { --caps-motion: 0s; }
+        }
+        @media (prefers-contrast: more) {
+          select {
+            border: var(--caps-select-border-contrast, 1px solid #000);
+            background: var(--caps-select-bg-contrast, #fff);
+            color: var(--caps-select-color-contrast, #000);
+          }
+        }
       </style>
       <select part="select"></select>
       <slot hidden></slot>
@@ -42,6 +53,7 @@ class CapsSelect extends HTMLElement {
     if (!select) return;
     if (name === 'disabled') {
       select.toggleAttribute('disabled', value !== null);
+      select.setAttribute('aria-disabled', value !== null ? 'true' : 'false');
     } else if (name === 'multiple') {
       select.toggleAttribute('multiple', value !== null);
     } else if (name === 'size') {
@@ -52,6 +64,9 @@ class CapsSelect extends HTMLElement {
       else select.removeAttribute('name');
     } else if (name === 'value') {
       select.value = value ?? '';
+    } else if (name.startsWith('aria-') || name === 'role') {
+      if (value !== null) select.setAttribute(name, value);
+      else select.removeAttribute(name);
     }
   }
 
@@ -86,6 +101,10 @@ class CapsSelect extends HTMLElement {
   set value(v) {
     const select = this.shadowRoot.querySelector('select');
     if (select) select.value = v;
+  }
+
+  focus() {
+    this.shadowRoot.querySelector('select')?.focus();
   }
 }
 

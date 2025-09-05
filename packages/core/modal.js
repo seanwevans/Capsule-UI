@@ -1,7 +1,7 @@
 import { getLocale, onLocaleChange } from './locale.js';
 
 class CapsModal extends HTMLElement {
-  static get observedAttributes() { return ['open']; }
+  static get observedAttributes() { return ['open', 'aria-label', 'aria-labelledby']; }
 
   constructor() {
     super();
@@ -44,6 +44,19 @@ class CapsModal extends HTMLElement {
     `;
     this._onKeyDown = (e) => {
       if (e.key === 'Escape') this.removeAttribute('open');
+      if (e.key === 'Tab') {
+        const focusables = this.shadowRoot.querySelectorAll('.modal a[href], .modal button:not([disabled]), .modal textarea:not([disabled]), .modal input:not([disabled]), .modal select:not([disabled]), .modal [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
   }
 
@@ -74,6 +87,10 @@ class CapsModal extends HTMLElement {
         document.removeEventListener('keydown', this._onKeyDown);
         this._previous?.focus();
       }
+    } else if (name === 'aria-label' || name === 'aria-labelledby') {
+      const modal = this.shadowRoot.querySelector('.modal');
+      if (value !== null) modal.setAttribute(name, value);
+      else modal.removeAttribute(name);
     }
   }
 }
