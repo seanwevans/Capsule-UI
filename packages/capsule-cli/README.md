@@ -25,6 +25,12 @@ The scaffolding generates the following files:
 - `index.ts` – re-export of the component
 - `__tests__/MyButton.test.ts` – placeholder test
 
+Use `--force` to overwrite an existing component:
+
+```
+node ./bin/capsule.js new component my-button --force
+```
+
 ## Other commands
 
 - `tokens build` – build design tokens

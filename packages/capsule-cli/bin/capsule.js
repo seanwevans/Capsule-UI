@@ -24,6 +24,7 @@ program
   .argument('<type>', 'Resource type (currently only "component" is supported)')
   .argument('<name>', 'Name of the component (kebab- or snake-case allowed)')
   .option('--dir <path>', 'Base directory for components', 'packages/components')
+  .option('--force', 'overwrite existing component')
   .action(async (type, name, options) => {
     if (type !== 'component') {
       console.error('Error: only "component" type is supported.');
@@ -35,7 +36,7 @@ program
       process.exitCode = 1;
       return;
     }
-    const ok = await scaffoldComponent(name, options.dir);
+    const ok = await scaffoldComponent(name, options.dir, options.force);
     process.exitCode = ok ? 0 : 1;
   });
 
@@ -140,7 +141,11 @@ function runCommand(command, params) {
   });
 }
 
-export async function scaffoldComponent(rawName, baseDir = 'packages/components') {
+export async function scaffoldComponent(
+  rawName,
+  baseDir = 'packages/components',
+  force = false
+) {
   try {
     const validName = /^[a-z](?:[a-z0-9]*(?:[-_][a-z0-9]+)*)$/i;
     if (!validName.test(rawName)) {
@@ -156,6 +161,9 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const componentDir = join(componentsDir, name);
 
     await mkdir(componentsDir, { recursive: true });
+    if (force) {
+      await rm(componentDir, { recursive: true, force: true });
+    }
     try {
       await mkdir(componentDir, { recursive: false });
     } catch (err) {

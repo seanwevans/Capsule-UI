@@ -162,6 +162,28 @@ test('fails when component already exists', async () => {
   }
 });
 
+test('overwrites existing component with --force flag', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  try {
+    let res = await run(['new', 'component', 'dupe'], { cwd: tmp });
+    assert.equal(res.code, 0);
+    const compFile = path.join(
+      tmp,
+      'packages',
+      'components',
+      'Dupe',
+      'Dupe.ts'
+    );
+    await writeFile(compFile, 'modified');
+    res = await run(['new', 'component', 'dupe', '--force'], { cwd: tmp });
+    assert.equal(res.code, 0);
+    const content = await readFile(compFile, 'utf8');
+    assert.match(content, /TODO: implement Dupe component/);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test('scaffoldComponent returns true and generates expected files', async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
   const originalCwd = process.cwd();
@@ -197,7 +219,10 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     );
     assert.equal(
       testFile,
-      `describe('ExampleComponent', () => {\n  it('should render correctly', () => {\n    expect(true).toBe(true);\n  });\n});\n`
+      `import test from 'node:test';\nimport assert from 'node:assert/strict';\n\n` +
+        "test('ExampleComponent', () => {\n" +
+        "  assert.equal(1, 1);\n" +
+        '});\n'
     );
     assert.equal(
       rootIndex,
@@ -218,6 +243,35 @@ test('scaffoldComponent respects custom base directory', async () => {
     const result = await scaffoldComponent('custom-base', 'custom-dir');
     assert.equal(result, true);
     await access(path.join(tempDir, 'custom-dir', 'CustomBase'));
+  } finally {
+    process.chdir(originalCwd);
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('scaffoldComponent overwrites existing component when force is true', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'capsule-'));
+  const originalCwd = process.cwd();
+  process.chdir(tempDir);
+  try {
+    const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
+    await scaffoldComponent('force-component');
+    const compFile = path.join(
+      tempDir,
+      'packages',
+      'components',
+      'ForceComponent',
+      'ForceComponent.ts'
+    );
+    await writeFile(compFile, 'old');
+    const result = await scaffoldComponent(
+      'force-component',
+      'packages/components',
+      true
+    );
+    assert.equal(result, true);
+    const content = await readFile(compFile, 'utf8');
+    assert.match(content, /TODO: implement ForceComponent component/);
   } finally {
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });
