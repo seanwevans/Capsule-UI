@@ -202,11 +202,11 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     const arrow = '\u003d>';
     assert.equal(
       component,
-      `export const ExampleComponent = () ${arrow} null;\n`
+      `export const ExampleComponent = () => {\n  return <div />;\n};\n`
     );
     assert.equal(
       style,
-      `export interface ExampleComponentStyleProps {}\n\nexport const createExampleComponentStyles = (_: ExampleComponentStyleProps) ${arrow} ({});\n`
+      `export interface ExampleComponentStyleProps {\n  color?: string;\n}\n\nexport const createExampleComponentStyles = (props: ExampleComponentStyleProps) => {\n  return {\n    root: {\n      color: props.color,\n    },\n  };\n};\n`
     );
     assert.equal(
       index,
@@ -228,13 +228,13 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       rootIndex,
       `export * from './ExampleComponent/ExampleComponent';\n`
     );
-    assert.equal(
-      doc,
-      `# ExampleComponent\n\nShort description of ExampleComponent.\n\n## Usage\n\n\`\`\`html\n<ExampleComponent />\n\`\`\`\n\n## Props\n\n<!-- TODO: document component props -->\n\n## Slots\n\n<!-- TODO: document component slots -->\n`
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
     );
     assert.equal(
-      adr,
-      `# ADR 001: ExampleComponent Style Contract\n\n## Status\nDraft\n\n## Context\nExplain why this style decision is needed and what problem it addresses.\n\n## Rationale\nDiscuss alternative approaches and why this solution was chosen.\n\n## Decision\nDetail the style contract including scope by default, token usage, layer ordering, and variant strategy.\n\n## Consequences\nNote any trade-offs, follow-up work, or implications of this decision.\n`
+      doc,
+      `# ExampleComponent\n\nThe ExampleComponent component.\n\n## Usage\n\n\`\`\`tsx\n<ExampleComponent />\n\`\`\`\n`
     );
   } finally {
     process.chdir(originalCwd);

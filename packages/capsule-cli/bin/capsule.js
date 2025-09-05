@@ -232,11 +232,12 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const adrNumber = await nextAdrNumber(adrDir);
     const adrFile = join(adrDir, `${adrNumber}-${kebab}.md`);
 
-    const componentSrc = `export const ${name} = () => null;\n`;
-    const styleSrc = `export interface ${name}StyleProps {}\n\nexport const create${name}Styles = (_: ${name}StyleProps) => ({});\n`;
+    const componentSrc = `export const ${name} = () => {\n  return <div />;\n};\n`;
+    const styleSrc = `export interface ${name}StyleProps {\n  color?: string;\n}\n\nexport const create${name}Styles = (props: ${name}StyleProps) => {\n  return {\n    root: {\n      color: props.color,\n    },\n  };\n};\n`;
     const indexSrc = `export * from './${name}';\nexport * from './style';\n`;
     const testSrc = `import test from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('${name}', () => {\n  assert.equal(1, 1);\n});\n`;
-    const docSrc = `# ${name}\n\nShort description of ${name}.\n\n## Usage\n\n\`\`\`html\n<${name} />\n\`\`\`\n\n## Props\n\n<!-- TODO: document component props -->\n\n## Slots\n\n<!-- TODO: document component slots -->\n`;
+    const docSrc = `# ${name}\n\nThe ${name} component.\n\n## Usage\n\n\`\`\`tsx\n<${name} />\n\`\`\`\n`;
+
     const templatePath = join(adrDir, '000-style-contract-template.md');
     let adrSrc = '';
     try {
