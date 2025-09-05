@@ -31,18 +31,25 @@ class CapsTabs extends HTMLElement {
   connectedCallback() {
     const tabSlot = this.shadowRoot.querySelector('slot[name="tab"]');
     const panelSlot = this.shadowRoot.querySelector('slot[name="panel"]');
+    const handlers = new WeakMap();
     const assign = () => {
       const tabs = tabSlot.assignedElements();
       const panels = panelSlot.assignedElements();
       tabs.forEach((tab, i) => {
         tab.setAttribute('role', 'tab');
         tab.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-        tab.addEventListener('click', () => {
+        const existingHandler = handlers.get(tab);
+        if (existingHandler) {
+          tab.removeEventListener('click', existingHandler);
+        }
+        const clickHandler = () => {
           tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
           panels.forEach(p => p.removeAttribute('data-active'));
           tab.setAttribute('aria-selected', 'true');
           panels[i]?.setAttribute('data-active', '');
-        });
+        };
+        tab.addEventListener('click', clickHandler);
+        handlers.set(tab, clickHandler);
       });
       panels.forEach((p, i) => {
         p.setAttribute('role', 'tabpanel');
