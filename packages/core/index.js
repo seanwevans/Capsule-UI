@@ -1,10 +1,15 @@
 export { CapsButton } from './button.js';
 export { buttonRecipe } from './button.recipe.js';
 export { CapsInput } from './input.js';
+export { inputRecipe } from './input.recipe.js';
 export { CapsCard } from './card.js';
+export { cardRecipe } from './card.recipe.js';
 export { CapsTabs } from './tabs.js';
+export { tabsRecipe } from './tabs.recipe.js';
 export { CapsModal } from './modal.js';
+export { modalRecipe } from './modal.recipe.js';
 export { CapsSelect } from './select.js';
+export { selectRecipe } from './select.recipe.js';
 export { getLocale, setLocale, onLocaleChange, formatNumber, formatDate, setDirection } from './locale.js';
 export { ThemeManager } from './theme-manager.js';
 export { setTheme, getTheme, onThemeChange } from './theme.js';

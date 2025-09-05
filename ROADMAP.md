@@ -31,13 +31,13 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 ## Milestone 2 — Component Recipes (Variants)
 - Adopt CVA/stylex/Panda/UnoCSS (compiled) for variant recipes.
-- Initial integration with `class-variance-authority` for button.
+- Use `class-variance-authority` recipes for core components.
 - Pattern: props → classes; zero runtime CSS generation.
 - Lint rule to forbid ad‑hoc class soup in callsites; enforce recipes.
 
 **Exit criteria:** All components expose typed variant APIs with autocomplete.
 
-**Status:** In progress — CVA integrated with a button recipe and lint rule to ban ad-hoc classes. Target: December 2025.
+**Status:** In progress — CVA recipes exist for core components and lint rule to ban ad-hoc classes. Target: December 2025.
 
 ---
 

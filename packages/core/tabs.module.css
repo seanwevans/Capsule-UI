@@ -18,7 +18,8 @@
   outline: 2px solid var(--color-text);
   outline-offset: 2px;
 }
-:where(.tabs[data-variant="pill"]) .tab {
+:where(.tabs[data-variant="pill"]) .tab,
+.tabs.variant-pill .tab {
   border-radius: 999px;
 }
 .tab:where([aria-selected='true']) {
