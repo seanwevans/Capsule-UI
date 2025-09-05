@@ -14,3 +14,4 @@ export const CapsInput = createComponent('caps-input', 'CapsInput');
 export const CapsCard = createComponent('caps-card', 'CapsCard');
 export const CapsTabs = createComponent('caps-tabs', 'CapsTabs');
 export const CapsModal = createComponent('caps-modal', 'CapsModal');
+export const CapsSelect = createComponent('caps-select', 'CapsSelect');
