@@ -1,11 +1,20 @@
 import express from 'express';
 import { createSSRApp } from 'vue';
 import { renderToString } from '@vue/server-renderer';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 
 global.HTMLElement = class {};
 global.customElements = { define() {}, get() { return undefined; } };
 
 const App = (await import('./App.js')).default;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const baseCss = readFileSync(
+  resolve(__dirname, '../../../packages/core/button.module.css'),
+  'utf8'
+);
 
 const app = express();
 
@@ -21,6 +30,7 @@ app.get('/', async (req, res) => {
   <meta charset="UTF-8" />
   <title>Vue SSR Example</title>
   <style>
+  ${baseCss}
     caps-button[variant="ghost"]::part(button) {
       background: transparent;
       border: 1px solid #4f46e5;
