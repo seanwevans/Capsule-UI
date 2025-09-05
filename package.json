@@ -17,6 +17,7 @@
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
+    "figma:sync-server": "tsx scripts/figma-sync-server.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "test:visual": "chromatic --exit-zero-on-changes"
