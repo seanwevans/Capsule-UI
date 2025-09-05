@@ -19,6 +19,14 @@ test('caps-select reflects value and disabled', async () => {
   assert.equal(el.value, 'b');
   assert.equal(el.shadowRoot.querySelector('select').value, 'b');
 
+  el.value = 'a';
+  assert.equal(el.getAttribute('value'), 'a');
+  assert.equal(el.shadowRoot.querySelector('select').value, 'a');
+
+  el.value = '';
+  assert.equal(el.hasAttribute('value'), false);
+  assert.equal(el.shadowRoot.querySelector('select').value, '');
+
   el.disabled = true;
   assert.equal(el.shadowRoot.querySelector('select').disabled, true);
 });

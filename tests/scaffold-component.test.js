@@ -182,18 +182,31 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       path.join(baseDir, '__tests__', 'ExampleComponent.test.ts'),
       'utf8'
     );
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
+    );
     const rootIndex = await readFile(
       path.join(tempDir, 'packages', 'components', 'index.ts'),
       'utf8'
     );
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
+    );
+    const adr = await readFile(
+      path.join(tempDir, 'docs', 'adr', '001-example-component.md'),
+      'utf8'
+    );
 
+    const arrow = '\u003d>';
     assert.equal(
       component,
-      `export const ExampleComponent = () => {\n  // TODO: implement ExampleComponent component\n};\n`
+      `export const ExampleComponent = () => {\n  return <div />;\n};\n`
     );
     assert.equal(
       style,
-      `export interface ExampleComponentStyleProps {\n  // TODO: define style props\n}\n\nexport const createExampleComponentStyles = (_: ExampleComponentStyleProps) => {\n  // TODO: implement Style API\n};\n`
+      `export interface ExampleComponentStyleProps {\n  color?: string;\n}\n\nexport const createExampleComponentStyles = (props: ExampleComponentStyleProps) => {\n  return {\n    root: {\n      color: props.color,\n    },\n  };\n};\n`
     );
     assert.equal(
       index,
@@ -208,8 +221,20 @@ test('scaffoldComponent returns true and generates expected files', async () => 
         '});\n'
     );
     assert.equal(
+      doc,
+      `# ExampleComponent\n\nDocumentation stub for ExampleComponent.\n`
+    );
+    assert.equal(
       rootIndex,
       `export * from './ExampleComponent/ExampleComponent';\n`
+    );
+    const doc = await readFile(
+      path.join(tempDir, 'docs', 'components', 'example-component.md'),
+      'utf8'
+    );
+    assert.equal(
+      doc,
+      `# ExampleComponent\n\nThe ExampleComponent component.\n\n## Usage\n\n\`\`\`tsx\n<ExampleComponent />\n\`\`\`\n`
     );
   } finally {
     process.chdir(originalCwd);

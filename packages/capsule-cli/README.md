@@ -21,11 +21,32 @@ The name is converted to PascalCase (`MyButton`).
 The scaffolding generates the following files:
 
 - `MyButton.ts` – component stub
-- `style.ts` – style API stub
+- `style.ts` – default style factory
 - `index.ts` – re-export of the component
-- `__tests__/MyButton.test.ts` – placeholder test
+- `__tests__/MyButton.test.ts` – smoke test exercising the style factory
 - `docs/components/my-button.md` – documentation stub
 - `docs/adr/NNN-my-button.md` – ADR template using the style contract
+
+Example generated files:
+
+```ts
+// MyButton.ts
+import { createMyButtonStyles } from './style';
+
+export const MyButton = () => {
+  const styles = createMyButtonStyles();
+  return `<button class="${styles.root}">MyButton</button>`;
+};
+
+// style.ts
+export interface MyButtonStyleProps {
+  variant?: 'primary' | 'secondary';
+}
+
+export const createMyButtonStyles = ({ variant = 'primary' }: MyButtonStyleProps = {}) => ({
+  root: variant === 'primary' ? 'caps-button--primary' : 'caps-button--secondary',
+});
+```
 
 ## Migrate existing code
 

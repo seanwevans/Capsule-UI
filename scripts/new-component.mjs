@@ -24,12 +24,22 @@ if (fs.existsSync(jsPath) || fs.existsSync(cssPath)) {
 
 fs.writeFileSync(
   jsPath,
-  `import styles from './${kebab}.module.css';\n\nexport function ${name}() {\n  // TODO: implement ${name}\n}\n`
+  `import styles from './${kebab}.module.css';
+
+export function ${name}() {
+  return \`<div class=\"\${styles['${kebab}']}\"></div>\`;
+}
+`
 );
 
 fs.writeFileSync(
   cssPath,
-  `@layer components;\n\n.${kebab} {\n  /* TODO: component styles */\n}\n`
+  `@layer components;
+
+.${kebab} {
+  display: block;
+}
+`
 );
 
 const adrDir = path.join('docs', 'adr');

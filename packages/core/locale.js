@@ -1,7 +1,10 @@
-let current = {
-  lang: document.documentElement.lang || 'en',
-  dir: document.documentElement.dir || 'ltr'
-};
+let current =
+  typeof document !== 'undefined'
+    ? {
+        lang: document.documentElement.lang || 'en',
+        dir: document.documentElement.dir || 'ltr',
+      }
+    : { lang: 'en', dir: 'ltr' };
 
 const EVENT = 'capsule:localechange';
 
@@ -11,20 +14,29 @@ export function getLocale() {
 
 export function setLocale({ lang, dir } = {}) {
   if (lang) {
-    document.documentElement.lang = lang;
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
     current.lang = lang;
   }
   if (dir) {
-    document.documentElement.dir = dir;
+    if (typeof document !== 'undefined') {
+      document.documentElement.dir = dir;
+    }
     current.dir = dir;
   }
-  window.dispatchEvent(new CustomEvent(EVENT, { detail: { ...current } }));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(EVENT, { detail: { ...current } }));
+  }
 }
 
 export function onLocaleChange(callback) {
   const handler = (e) => callback(e.detail);
-  window.addEventListener(EVENT, handler);
-  return () => window.removeEventListener(EVENT, handler);
+  if (typeof window !== 'undefined') {
+    window.addEventListener(EVENT, handler);
+    return () => window.removeEventListener(EVENT, handler);
+  }
+  return () => {};
 }
 
 const numberFormatCache = new Map();

@@ -41,10 +41,23 @@ const createComponent = (tag) =>
       }
     }, children);
   });
+const components = [
+  ['caps-button', 'CapsButton'],
+  ['caps-input', 'CapsInput'],
+  ['caps-card', 'CapsCard'],
+  ['caps-tabs', 'CapsTabs'],
+  ['caps-modal', 'CapsModal'],
+  ['caps-select', 'CapsSelect']
+];
 
-export const CapsButton = createComponent('caps-button');
-export const CapsInput = createComponent('caps-input');
-export const CapsCard = createComponent('caps-card');
-export const CapsTabs = createComponent('caps-tabs');
-export const CapsModal = createComponent('caps-modal');
-export const CapsSelect = createComponent('caps-select');
+export const {
+  CapsButton,
+  CapsInput,
+  CapsCard,
+  CapsTabs,
+  CapsModal,
+  CapsSelect
+} = components.reduce((acc, [tag, name]) => {
+  acc[name] = createComponent(tag);
+  return acc;
+}, {});

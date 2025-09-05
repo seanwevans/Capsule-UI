@@ -10,6 +10,7 @@ export { CapsModal } from './modal.js';
 export { modalRecipe } from './modal.recipe.js';
 export { CapsSelect } from './select.js';
 export { selectRecipe } from './select.recipe.js';
+export { withLocaleDir } from './withLocaleDir.js';
 export { getLocale, setLocale, onLocaleChange, formatNumber, formatDate, setDirection } from './locale.js';
 export { ThemeManager } from './theme-manager.js';
 export { setTheme, getTheme, onThemeChange } from './theme.js';

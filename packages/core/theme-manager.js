@@ -1,4 +1,13 @@
 const varNameRe = /^[a-z0-9-]+$/i;
+const tenantThemeRe = /^[a-z0-9-]+$/i;
+
+function sanitizeName(name) {
+  const sanitized = String(name).replace(/[^a-z0-9-]/gi, '-');
+  if (!tenantThemeRe.test(sanitized)) {
+    throw new Error(`Invalid tenant or theme: ${name}`);
+  }
+  return sanitized;
+}
 
 function sanitize(vars) {
   return Object.entries(vars).reduce((acc, [key, value]) => {
@@ -17,6 +26,7 @@ function sanitize(vars) {
 export class ThemeManager {
   static register(tenant, variables) {
     if (typeof document === 'undefined') return;
+    tenant = sanitizeName(tenant);
     const vars = sanitize(variables);
     const id = `caps-theme-${tenant}`;
     let style = document.getElementById(id);
@@ -33,6 +43,8 @@ export class ThemeManager {
 
   static registerTheme(tenant, theme, variables) {
     if (typeof document === 'undefined') return;
+    tenant = sanitizeName(tenant);
+    theme = sanitizeName(theme);
     const vars = sanitize(variables);
     const id = `caps-theme-${tenant}-${theme}`;
     let style = document.getElementById(id);
@@ -58,11 +70,14 @@ export class ThemeManager {
 
   static apply(tenant, element = document.documentElement) {
     if (typeof document === 'undefined') return;
+    tenant = sanitizeName(tenant);
     element.setAttribute('data-tenant', tenant);
   }
 
   static applyTheme(tenant, theme, element = document.documentElement) {
     if (typeof document === 'undefined') return;
+    tenant = sanitizeName(tenant);
+    theme = sanitizeName(theme);
     element.setAttribute('data-tenant', tenant);
     element.setAttribute('data-theme', theme);
   }
