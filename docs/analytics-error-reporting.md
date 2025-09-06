@@ -2,6 +2,12 @@
 
 Capsule UI exposes opt-in hooks to record anonymous usage metrics and report runtime errors.
 
+## Guidelines
+
+- Enable analytics only with user consent and keep it disabled in development.
+- Route error reports to a centralized service and tag them with tenant identifiers.
+- In tests, stub analytics and error handlers to avoid noisy output.
+
 ## Usage analytics
 
 ```js

@@ -40,6 +40,10 @@ Import `tabs.module.css` and apply the exported classes.
 
 When the container is narrower than `480px` the tab list stacks vertically.
 
+## Demo
+
+<iframe src="https://storybook.capsule-ui.com/iframe.html?id=components-tabs--default" style="width:100%;height:400px;border:1px solid #eee;"></iframe>
+
 ## A11y
 
 - Tab buttons are given proper `role` and keyboard navigation.

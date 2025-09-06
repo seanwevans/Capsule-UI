@@ -57,7 +57,7 @@ capsule migrate tailwind src/**/*.tsx
 capsule migrate emotion src/
 ```
 
-The Tailwind codemod finds `className` values such as `btn btn-primary` and replaces them with `<CapsButton>` elements using a `variant` prop. The Emotion codemod removes `styled.button` declarations and swaps their usages for `CapsButton` imports.
+The Tailwind codemod recognises utility classes like `btn`, `input`, `card`, `tabs`, `modal` and `select`, even inside dynamic `className` expressions (`clsx`, template literals, etc.). Matched elements are replaced with the corresponding Capsule components and a `variant` prop when a `*-foo` class is present. The Emotion codemod removes `styled.button` declarations and swaps their usages for `CapsButton` imports.
 
 ## Other commands
 
