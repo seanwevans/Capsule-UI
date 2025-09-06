@@ -30,7 +30,13 @@
     "./select.recipe": {
       "import": "./select.recipe.js",
       "types": "./select.recipe.d.ts"
-    }
+    },
+    "./button.module.css": "./button.module.css",
+    "./card.module.css": "./card.module.css",
+    "./input.module.css": "./input.module.css",
+    "./tabs.module.css": "./tabs.module.css",
+    "./modal.module.css": "./modal.module.css",
+    "./select.module.css": "./select.module.css"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1"
