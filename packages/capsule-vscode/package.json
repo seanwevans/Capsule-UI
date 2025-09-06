@@ -14,6 +14,18 @@
     "onLanguage:html"
   ],
   "main": "dist/extension.js",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "css",
+        "path": "./snippets/capsule.code-snippets"
+      },
+      {
+        "language": "scss",
+        "path": "./snippets/capsule.code-snippets"
+      }
+    ]
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
