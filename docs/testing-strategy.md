@@ -22,17 +22,33 @@ pnpm test
 
 ## Accessibility tests
 
-Automated accessibility checks prevent regressions. Capsule runs [`pa11y`](https://pa11y.org/) against example pages via `pnpm test:a11y`:
+Automated accessibility checks prevent regressions. Capsule runs both
+[`pa11y`](https://pa11y.org/) and [`axe-core`](https://github.com/dequelabs/axe-core)
+against example pages via `pnpm test:a11y`:
 
 ```js
+import { chromium } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+const chromePath = chromium.executablePath();
 await pa11y('examples/index.html', {
   chromeLaunchConfig: {
+    executablePath: chromePath,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   }
 });
+
+const browser = await chromium.launch();
+const context = await browser.newContext();
+const page = await context.newPage();
+await page.goto('examples/index.html');
+await new AxeBuilder({ page }).analyze();
+await context.close();
+await browser.close();
 ```
 
-For component-level accessibility, integrate [`axe-core`](https://github.com/dequelabs/axe-core) in browser-based tests (e.g., Playwright, Cypress).
+Playwright, Cypress, or other browser-based tests can also import the
+`@axe-core` helpers to validate individual components.
 
 ## Visual regression tests
 

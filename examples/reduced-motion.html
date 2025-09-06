@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Capsule reduced motion demo</title>
+    <script type="module" src="../packages/core/index.js"></script>
+    <style>
+      .spin {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background: var(--color-brand, #09f);
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spin { animation: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <p>The blue square spins unless your system requests reduced motion.</p>
+    <div class="spin" aria-hidden="true"></div>
+    <p>
+      <caps-button id="open" aria-label="Open modal">Open modal</caps-button>
+    </p>
+    <caps-modal id="m">
+      <p>Modal respects reduced motion for its transitions.</p>
+      <caps-button id="close" aria-label="Close modal">Close</caps-button>
+    </caps-modal>
+    <script type="module">
+      const modal = document.getElementById('m');
+      document.getElementById('open').addEventListener('click', () => modal.setAttribute('open', ''));
+      document.getElementById('close').addEventListener('click', () => modal.removeAttribute('open'));
+    </script>
+  </body>
+</html>

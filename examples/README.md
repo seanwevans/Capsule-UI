@@ -35,3 +35,7 @@ Open `index.html` in a modern browser to see the widget and runtime theming in a
 
 `rtl.html` showcases locale switching and right‑to‑left support for core
 components using the exported `setLocale` helper.
+
+`reduced-motion.html` demonstrates how Capsule components honor the user's
+`prefers-reduced-motion` setting by disabling animations and smooth
+transitions when appropriate.
