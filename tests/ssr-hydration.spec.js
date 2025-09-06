@@ -17,7 +17,9 @@ test('upgrades light DOM without layout shift', async ({ page }) => {
   await page.goto(`http://localhost:${port}`);
   await page.waitForSelector('caps-button');
   const cls = await page.evaluate(() => window.__getCLS());
+  const hydration = await page.evaluate(() => window.__hydrationTime);
   expect(cls).toBeLessThan(0.01);
+  expect(hydration).toBeLessThan(50);
   const tag = await page.locator('caps-button').evaluate((el) => el.tagName);
   expect(tag).toBe('CAPS-BUTTON');
 });

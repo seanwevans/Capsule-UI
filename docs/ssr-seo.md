@@ -19,6 +19,13 @@ btn.replaceWith(ce);
 ```
 
 Framework integrations under `examples/ssr/` show the pattern for React, Vue and Svelte.
-Each example inlines precompiled Capsule CSS modules to avoid a flash of unstyled
-content before hydration. The `light-dom` sample illustrates measuring Cumulative Layout
-Shift during upgrade; a passing Playwright test ensures the layout stays stable.
+CSS for Web Components can be loaded ahead of time with a customized link element:
+
+```html
+<link rel="stylesheet" is="capsule-style" data-module="caps-button" href="/button.css" />
+```
+
+The `capsule-style` element registers the loaded `CSSStyleSheet` so components can
+adopt it during hydration and avoid a flash of unstyled content. The `light-dom`
+sample illustrates measuring Cumulative Layout Shift during upgrade and records the
+hydration time budget with a Playwright test.

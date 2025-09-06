@@ -9,7 +9,7 @@
     "lint": "pnpm run lint:css && pnpm run lint:js",
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
     "check:runtime-styles": "node scripts/check-runtime-styles.mjs",
-    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run test:e2e",    
+    "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run check:bundle-size && pnpm run test:e2e",
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
     "new:component": "node scripts/new-component.mjs",
     "test:a11y": "node scripts/a11y-check.mjs",
