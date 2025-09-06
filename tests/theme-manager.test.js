@@ -91,3 +91,31 @@ test('ThemeManager sanitizes invalid tenant and theme names', async () => {
   assert.ok(style.includes('[data-tenant="foo-bar"][data-theme="dark-mode"]'));
 });
 
+test('ThemeManager can unregister themes and reset attributes', async () => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>');
+  global.window = dom.window;
+  global.document = dom.window.document;
+
+  const { ThemeManager } = await import('../packages/core/theme-manager.js');
+
+  ThemeManager.register('acme', { 'caps-btn-bg': 'pink' });
+  ThemeManager.registerTheme('acme', 'dark', { 'caps-btn-bg': 'purple' });
+
+  let style = document.getElementById('caps-theme-acme');
+  assert.ok(style);
+  ThemeManager.unregister('acme');
+  style = document.getElementById('caps-theme-acme');
+  assert.equal(style, null);
+
+  const el = document.createElement('div');
+  ThemeManager.applyTheme('acme', 'dark', el);
+  assert.equal(el.getAttribute('data-tenant'), 'acme');
+  assert.equal(el.getAttribute('data-theme'), 'dark');
+  ThemeManager.reset(el);
+  assert.equal(el.getAttribute('data-tenant'), null);
+  assert.equal(el.getAttribute('data-theme'), null);
+  ThemeManager.unregisterTheme('acme', 'dark');
+  style = document.getElementById('caps-theme-acme-dark');
+  assert.equal(style, null);
+});
+

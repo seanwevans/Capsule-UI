@@ -14,6 +14,8 @@ For developers migrating from Tailwind or CSS‑in‑JS, see the [migration and 
 - **Isolation by default.** Your host CSS can’t leak in; component CSS can’t leak out.
 - **Theming at runtime.** Flip brands/tenants by setting CSS variables—no rebuilds.
 - **Tenant isolation.** `ThemeManager` scopes tokens per tenant so styles can't leak across boundaries.
+- **Micro-frontend ready.** Register and remove tenant styles on the fly.
+- **Secure events.** `dispatchSafeEvent` keeps custom events inside component boundaries.
 - **Predictable overrides.** Only what you expose is customizable (`::part`, CSS vars).
 - **Fast.** Plain CSS or compile-time utilities; zero runtime styling engine.
 - **Local responsiveness.** Container queries adapt to *the space you give the component*.
@@ -230,6 +232,10 @@ import { ThemeManager } from '@capsule-ui/core';
 
 await ThemeManager.load('tenantA', '/themes/tenant-a.json');
 ThemeManager.applyTheme('tenantA', 'dark');
+
+// Later, when tearing down a micro-frontend:
+ThemeManager.unregister('tenantA');
+ThemeManager.reset();
 ```
 
 ### Theming lab
@@ -243,6 +249,18 @@ Shareable presets can be uploaded to a lightweight [theme registry](docs/theme-r
 Each upload receives a unique URL that teams can reference at runtime or package for
 distribution on npm. Browse, fetch, and reuse themes without copying token files
 between projects.
+
+### Secure custom events
+
+Use `dispatchSafeEvent` to emit sanitized custom events that stay inside the
+component's shadow DOM by default. This prevents accidental leakage across
+micro-frontend boundaries:
+
+```js
+import { dispatchSafeEvent } from '@capsule-ui/core';
+
+dispatchSafeEvent(el, 'capsule:change', { value });
+```
 
 ---
 

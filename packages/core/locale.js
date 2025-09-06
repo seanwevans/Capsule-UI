@@ -1,3 +1,5 @@
+import { dispatchSafeEvent } from './events.js';
+
 let current =
   typeof document !== 'undefined'
     ? {
@@ -26,7 +28,7 @@ export function setLocale({ lang, dir } = {}) {
     current.dir = dir;
   }
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(EVENT, { detail: { ...current } }));
+    dispatchSafeEvent(window, EVENT, { ...current }, { bubbles: false });
   }
 }
 
