@@ -81,4 +81,22 @@ export class ThemeManager {
     element.setAttribute('data-tenant', tenant);
     element.setAttribute('data-theme', theme);
   }
+
+  static unregister(tenant) {
+    if (typeof document === 'undefined') return;
+    const id = `caps-theme-${sanitizeName(tenant)}`;
+    document.getElementById(id)?.remove();
+  }
+
+  static unregisterTheme(tenant, theme) {
+    if (typeof document === 'undefined') return;
+    const id = `caps-theme-${sanitizeName(tenant)}-${sanitizeName(theme)}`;
+    document.getElementById(id)?.remove();
+  }
+
+  static reset(element = document.documentElement) {
+    if (typeof document === 'undefined') return;
+    element.removeAttribute('data-tenant');
+    element.removeAttribute('data-theme');
+  }
 }
