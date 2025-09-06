@@ -28,6 +28,10 @@ Import `input.module.css` and apply the exported `input` class.
 
 Padding increases when its container width reaches `480px`.
 
+## Demo
+
+<iframe src="https://storybook.capsule-ui.com/iframe.html?id=components-input--default" style="width:100%;height:400px;border:1px solid #eee;"></iframe>
+
 ## A11y
 
 - Pair with a `<label for="...">` to provide a programmatic name.

@@ -100,6 +100,8 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 - Button, Input, Select, Tabs, Card, Modal built with Capsule patterns.
 - Container-query examples in each.
 - Per-component Style API docs (vars/parts/attributes).
+- Next controls: Textarea, Checkbox, Radio, Badge, Alert, Tooltip, and Dropdown.
+  - Each uses isolated styles, accessible defaults, and container queries with documented Style APIs.
 
 **Exit criteria:** Usable starter library for typical SaaS embeds.
 

@@ -1,7 +1,8 @@
 # Light DOM SSR Example
 
-This example renders a plain `<button>` on the server with precompiled Capsule styles.
-On the client it upgrades the element to `<caps-button>` without causing layout shift.
+This example renders a plain `<button>` on the server with precompiled Capsule styles
+loaded through a custom `<link rel="stylesheet" is='capsule-style'>` element. On the
+client it upgrades the element to `<caps-button>` without causing layout shift.
 
 ## Running
 
