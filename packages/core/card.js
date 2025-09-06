@@ -18,8 +18,15 @@ class CapsCard extends HTMLElement {
           box-shadow: var(--shadow-sm);
         }
         :host([variant="outline"]) .card { box-shadow: none; }
+        :host([variant="ghost"]) .card {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+        }
+        :host([size="compact"]) .card { padding: var(--spacing-md); }
         @container (min-width: 600px) {
           .card { padding: calc(var(--spacing-lg) * 1.5); }
+          :host([size="compact"]) .card { padding: var(--spacing-lg); }
         }
       </style>
       <div class="card" part="card"><slot></slot></div>

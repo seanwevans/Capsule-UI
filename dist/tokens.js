@@ -14,6 +14,11 @@ export const tokens = {
     "light": "#4f46e5",
     "ocean": "#0284c7"
   },
+  "--color-danger": {
+    "dark": "#ef4444",
+    "light": "#dc2626",
+    "ocean": "#be123c"
+  },
   "--color-overlay": {
     "dark": "rgba(0,0,0,0.5)",
     "light": "rgba(0,0,0,0.5)",

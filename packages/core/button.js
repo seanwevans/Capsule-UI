@@ -27,6 +27,14 @@ class CapsButton extends withLocaleDir(HTMLElement) {
           border: 1px solid var(--color-brand);
           color: var(--color-brand);
         }
+        :host([variant="secondary"]) button {
+          background: var(--color-secondary);
+          color: var(--color-text);
+        }
+        :host([variant="danger"]) button {
+          background: var(--color-danger);
+          color: var(--color-text);
+        }
         @container (min-width: 480px) {
           button { padding: var(--spacing-md) var(--spacing-xl); }
         }

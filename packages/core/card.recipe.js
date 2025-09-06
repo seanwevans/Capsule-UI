@@ -4,7 +4,11 @@ import styles from './card.module.css';
 export const cardRecipe = cva(styles.card, {
   variants: {
     variant: {
-      outline: styles['variant-outline']
+      outline: styles['variant-outline'],
+      ghost: styles['variant-ghost']
+    },
+    size: {
+      compact: styles['size-compact']
     }
   }
 });
