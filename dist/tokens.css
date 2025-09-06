@@ -3,6 +3,7 @@
   --color-background: #ffffff;
   --color-border: #e5e7eb;
   --color-brand: #4f46e5;
+  --color-danger: #dc2626;
   --color-overlay: rgba(0,0,0,0.5);
   --color-secondary: #6b7280;
   --color-text: #000000;
@@ -23,6 +24,7 @@
   --color-background: #000000;
   --color-border: #4b5563;
   --color-brand: #6366f1;
+  --color-danger: #ef4444;
   --color-overlay: rgba(0,0,0,0.5);
   --color-secondary: #9ca3af;
   --color-text: #ffffff;
@@ -43,6 +45,7 @@
   --color-background: #f0f9ff;
   --color-border: #7dd3fc;
   --color-brand: #0284c7;
+  --color-danger: #be123c;
   --color-overlay: rgba(0,0,0,0.5);
   --color-secondary: #475569;
   --color-text: #0f172a;

@@ -13,6 +13,24 @@
 .variant-outline {
   box-shadow: none;
 }
+.card:where([data-variant="ghost"]) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.variant-ghost {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.card:where([data-size="compact"]) {
+  padding: var(--spacing-md);
+}
+.size-compact {
+  padding: var(--spacing-md);
+}
 @container (min-width: 600px) {
   .card { padding: calc(var(--spacing-lg) * 1.5); }
+  .card:where([data-size="compact"]),
+  .size-compact { padding: var(--spacing-lg); }
 }

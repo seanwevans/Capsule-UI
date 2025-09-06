@@ -9,7 +9,9 @@ export const buttonRecipe = cva(styles.button, {
     },
     variant: {
       primary: '',
-      secondary: styles['variant-secondary']
+      secondary: styles['variant-secondary'],
+      danger: styles['variant-danger'],
+      outline: styles['variant-outline']
     }
   },
   defaultVariants: {
