@@ -36,3 +36,12 @@ Container query: padding grows when the button's container is at least `480px` w
 
 - Uses native `<button>` semantics so keyboard and screen-reader behaviour follow platform defaults.
 - Set `aria-label` when the button has no text content.
+- Example:
+
+```html
+<caps-button aria-label="Add item">
+  <svg aria-hidden="true"><!-- icon --></svg>
+</caps-button>
+```
+
+- Activate the button with `Enter` or `Space`.

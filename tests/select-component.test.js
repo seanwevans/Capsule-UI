@@ -8,6 +8,8 @@ test('caps-select reflects value and disabled', async () => {
   global.document = dom.window.document;
   global.HTMLElement = dom.window.HTMLElement;
   global.customElements = dom.window.customElements;
+  global.Node = dom.window.Node;
+  global.Element = dom.window.Element;
 
   await import('../packages/core/select.js');
 

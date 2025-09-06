@@ -44,3 +44,15 @@ When the container is narrower than `480px` the tab list stacks vertically.
 
 - Tab buttons are given proper `role` and keyboard navigation.
 - Remember to label the tab list if necessary via `aria-label`.
+- Example:
+
+```html
+<caps-tabs aria-label="Sample tabs">
+  <button slot="tab">One</button>
+  <button slot="tab">Two</button>
+  <div slot="panel">First panel</div>
+  <div slot="panel">Second panel</div>
+</caps-tabs>
+```
+
+- Use arrow keys to move between tabs and `Home`/`End` to jump.

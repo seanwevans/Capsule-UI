@@ -44,3 +44,14 @@ Padding adjusts when the container is at least `480px` wide.
 
 - Pair with a `<label for="...">` to provide a programmatic name.
 - Uses native `<select>` semantics so keyboard and screen-reader behavior follow platform defaults.
+- Example:
+
+```html
+<label for="fruit">Fruit</label>
+<caps-select id="fruit">
+  <option value="a">Apple</option>
+  <option value="b">Banana</option>
+</caps-select>
+```
+
+- Open the list with `Alt+Down` and navigate options with arrow keys.
