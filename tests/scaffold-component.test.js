@@ -182,18 +182,12 @@ test('scaffoldComponent returns true and generates expected files', async () => 
       path.join(baseDir, '__tests__', 'ExampleComponent.test.ts'),
       'utf8'
     );
-
-    await readFile(
-      path.join(tempDir, 'docs', 'adr', '001-example-component.md'),
-      'utf8'
-    );
-
-    const doc = await readFile(
-      path.join(tempDir, 'docs', 'components', 'example-component.md'),
-      'utf8'
-    );
     const rootIndex = await readFile(
       path.join(tempDir, 'packages', 'components', 'index.ts'),
+      'utf8'
+    );
+    const adr = await readFile(
+      path.join(tempDir, 'docs', 'adr', '001-example-component.md'),
       'utf8'
     );
     await readFile(path.join(tempDir, 'docs', 'adr', '001-example-component.md'), 'utf8');
@@ -218,9 +212,10 @@ test('scaffoldComponent returns true and generates expected files', async () => 
         "  assert.equal(1, 1);\n" +
         '});\n'
     );
-    const rootIndex = await readFile(
-      path.join(tempDir, 'packages', 'components', 'index.ts'),
-      'utf8'
+
+    assert.equal(
+      rootIndex,
+      `export * from './ExampleComponent/ExampleComponent';\n`
     );
     let doc = await readFile(
       path.join(tempDir, 'docs', 'components', 'example-component.md'),

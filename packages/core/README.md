@@ -12,6 +12,22 @@ Preview package containing fundamental Capsule UI components.
 
 These components are early previews for experimentation and feedback.
 
+## Accessibility
+
+| Component | ARIA roles / attributes | Keyboard traps |
+| --- | --- | --- |
+| `<caps-button>` | inherits native `<button>` semantics | none |
+| `<caps-input>` | native `<input type="text">` semantics | none |
+| `<caps-card>` | `role="group"` container | none |
+| `<caps-tabs>` | host `role="tablist"`; slotted tabs/panels get `role="tab"`/`role="tabpanel"` | none (arrow keys move focus) |
+| `<caps-modal>` | `role="dialog"` with `aria-modal="true"` | focus stays inside while open, `Escape` closes |
+| `<caps-select>` | wraps native `<select>` element | none |
+
+## Localization
+
+`getLocale`, `setLocale`, `onLocaleChange`, `formatNumber`, and
+`formatDate` are exported to make components and host apps locale-aware.
+
 ## Analytics and Error Reporting
 
 Usage metrics and error reporting are disabled by default. To opt in:

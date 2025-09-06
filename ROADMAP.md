@@ -81,7 +81,7 @@ A living plan toward v1.0. We prioritize stability, clear contracts, and great D
 
 **Exit criteria:** Components meet a11y minimums; CI enforces regressions.
 
-**Status:** In progress — Pa11y script (`scripts/a11y-check.mjs`) and RTL demo (`examples/rtl.html`) in place. Target: March 2026.
+**Status:** In progress — Pa11y + Axe checks in CI and RTL/reduced-motion demos (`examples/rtl.html`, `examples/reduced-motion.html`) in place. Target: March 2026.
 
 ---
 
