@@ -40,6 +40,10 @@ Import `select.module.css` and apply the exported `select` class.
 
 Padding adjusts when the container is at least `480px` wide.
 
+## Demo
+
+<iframe src="https://storybook.capsule-ui.com/iframe.html?id=components-select--default" style="width:100%;height:400px;border:1px solid #eee;"></iframe>
+
 ## A11y
 
 - Pair with a `<label for="...">` to provide a programmatic name.

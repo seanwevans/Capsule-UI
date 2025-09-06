@@ -18,7 +18,8 @@ ce.textContent = btn.textContent;
 btn.replaceWith(ce);
 ```
 
-Framework integrations under `examples/ssr/` show the pattern for React, Vue and Svelte.
+Framework integrations under [`examples/ssr`](../examples/ssr/) include concrete setups for
+[React](../examples/ssr/react), [Vue](../examples/ssr/vue) and [Svelte](../examples/ssr/svelte).
 Each example inlines precompiled Capsule CSS modules to avoid a flash of unstyled
 content before hydration. The `light-dom` sample illustrates measuring Cumulative Layout
 Shift during upgrade; a passing Playwright test ensures the layout stays stable.
