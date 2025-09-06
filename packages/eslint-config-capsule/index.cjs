@@ -54,6 +54,14 @@ module.exports = {
           {
             selector: "JSXAttribute[name.name='className'] Literal",
             message: 'Ad-hoc class names are not allowed. Use a component recipe instead.'
+          },
+          {
+            selector: "JSXAttribute[name.name='style']",
+            message: 'Inline style attributes are not allowed.'
+          },
+          {
+            selector: "MemberExpression[property.name='style']",
+            message: 'Element.style is not allowed. Use stylesheets or recipes instead.'
           }
         ]
       }

@@ -15,7 +15,7 @@ module.exports = {
       parser: '@typescript-eslint/parser'
     },
     {
-      files: ['packages/components/**/*.{js,jsx,ts,tsx}'],
+      files: ['packages/**/*.{js,jsx,ts,tsx}'],
       rules: {
         'no-restricted-imports': [
           'error',
@@ -42,6 +42,21 @@ module.exports = {
                 message: 'Runtime CSS-in-JS is not allowed in components.'
               }
             ]
+          }
+        ],
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: "JSXAttribute[name.name='className'] Literal",
+            message: 'Ad-hoc class names are not allowed. Use a component recipe instead.'
+          },
+          {
+            selector: "JSXAttribute[name.name='style']",
+            message: 'Inline style attributes are not allowed.'
+          },
+          {
+            selector: "MemberExpression[property.name='style']",
+            message: 'Element.style is not allowed. Use stylesheets or recipes instead.'
           }
         ]
       }
