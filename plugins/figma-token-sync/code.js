@@ -1,11 +1,19 @@
+/* global figma */
 // Capsule Token Sync Figma plugin
 // Pulls design tokens from the local codebase and pushes changes back
 
+/* global figma */
 const SERVER_URL = 'http://localhost:4141/tokens';
+// Optional token to authenticate with the sync server
+const SYNC_TOKEN = '';
+
+function authHeaders(headers = {}) {
+  return SYNC_TOKEN ? { ...headers, 'X-Figma-Sync-Token': SYNC_TOKEN } : headers;
+}
 
 async function pull() {
   try {
-    const res = await fetch(SERVER_URL);
+    const res = await fetch(SERVER_URL, { headers: authHeaders() });
     if (!res.ok) throw new Error('Failed to fetch tokens');
     const src = await res.json();
     const tokens = flattenTokens(src);
@@ -66,7 +74,7 @@ async function push() {
     }
     await fetch(SERVER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(tokens, null, 2)
     });
     figma.notify('Tokens pushed to code');

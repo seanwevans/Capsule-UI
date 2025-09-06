@@ -16,6 +16,7 @@ const rules = {
       ignoreValues: ['transparent', 'inherit', 'currentColor']
     }
   ],
+  'at-rule-no-unknown': [true, { ignoreAtRules: ['layer'] }],
 };
 
 if (layerRule) {

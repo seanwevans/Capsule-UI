@@ -10,12 +10,15 @@ const layerRule =
 
 const rules = {
   'selector-max-specificity': '0,1,0',
+  'selector-max-type': 0,
+  'declaration-no-important': true,
   'scale-unlimited/declaration-strict-value': [
     ['/color/', 'fill', 'stroke'],
     {
       ignoreValues: ['transparent', 'inherit', 'currentColor']
     }
-  ]
+  ],
+  'at-rule-no-unknown': [true, { ignoreAtRules: ['layer'] }]
 };
 
 if (layerRule) {

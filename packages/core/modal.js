@@ -14,6 +14,8 @@ class CapsModal extends withLocaleDir(HTMLElement) {
           position: fixed;
           inset: 0;
           container-type: inline-size;
+          contain: layout paint;
+          content-visibility: auto;
         }
         :host([open]) { display: block; }
         .backdrop { position: absolute; inset: 0; background: var(--color-overlay); }
@@ -26,6 +28,8 @@ class CapsModal extends withLocaleDir(HTMLElement) {
           padding: var(--spacing-lg);
           border-radius: var(--radius-lg);
           min-width: 300px;
+          contain: layout paint;
+          content-visibility: auto;
         }
         :host([variant="fullscreen"]) .modal {
           inset: 0;

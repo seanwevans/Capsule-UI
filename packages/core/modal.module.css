@@ -5,6 +5,8 @@
   inset: 0;
   container-type: inline-size;
   --motion-fast: 0.2s;
+  contain: layout paint;
+  content-visibility: auto;
 }
 .container:where([open]) {
   display: block;
@@ -24,6 +26,8 @@
   border-radius: var(--radius-lg);
   min-width: 300px;
   transition: transform var(--motion-fast);
+  contain: layout paint;
+  content-visibility: auto;
 }
 @media (prefers-reduced-motion: reduce) {
   .container { --motion-fast: 0s; }
