@@ -36,3 +36,11 @@ Padding increases when its container width reaches `480px`.
 
 - Pair with a `<label for="...">` to provide a programmatic name.
 - Focus outline follows platform defaults.
+- Example:
+
+```html
+<label for="email">Email</label>
+<caps-input id="email"></caps-input>
+```
+
+- Move focus with `Tab`/`Shift+Tab` like a native `<input>`.

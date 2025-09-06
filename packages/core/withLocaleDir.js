@@ -4,13 +4,14 @@ export function withLocaleDir(Base = HTMLElement) {
   return class extends Base {
     connectedCallback() {
       if (super.connectedCallback) super.connectedCallback();
-      if (!this.hasAttribute('dir')) {
+      this._autoDir = !this.hasAttribute('dir');
+      if (this._autoDir) {
         this.setAttribute('dir', getLocale().dir);
-        this._unsubLocale = onLocaleChange((loc) => {
-          if (!this.hasAttribute('dir')) this.setAttribute('dir', loc.dir);
-          this.localeDirChanged?.(loc);
-        });
       }
+      this._unsubLocale = onLocaleChange((loc) => {
+        if (this._autoDir) this.setAttribute('dir', loc.dir);
+        this.localeDirChanged?.(loc);
+      });
     }
 
     disconnectedCallback() {

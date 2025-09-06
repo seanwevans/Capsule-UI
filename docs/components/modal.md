@@ -41,3 +41,13 @@ Setting `variant="fullscreen"` makes the dialog cover the viewport. The modal's 
 
 - Focus is trapped when open and returned to the trigger on close.
 - Clicking the backdrop or pressing `Escape` closes the dialog.
+- Example:
+
+```html
+<caps-modal aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Confirm</h2>
+  <p>Are you sure?</p>
+</caps-modal>
+```
+
+- Use `Tab`/`Shift+Tab` to cycle focus within the dialog.
