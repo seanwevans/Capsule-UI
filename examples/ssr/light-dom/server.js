@@ -8,9 +8,23 @@ const buttonCss = readFileSync(
   resolve(__dirname, '../../../packages/core/button.module.css'),
   'utf8'
 );
+const capsuleStyleJs = readFileSync(
+  resolve(__dirname, './capsule-style.js'),
+  'utf8'
+);
 
 export function createServer() {
   return http.createServer((req, res) => {
+    if (req.url === '/button.css') {
+      res.writeHead(200, { 'Content-Type': 'text/css' });
+      res.end(buttonCss);
+      return;
+    }
+    if (req.url === '/capsule-style.js') {
+      res.writeHead(200, { 'Content-Type': 'application/javascript' });
+      res.end(capsuleStyleJs);
+      return;
+    }
     if (req.url && req.url.endsWith('.js')) {
       try {
         const js = readFileSync(
@@ -32,7 +46,8 @@ export function createServer() {
 <head>
 <meta charset="UTF-8">
 <title>Light DOM SSR</title>
-<style>${buttonCss}</style>
+<link rel="stylesheet" is="capsule-style" data-module="caps-button" href="/button.css">
+<script type="module" src="/capsule-style.js"></script>
 <script>
   let cls = 0;
   new PerformanceObserver((list) => {
@@ -41,6 +56,7 @@ export function createServer() {
     }
   }).observe({ type: 'layout-shift', buffered: true });
   window.__getCLS = () => cls;
+  window.__hydrationStart = performance.now();
 </script>
 </head>
 <body>
@@ -51,6 +67,7 @@ export function createServer() {
   const ce = document.createElement('caps-button');
   ce.textContent = btn.textContent;
   btn.replaceWith(ce);
+  window.__hydrationTime = performance.now() - window.__hydrationStart;
 </script>
 </body>
 </html>`);
