@@ -29,9 +29,12 @@
   border: 1px solid var(--color-border);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   padding: var(--spacing-lg);
+  contain: layout paint;
 }
 .panel {
   display: none;
+  contain: layout paint;
+  content-visibility: auto;
 }
 .panel:where([data-active]) {
   display: block;
