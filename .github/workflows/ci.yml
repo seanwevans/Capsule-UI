@@ -23,9 +23,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint:css
-      - run: pnpm run lint:js
-      - run: pnpm run check:runtime-styles
+      - run: pnpm run lint
       - run: pnpm test
 
   a11y:

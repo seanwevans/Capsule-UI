@@ -6,7 +6,7 @@
     "build:stylelint-plugin": "tsc stylelint/require-layer.ts --esModuleInterop --module commonjs --target ES2022 --skipLibCheck",
     "lint:css": "pnpm run build:stylelint-plugin && stylelint \"**/*.{css,scss}\"",
     "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\"",
-    "lint": "pnpm run lint:css && pnpm run lint:js",
+    "lint": "pnpm run lint:css && pnpm run lint:js && pnpm run check:runtime-styles",
     "lint:fix": "pnpm run lint:css --fix && pnpm run lint:js --fix",
     "check:runtime-styles": "node scripts/check-runtime-styles.mjs",
     "test": "pnpm run build:stylelint-plugin && node --test && pnpm run test:a11y && pnpm run check:runtime-styles && pnpm run check:bundle-size && pnpm run test:e2e",

@@ -13,21 +13,25 @@ const kebab = name
   .replace(/\s+/g, '-')
   .toLowerCase();
 
+const camel = name.charAt(0).toLowerCase() + name.slice(1);
+
 const pkgDir = path.join('packages', 'core');
 const jsPath = path.join(pkgDir, `${kebab}.js`);
 const cssPath = path.join(pkgDir, `${kebab}.module.css`);
+const recipePath = path.join(pkgDir, `${kebab}.recipe.js`);
+const dtsPath = path.join(pkgDir, `${kebab}.recipe.d.ts`);
 
-if (fs.existsSync(jsPath) || fs.existsSync(cssPath)) {
+if (fs.existsSync(jsPath) || fs.existsSync(cssPath) || fs.existsSync(recipePath) || fs.existsSync(dtsPath)) {
   console.error('Component already exists');
   process.exit(1);
 }
 
 fs.writeFileSync(
   jsPath,
-  `import styles from './${kebab}.module.css';
+  `import { ${camel}Recipe } from './${kebab}.recipe.js';
 
-export function ${name}() {
-  return \`<div class=\"\${styles['${kebab}']}\"></div>\`;
+export function ${name}(props = {}) {
+  return \`<div class=\"\${${camel}Recipe(props)}\"></div>\`;
 }
 `
 );
@@ -39,6 +43,29 @@ fs.writeFileSync(
 .${kebab} {
   display: block;
 }
+`
+);
+
+fs.writeFileSync(
+  recipePath,
+  `import { cva } from 'class-variance-authority';
+import styles from './${kebab}.module.css';
+
+export const ${camel}Recipe = cva(styles['${kebab}'], {
+  variants: {},
+  defaultVariants: {}
+});
+`
+);
+
+fs.writeFileSync(
+  dtsPath,
+  `/* eslint-disable no-unused-vars */
+import type { VariantProps } from 'class-variance-authority';
+
+export declare const ${camel}Recipe: (options?: Record<string, string>) => string;
+
+export type ${name}RecipeProps = VariantProps<typeof ${camel}Recipe>;
 `
 );
 
@@ -56,5 +83,5 @@ const adrContent = template
   .replace('Draft', 'Draft');
 fs.writeFileSync(adrPath, adrContent);
 
-console.log(`Scaffolded component at ${jsPath} and ${cssPath}`);
+console.log(`Scaffolded component at ${jsPath}, ${cssPath}, ${recipePath}, and ${dtsPath}`);
 console.log(`Created ADR at ${adrPath}`);
