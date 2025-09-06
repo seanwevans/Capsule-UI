@@ -1,18 +1,31 @@
 import fs from 'fs';
 import path from 'path';
 
-const bundlePath = path.resolve('dist', 'tokens.js');
-const maxBytes = 5 * 1024; // 5KB budget
+const budgets = [
+  { file: path.resolve('dist', 'tokens.js'), maxBytes: 5 * 1024 },
+  { file: path.resolve('dist', 'tokens.css'), maxBytes: 5 * 1024 },
+  { file: path.resolve('packages', 'core', 'modal.js'), maxBytes: 6 * 1024 },
+  { file: path.resolve('packages', 'core', 'modal.module.css'), maxBytes: 2 * 1024 },
+  { file: path.resolve('packages', 'core', 'tabs.js'), maxBytes: 6 * 1024 },
+  { file: path.resolve('packages', 'core', 'tabs.module.css'), maxBytes: 2 * 1024 }
+];
 
-try {
-  const { size } = fs.statSync(bundlePath);
-  if (size > maxBytes) {
-    console.error(`Bundle size ${size} exceeds budget of ${maxBytes} bytes`);
-    process.exit(1);
-  } else {
-    console.log(`Bundle size ${size} within budget (${maxBytes} bytes)`);
+let withinBudget = true;
+for (const { file, maxBytes } of budgets) {
+  try {
+    const { size } = fs.statSync(file);
+    if (size > maxBytes) {
+      console.error(`Bundle size ${file} ${size} exceeds budget of ${maxBytes} bytes`);
+      withinBudget = false;
+    } else {
+      console.log(`Bundle size ${file} ${size} within budget (${maxBytes} bytes)`);
+    }
+  } catch (err) {
+    console.error(`Unable to check bundle size at ${file}:`, err.message);
+    withinBudget = false;
   }
-} catch (err) {
-  console.error(`Unable to check bundle size at ${bundlePath}:`, err.message);
+}
+
+if (!withinBudget) {
   process.exit(1);
 }

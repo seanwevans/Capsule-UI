@@ -4,6 +4,7 @@ import path from 'path';
 import { promises as fs } from 'fs';
 
 const port = Number(process.env.FIGMA_SYNC_PORT) || 4141;
+const syncToken = process.env.FIGMA_SYNC_TOKEN;
 const root = path.join(__dirname, '..');
 const tokensPath = path.join(root, 'tokens', 'source', 'tokens.json');
 const registryUrl = process.env.THEME_REGISTRY_URL;
@@ -11,6 +12,12 @@ const registryToken = process.env.THEME_REGISTRY_TOKEN;
 const registrySlug = process.env.THEME_REGISTRY_SLUG || 'figma-sync';
 
 const server = http.createServer(async (req, res) => {
+  if (syncToken && req.headers['x-figma-sync-token'] !== syncToken) {
+    res.statusCode = 401;
+    res.end('Unauthorized');
+    return;
+  }
+
   if (req.method === 'GET' && req.url === '/tokens') {
     try {
       const json = await fs.readFile(tokensPath, 'utf8');

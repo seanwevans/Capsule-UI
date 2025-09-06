@@ -79,6 +79,9 @@ Then run the plugin inside Figma:
 - **Pull** – apply the values from `tokens/source/tokens.json` to Figma variables.
 - **Push** – write updated variables back to `tokens/source/tokens.json` and rebuild the generated artifacts.
 
+Set a `FIGMA_SYNC_TOKEN` environment variable before starting the server and define the same value in the plugin's `SYNC_TOKEN`
+constant to require authentication.
+
 ## Categories & usage
 
 - **Color** – semantic tokens like `background`, `text`, `brand`, `success`, `warning`, and `error`.
