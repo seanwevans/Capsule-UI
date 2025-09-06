@@ -11,6 +11,8 @@ class CapsTabs extends withLocaleDir(HTMLElement) {
         :host {
           display: block;
           container-type: inline-size;
+          contain: layout paint;
+          content-visibility: auto;
         }
         .tablist { display: flex; gap: var(--spacing-xs); }
         .tablist ::slotted(button) {
@@ -32,8 +34,13 @@ class CapsTabs extends withLocaleDir(HTMLElement) {
           border: 1px solid var(--color-border);
           border-radius: 0 0 var(--radius-md) var(--radius-md);
           padding: var(--spacing-lg);
+          contain: layout paint;
         }
-        .panels ::slotted(*) { display: none; }
+        .panels ::slotted(*) {
+          display: none;
+          contain: layout paint;
+          content-visibility: auto;
+        }
         .panels ::slotted([data-active]) { display: block; }
         @container (max-width: 480px) {
           .tablist { flex-direction: column; }
