@@ -2,7 +2,6 @@
 // Capsule Token Sync Figma plugin
 // Pulls design tokens from the local codebase and pushes changes back
 
-/* global figma */
 const SERVER_URL = 'http://localhost:4141/tokens';
 // Optional token to authenticate with the sync server
 const SYNC_TOKEN = '';

@@ -20,6 +20,7 @@ export function activate(context: ExtensionContext) {
   };
   client = new LanguageClient('capsuleLanguageServer', 'Capsule Language Server', serverOptions, clientOptions);
   client.start();
+  context.subscriptions.push(client);
 }
 
 export function deactivate() {
