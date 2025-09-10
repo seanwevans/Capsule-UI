@@ -63,16 +63,19 @@ class CapsModal extends withLocaleDir(HTMLElement) {
         }
       }
     };
+    this._onBackdropClick = () => this.removeAttribute('open');
   }
 
   connectedCallback() {
     super.connectedCallback();
     const backdrop = this.shadowRoot.querySelector('.backdrop');
-    backdrop?.addEventListener('click', () => this.removeAttribute('open'));
+    backdrop?.addEventListener('click', this._onBackdropClick);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    const backdrop = this.shadowRoot.querySelector('.backdrop');
+    backdrop?.removeEventListener('click', this._onBackdropClick);
     document.removeEventListener('keydown', this._onKeyDown);
   }
 
