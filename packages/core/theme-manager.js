@@ -60,11 +60,21 @@ export class ThemeManager {
   }
 
   static async load(tenant, url) {
-    if (typeof fetch === 'undefined') return;
-    const res = await fetch(url);
-    const themes = await res.json();
-    for (const [theme, vars] of Object.entries(themes)) {
-      this.registerTheme(tenant, theme, vars);
+    if (typeof fetch === 'undefined') return false;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.error(`Failed to load themes from ${url}: ${res.status} ${res.statusText}`);
+        return false;
+      }
+      const themes = await res.json();
+      for (const [theme, vars] of Object.entries(themes)) {
+        this.registerTheme(tenant, theme, vars);
+      }
+      return true;
+    } catch (err) {
+      console.error(`Failed to load themes from ${url}:`, err);
+      return false;
     }
   }
 
