@@ -34,6 +34,7 @@ test('ThemeManager loads and switches tenant themes at runtime', async () => {
   global.window = dom.window;
   global.document = dom.window.document;
   global.fetch = async () => ({
+    ok: true,
     json: async () => ({
       light: { 'caps-btn-bg': 'white' },
       dark: { 'caps-btn-bg': 'black' },
