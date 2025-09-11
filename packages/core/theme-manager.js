@@ -23,22 +23,27 @@ function sanitize(vars) {
   }, {});
 }
 
+function _injectStyle(id, selector, vars) {
+  let style = document.getElementById(id);
+  if (!style) {
+    style = document.createElement('style');
+    style.id = id;
+    document.head.appendChild(style);
+  }
+  const declarations = Object.entries(vars)
+    .map(([k, v]) => `  --${k}: ${v};`)
+    .join('\n');
+  style.textContent = `${selector}{\n${declarations}\n}`;
+}
+
 export class ThemeManager {
   static register(tenant, variables) {
     if (typeof document === 'undefined') return;
     tenant = sanitizeName(tenant);
     const vars = sanitize(variables);
     const id = `caps-theme-${tenant}`;
-    let style = document.getElementById(id);
-    if (!style) {
-      style = document.createElement('style');
-      style.id = id;
-      document.head.appendChild(style);
-    }
-    const declarations = Object.entries(vars)
-      .map(([k, v]) => `  --${k}: ${v};`)
-      .join('\n');
-    style.textContent = `[data-tenant="${tenant}"]{\n${declarations}\n}`;
+    const selector = `[data-tenant="${tenant}"]`;
+    _injectStyle(id, selector, vars);
   }
 
   static registerTheme(tenant, theme, variables) {
@@ -47,16 +52,8 @@ export class ThemeManager {
     theme = sanitizeName(theme);
     const vars = sanitize(variables);
     const id = `caps-theme-${tenant}-${theme}`;
-    let style = document.getElementById(id);
-    if (!style) {
-      style = document.createElement('style');
-      style.id = id;
-      document.head.appendChild(style);
-    }
-    const declarations = Object.entries(vars)
-      .map(([k, v]) => `  --${k}: ${v};`)
-      .join('\n');
-    style.textContent = `[data-tenant="${tenant}"][data-theme="${theme}"]{\n${declarations}\n}`;
+    const selector = `[data-tenant="${tenant}"][data-theme="${theme}"]`;
+    _injectStyle(id, selector, vars);
   }
 
   static async load(tenant, url) {
