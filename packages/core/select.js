@@ -80,7 +80,8 @@ class CapsSelect extends HTMLElement {
     select.innerHTML = '';
     for (const node of slot.assignedNodes()) {
       if (node.nodeName === 'OPTION' || node.nodeName === 'OPTGROUP') {
-        select.appendChild(sanitizeNode(node));
+        const clonedNode = node.cloneNode(true);
+        select.appendChild(sanitizeNode(clonedNode));
       }
     }
     if (this.hasAttribute('value')) {
