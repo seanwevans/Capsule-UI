@@ -50,14 +50,21 @@ class CapsModal extends withLocaleDir(HTMLElement) {
     this._onKeyDown = (e) => {
       if (e.key === 'Escape') this.removeAttribute('open');
       if (e.key === 'Tab') {
-        const focusables = this.shadowRoot.querySelectorAll('.modal a[href], .modal button:not([disabled]), .modal textarea:not([disabled]), .modal input:not([disabled]), .modal select:not([disabled]), .modal [tabindex]:not([tabindex="-1"])');
+        const focusables = Array.from(this.shadowRoot.querySelectorAll('.modal a[href], .modal button:not([disabled]), .modal textarea:not([disabled]), .modal input:not([disabled]), .modal select:not([disabled]), .modal [tabindex]:not([tabindex="-1"])'));
         if (!focusables.length) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
+        let activeElement = this.shadowRoot.activeElement;
+        const isShadowActive = focusables.some((el) => el === activeElement || el?.contains?.(activeElement));
+        if (!isShadowActive) {
+          activeElement = document.activeElement;
+        }
+        const isFirstActive = first === activeElement || first?.contains?.(activeElement);
+        const isLastActive = last === activeElement || last?.contains?.(activeElement);
+        if (e.shiftKey && isFirstActive) {
           e.preventDefault();
           last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
+        } else if (!e.shiftKey && isLastActive) {
           e.preventDefault();
           first.focus();
         }
