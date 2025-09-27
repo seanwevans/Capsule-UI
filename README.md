@@ -230,7 +230,10 @@ For multi-tenant apps, `ThemeManager` can load and switch tenant-specific preset
 ```js
 import { ThemeManager } from '@capsule-ui/core';
 
-await ThemeManager.load('tenantA', '/themes/tenant-a.json');
+const loaded = await ThemeManager.load('tenantA', '/themes/tenant-a.json');
+if (!loaded) {
+  console.warn('Falling back to defaults for tenantA');
+}
 ThemeManager.applyTheme('tenantA', 'dark');
 
 // Later, when tearing down a micro-frontend:
