@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export interface Locale {
   lang: string;
   dir: string;

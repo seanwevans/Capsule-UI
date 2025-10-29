@@ -88,8 +88,22 @@ function normalizeUrl(value) {
     return '';
   }
 
-  const trimmed = value.trim().replace(/[\u0000-\u001F\u007F-\u009F]+/g, '');
+  const trimmed = stripControlCharacters(value.trim());
   return trimmed;
+}
+
+function stripControlCharacters(value) {
+  let result = '';
+  for (let i = 0; i < value.length; i += 1) {
+    const code = value.charCodeAt(i);
+    const isAsciiControl = code >= 0x00 && code <= 0x1f;
+    const isExtendedControl = code >= 0x7f && code <= 0x9f;
+    if (isAsciiControl || isExtendedControl) {
+      continue;
+    }
+    result += value[i];
+  }
+  return result;
 }
 
 function isDangerousUrl(value) {

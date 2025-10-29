@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export class ThemeManager {
   static register(tenant: string, variables: Record<string, string | number>): void;
   static registerTheme(tenant: string, theme: string, variables: Record<string, string | number>): void;
