@@ -94,6 +94,42 @@ test('caps-modal traps focus within the modal when tabbing', async () => {
   assert.equal(el.shadowRoot.activeElement, firstWrapper);
 });
 
+test('caps-modal traps focus within slotted content', async () => {
+  const dom = new JSDOM('<!doctype html><html><body></body></html>', { pretendToBeVisual: true });
+  global.window = dom.window;
+  global.document = dom.window.document;
+  global.HTMLElement = dom.window.HTMLElement;
+  global.customElements = dom.window.customElements;
+  global.Node = dom.window.Node;
+  global.Element = dom.window.Element;
+  global.Event = dom.window.Event;
+  global.KeyboardEvent = dom.window.KeyboardEvent;
+
+  await import('../packages/core/modal.js?test=slot-trap');
+  await customElements.whenDefined('caps-modal');
+
+  const el = document.createElement('caps-modal');
+  const first = document.createElement('button');
+  first.textContent = 'First';
+  const middle = document.createElement('input');
+  middle.type = 'text';
+  const last = document.createElement('button');
+  last.textContent = 'Last';
+
+  el.append(first, middle, last);
+  document.body.appendChild(el);
+
+  el.setAttribute('open', '');
+
+  first.focus();
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+  assert.equal(document.activeElement, last);
+
+  last.focus();
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+  assert.equal(document.activeElement, first);
+});
+
 test('caps-modal supports fullscreen variant', async () => {
   const dom = new JSDOM('<!doctype html><html><body></body></html>');
   global.window = dom.window;

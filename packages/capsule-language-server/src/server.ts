@@ -1,13 +1,13 @@
 import { createConnection, TextDocuments, ProposedFeatures, CompletionItemKind, TextDocumentSyncKind } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import fs from 'fs';
 import path from 'path';
+import { loadVariantsFromDirectory, VariantMap } from './variant-loader';
+import fs from 'fs';
 
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let tokenNames: string[] = [];
-interface VariantMap { [component: string]: { [attr: string]: string[] } }
 let variants: VariantMap = {};
 
 function flattenTokens(obj: any, prefix: string[] = []) {
@@ -43,39 +43,10 @@ function loadTokens() {
 }
 
 function loadVariants() {
-  variants = {};
   const coreDir = path.resolve(__dirname, '../../packages/core');
-  let files: string[] = [];
-  try {
-    files = fs.readdirSync(coreDir).filter(f => f.endsWith('.recipe.js'));
-  } catch {
-    return;
-  }
-  for (const file of files) {
-    const component = 'caps-' + file.replace('.recipe.js', '');
-    try {
-      const content = fs.readFileSync(path.join(coreDir, file), 'utf8');
-      const variantsBlock = content.match(/variants\s*:\s*{([\s\S]*?)}\s*,\s*defaultVariants/);
-      if (!variantsBlock) continue;
-      const block = variantsBlock[1];
-      const groupRegex = /(\w+)\s*:\s*{([^}]*)}/g;
-      let gMatch;
-      variants[component] = {};
-      while ((gMatch = groupRegex.exec(block))) {
-        const attr = gMatch[1];
-        const body = gMatch[2];
-        const valueRegex = /(\w+)\s*:/g;
-        let vMatch;
-        const values: string[] = [];
-        while ((vMatch = valueRegex.exec(body))) {
-          values.push(vMatch[1]);
-        }
-        variants[component][attr] = values;
-      }
-    } catch (err) {
-      connection.console.error(`Failed parsing variants for ${file}: ${err}`);
-    }
-  }
+  variants = loadVariantsFromDirectory(coreDir, (file, error) => {
+    connection.console.error(`Failed parsing variants for ${file}: ${error}`);
+  });
 }
 
 connection.onInitialize(() => {

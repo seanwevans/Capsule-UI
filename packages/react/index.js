@@ -20,6 +20,13 @@ const createComponent = (tag) =>
       }
     }
 
+    const eventEntries = Object.entries(eventHandlers);
+    const eventDeps = eventEntries.flat();
+    const memoizedEventListeners = useMemo(
+      () => eventEntries.map(([key, handler]) => [key.slice(2).toLowerCase(), handler]),
+      eventDeps
+    );
+
     const restDeps = Object.entries(rest).flat();
     const memoizedRest = useMemo(() => rest, restDeps);
 
@@ -37,9 +44,11 @@ const createComponent = (tag) =>
         listeners.push([evt, value]);
       }
       return () => {
-        listeners.forEach(([e, fn]) => el.removeEventListener(e, fn));
+        memoizedEventListeners.forEach(([evt, handler]) => {
+          el.removeEventListener(evt, handler);
+        });
       };
-    }, Object.values(eventHandlers));
+    }, [memoizedEventListeners]);
 
     return createElement(tag, {
       ...memoizedRest,
