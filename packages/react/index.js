@@ -20,22 +20,28 @@ const createComponent = (tag) =>
       }
     }
 
+    const eventEntries = Object.entries(eventHandlers);
+    const eventDeps = eventEntries.flat();
+    const memoizedEventListeners = useMemo(
+      () => eventEntries.map(([key, handler]) => [key.slice(2).toLowerCase(), handler]),
+      eventDeps
+    );
+
     const restDeps = Object.entries(rest).flat();
     const memoizedRest = useMemo(() => rest, restDeps);
 
     useEffect(() => {
       const el = innerRef.current;
       if (!el) return;
-      const listeners = [];
-      for (const [key, value] of Object.entries(eventHandlers)) {
-        const evt = key.slice(2).toLowerCase();
-        el.addEventListener(evt, value);
-        listeners.push([evt, value]);
-      }
+      memoizedEventListeners.forEach(([evt, handler]) => {
+        el.addEventListener(evt, handler);
+      });
       return () => {
-        listeners.forEach(([e, fn]) => el.removeEventListener(e, fn));
+        memoizedEventListeners.forEach(([evt, handler]) => {
+          el.removeEventListener(evt, handler);
+        });
       };
-    }, Object.values(eventHandlers));
+    }, [memoizedEventListeners]);
 
     return createElement(tag, {
       ...memoizedRest,
