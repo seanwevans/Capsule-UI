@@ -41,6 +41,18 @@ class CapsInput extends withLocaleDir(HTMLElement) {
       <input part="input" />
     `;
 
+    this._input = this.shadowRoot.querySelector('input');
+    this._handleValueChange = () => {
+      if (!this._input) return;
+      const nextValue = this._input.value ?? '';
+      this._syncFormValue(nextValue);
+    };
+
+    if (this._input) {
+      this._input.addEventListener('input', this._handleValueChange);
+      this._input.addEventListener('change', this._handleValueChange);
+    }
+
     this._internals = null;
     this._formProxy = null;
     if (typeof this.attachInternals === 'function') {
@@ -76,7 +88,7 @@ class CapsInput extends withLocaleDir(HTMLElement) {
   }
 
   attributeChangedCallback(name, _old, value) {
-    const input = this.shadowRoot.querySelector('input');
+    const input = this._input;
     if (!input) return;
     if (name === 'disabled') {
       if (value !== null) {
@@ -112,7 +124,7 @@ class CapsInput extends withLocaleDir(HTMLElement) {
   }
 
   focus() {
-    this.shadowRoot.querySelector('input')?.focus();
+    this._input?.focus();
   }
 
   get disabled() {
@@ -124,8 +136,7 @@ class CapsInput extends withLocaleDir(HTMLElement) {
   }
 
   get value() {
-    const input = this.shadowRoot.querySelector('input');
-    return input?.value || '';
+    return this._input?.value || '';
   }
 
   set value(v) {
