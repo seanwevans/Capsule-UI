@@ -45,8 +45,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",
-    "pa11y": "^6.1.1",
-    "jsdom": "^24.0.0",
     "@playwright/test": "^1.48.0",
     "@axe-core/playwright": "^4.10.0",
     "@changesets/changelog-github": "^0.5.1",

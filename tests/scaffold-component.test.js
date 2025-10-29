@@ -175,7 +175,7 @@ test('scaffoldComponent returns true and generates expected files', async () => 
     const result = await scaffoldComponent('example-component');
     assert.equal(result, true);
     const baseDir = path.join(tempDir, 'packages', 'components', 'ExampleComponent');
-    const component = await readFile(path.join(baseDir, 'ExampleComponent.ts'), 'utf8');
+    const component = await readFile(path.join(baseDir, 'ExampleComponent.tsx'), 'utf8');
     const style = await readFile(path.join(baseDir, 'style.ts'), 'utf8');
     const index = await readFile(path.join(baseDir, 'index.ts'), 'utf8');
     const testFile = await readFile(
