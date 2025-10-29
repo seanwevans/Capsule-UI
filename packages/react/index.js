@@ -28,7 +28,11 @@ const createComponent = (tag) =>
       if (!el) return;
       const listeners = [];
       for (const [key, value] of Object.entries(eventHandlers)) {
-        const evt = key.slice(2).toLowerCase();
+        const eventName = key.slice(2);
+        const evt =
+          eventName.length > 0
+            ? eventName[0].toLowerCase() + eventName.slice(1)
+            : eventName;
         el.addEventListener(evt, value);
         listeners.push([evt, value]);
       }
