@@ -40,14 +40,23 @@ export function trackComponent(name, variant = 'default') {
 
 async function send() {
   if (!enabled || !endpoint) return;
-  const payload = { counts };
+  const snapshotEntries = Object.entries(counts);
+  if (snapshotEntries.length === 0) return;
+  const payload = { counts: Object.fromEntries(snapshotEntries) };
   try {
     await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    for (const key in counts) delete counts[key];
+    for (const [key, value] of snapshotEntries) {
+      const remaining = (counts[key] || 0) - value;
+      if (remaining > 0) {
+        counts[key] = remaining;
+      } else {
+        delete counts[key];
+      }
+    }
   } catch {
     // ignore network errors
   }
