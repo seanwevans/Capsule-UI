@@ -236,22 +236,21 @@ class CapsSelect extends HTMLElement {
     }
     this.#internals.states?.delete('disabled');
     if (select.multiple) {
-      const name = this.getAttribute('name') ?? '';
-      const selectedValues = [...select.selectedOptions].map((opt) => opt.value);
-      if (!name || selectedValues.length === 0) {
-        this.#internals.setFormValue?.(null);
-      } else {
-        const FormDataCtor = this.ownerDocument?.defaultView?.FormData ?? globalThis.FormData;
-        if (FormDataCtor) {
+      const selectedValues = Array.from(select.selectedOptions).map((option) => option.value);
+      let formValue = null;
+      if (selectedValues.length) {
+        const defaultView = this.ownerDocument?.defaultView;
+        const FormDataCtor = defaultView?.FormData || globalThis.FormData;
+        const name = this.getAttribute('name');
+        if (typeof FormDataCtor === 'function' && name) {
           const formData = new FormDataCtor();
           for (const value of selectedValues) {
             formData.append(name, value);
           }
-          this.#internals.setFormValue?.(formData);
-        } else {
-          this.#internals.setFormValue?.(selectedValues.join(','));
+          formValue = formData;
         }
       }
+      this.#internals.setFormValue?.(formValue, selectedValues);
     } else {
       const value = select.value ?? '';
       this.#internals.setFormValue?.(value === '' ? null : value);

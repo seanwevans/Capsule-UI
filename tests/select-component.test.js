@@ -74,6 +74,16 @@ test('caps-select required prevents submission until a value is chosen', async (
   assert.deepEqual([...new window.FormData(form).entries()], [['flavor', 'a']]);
 });
 
+test('caps-select multi-select submissions include every selected value with ElementInternals', async () => {
+  const { window } = await setupDom();
+
+  const recordedFormValues = [];
+  const originalAttachInternals = window.HTMLElement.prototype.attachInternals;
+
+  window.HTMLElement.prototype.attachInternals = function () {
+    return {
+      setFormValue(value, state) {
+        recordedFormValues.push({ value, state });
 test('caps-select multiple submits all selected values when posting a form', async () => {
   await setupDom();
 
@@ -121,7 +131,7 @@ test('caps-select multiple uses FormData with all selections when ElementInterna
     const form = document.createElement('form');
     const select = document.createElement('caps-select');
     select.setAttribute('multiple', '');
-    select.setAttribute('name', 'flavor');
+    select.setAttribute('name', 'flavors');
     select.innerHTML = `
       <option value="vanilla" selected>Vanilla</option>
       <option value="chocolate" selected>Chocolate</option>
@@ -130,6 +140,23 @@ test('caps-select multiple uses FormData with all selections when ElementInterna
     form.appendChild(select);
     document.body.appendChild(form);
 
+    let lastFormDataCall;
+    for (let i = recordedFormValues.length - 1; i >= 0; i -= 1) {
+      const call = recordedFormValues[i];
+      if (call.value instanceof window.FormData) {
+        lastFormDataCall = call;
+        break;
+      }
+    }
+
+    assert.ok(lastFormDataCall, 'Expected setFormValue to be called with a FormData instance');
+    assert.deepEqual([...lastFormDataCall.value.entries()], [
+      ['flavors', 'vanilla'],
+      ['flavors', 'chocolate'],
+    ]);
+    assert.deepEqual(lastFormDataCall.state, ['vanilla', 'chocolate']);
+  } finally {
+    window.HTMLElement.prototype.attachInternals = originalAttachInternals;
     await Promise.resolve();
 
     const lastCall = calls.at(-1);
@@ -149,8 +176,7 @@ test('caps-select multiple uses FormData with all selections when ElementInterna
 });
 
 test('caps-select preserves light DOM options when syncing', async () => {
-  document.body.innerHTML = '';
-  await loadCapsSelect();
+  await setupDom();
 
   const el = document.createElement('caps-select');
   el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
