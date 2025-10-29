@@ -43,12 +43,17 @@ test('React adapter maps camelCase custom events to kebab-case', async () => {
   const handleClick = (event) => {
     clickReceived = event.type;
   };
+  let pointerReceived = null;
+  const handlePointerDown = (event) => {
+    pointerReceived = event.type;
+  };
 
   await act(async () => {
     root.render(
       React.createElement(CapsInput, {
         onCapsChange: handleCapsChange,
         onClick: handleClick,
+        onPointerDown: handlePointerDown,
         label: 'Capsule'
       })
     );
@@ -62,6 +67,9 @@ test('React adapter maps camelCase custom events to kebab-case', async () => {
 
   element.dispatchEvent(new dom.window.Event('click', { bubbles: true }));
   assert.equal(clickReceived, 'click');
+
+  element.dispatchEvent(new dom.window.Event('pointerdown', { bubbles: true }));
+  assert.equal(pointerReceived, 'pointerdown');
 
   root.unmount();
   delete global.window;
