@@ -45,16 +45,6 @@ class CapsInput extends withLocaleDir(HTMLElement) {
     this._handleValueChange = () => {
       if (!this._input) return;
       const nextValue = this._input.value ?? '';
-      const currentAttr = this.getAttribute('value');
-      if (nextValue === '') {
-        if (currentAttr !== null) {
-          this.removeAttribute('value');
-          return;
-        }
-      } else if (currentAttr !== nextValue) {
-        this.setAttribute('value', nextValue);
-        return;
-      }
       this._syncFormValue(nextValue);
     };
 

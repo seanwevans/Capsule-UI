@@ -51,7 +51,7 @@ test('caps-input synchronizes user input with form submissions', async (t) => {
   innerInput.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
 
   assert.equal(capsInput.value, 'hello world');
-  assert.equal(capsInput.getAttribute('value'), 'hello world');
+  assert.equal(capsInput.getAttribute('value'), null);
 
   const formData = new window.FormData(form);
   assert.equal(formData.get('username'), 'hello world');
