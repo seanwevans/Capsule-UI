@@ -6,6 +6,16 @@ const mergeRefs = (ref, node) => {
   else if (ref) ref.current = node;
 };
 
+const toEventName = (propName) => {
+  const event = propName.slice(2);
+  if (!event) return '';
+  if (event === event.toLowerCase()) return event;
+  return event
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase();
+};
+
 const createComponent = (tag) =>
   forwardRef(({ children, ...props }, forwardedRef) => {
     const innerRef = useRef(null);
@@ -28,7 +38,8 @@ const createComponent = (tag) =>
       if (!el) return;
       const listeners = [];
       for (const [key, value] of Object.entries(eventHandlers)) {
-        const evt = key.slice(2).toLowerCase();
+        const evt = toEventName(key);
+        if (!evt) continue;
         el.addEventListener(evt, value);
         listeners.push([evt, value]);
       }
