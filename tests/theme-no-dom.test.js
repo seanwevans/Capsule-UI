@@ -1,26 +1,23 @@
 const test = require('node:test');
-const assert = require('node:assert/strict');
+const path = require('node:path');
+const { pathToFileURL } = require('node:url');
+const { execFile } = require('node:child_process');
+const { promisify } = require('node:util');
+
+const execFileAsync = promisify(execFile);
 
 test('setTheme updates current theme without a document', async () => {
-  const originalDocument = global.document;
-
-  try {
-    delete global.document;
-
-    const { getTheme, setTheme } = await import('../packages/core/theme.js');
-
+  const moduleUrl = pathToFileURL(path.resolve(__dirname, '../packages/core/theme.js')).href;
+  const script = `
+    import { getTheme, setTheme } from ${JSON.stringify(moduleUrl)};
     const originalTheme = getTheme();
     const nextTheme = originalTheme === 'light' ? 'dark' : 'light';
-
     setTheme(nextTheme);
-    assert.equal(getTheme(), nextTheme);
-
-    setTheme(originalTheme);
-  } finally {
-    if (typeof originalDocument !== 'undefined') {
-      global.document = originalDocument;
-    } else {
-      delete global.document;
+    if (getTheme() !== nextTheme) {
+      throw new Error('Theme did not update');
     }
-  }
+    setTheme(originalTheme);
+  `;
+
+  await execFileAsync(process.execPath, ['--input-type=module', '--eval', script]);
 });
