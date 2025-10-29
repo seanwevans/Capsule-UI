@@ -13,6 +13,7 @@ async function setupDom() {
     global.customElements = dom.window.customElements;
     global.Node = dom.window.Node;
     global.Element = dom.window.Element;
+    global.Event = dom.window.Event;
     await import('../packages/core/select.js');
   } else {
     dom.window.document.body.innerHTML = '';
@@ -68,16 +69,67 @@ test('caps-select required prevents submission until a value is chosen', async (
   assert.deepEqual([...new window.FormData(form).entries()], [['flavor', 'a']]);
 });
 
+test('caps-select multi-select submissions include every selected value with ElementInternals', async () => {
+  const { window } = await setupDom();
+
+  const recordedFormValues = [];
+  const originalAttachInternals = window.HTMLElement.prototype.attachInternals;
+
+  window.HTMLElement.prototype.attachInternals = function () {
+    return {
+      setFormValue(value, state) {
+        recordedFormValues.push({ value, state });
+      },
+      setValidity() {},
+      states: {
+        add() {},
+        delete() {},
+      },
+    };
+  };
+
+  try {
+    const form = document.createElement('form');
+    const select = document.createElement('caps-select');
+    select.setAttribute('multiple', '');
+    select.setAttribute('name', 'flavors');
+    select.innerHTML = `
+      <option value="vanilla" selected>Vanilla</option>
+      <option value="chocolate" selected>Chocolate</option>
+      <option value="strawberry">Strawberry</option>
+    `;
+    form.appendChild(select);
+    document.body.appendChild(form);
+
+    let lastFormDataCall;
+    for (let i = recordedFormValues.length - 1; i >= 0; i -= 1) {
+      const call = recordedFormValues[i];
+      if (call.value instanceof window.FormData) {
+        lastFormDataCall = call;
+        break;
+      }
+    }
+
+    assert.ok(lastFormDataCall, 'Expected setFormValue to be called with a FormData instance');
+    assert.deepEqual([...lastFormDataCall.value.entries()], [
+      ['flavors', 'vanilla'],
+      ['flavors', 'chocolate'],
+    ]);
+    assert.deepEqual(lastFormDataCall.state, ['vanilla', 'chocolate']);
+  } finally {
+    window.HTMLElement.prototype.attachInternals = originalAttachInternals;
+  }
+});
+
 test('caps-select preserves light DOM options when syncing', async () => {
-  document.body.innerHTML = '';
-  await loadCapsSelect();
+  await setupDom();
 
   const el = document.createElement('caps-select');
   el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
   el.setAttribute('value', 'b');
   document.body.appendChild(el);
 
-  const lightOptions = el.querySelectorAll('option');
+  const lightOptions = el.querySelectorAll(':scope > option');
   assert.equal(lightOptions.length, 2);
 
   const internalOptions = el.shadowRoot.querySelectorAll('option');
@@ -90,7 +142,7 @@ test('caps-select preserves light DOM options when syncing', async () => {
   el.innerHTML = '<option value="b">B</option><option value="c">C</option>';
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  const updatedLightOptions = el.querySelectorAll('option');
+  const updatedLightOptions = el.querySelectorAll(':scope > option');
   assert.equal(updatedLightOptions.length, 2);
 
   const updatedInternalOptions = el.shadowRoot.querySelectorAll('option');
