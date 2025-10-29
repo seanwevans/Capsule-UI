@@ -13,7 +13,7 @@
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
     "new:component": "node scripts/new-component.mjs",
     "test:a11y": "node scripts/a11y-check.mjs",
-    "test:e2e": "playwright test",
+    "test:e2e": "node scripts/run-playwright.mjs",
     "tokens:build": "tsx scripts/build-tokens.ts",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
     "tokens:watch": "chokidar \"tokens/source/tokens.json\" -c \"pnpm tokens:build\"",
