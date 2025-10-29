@@ -270,11 +270,17 @@ class CapsSelect extends HTMLElement {
     const select = this.shadowRoot.querySelector('select');
     if (!select || !this.#proxy) return;
     if (select.multiple) {
+      const hasInternalsFormValue = typeof this.#internals?.setFormValue === 'function';
       const selectedValues = new Set([...select.selectedOptions].map((opt) => opt.value));
       for (const option of this.#proxy.options) {
         option.selected = selectedValues.has(option.value);
       }
-      this.#updateProxyValueInputs(selectedValues);
+      if (hasInternalsFormValue) {
+        this.#clearProxyValueInputs();
+        this.#proxy.removeAttribute('name');
+      } else {
+        this.#updateProxyValueInputs(selectedValues);
+      }
     } else {
       this.#clearProxyValueInputs();
       const name = this.getAttribute('name');
@@ -293,6 +299,10 @@ class CapsSelect extends HTMLElement {
 
   #updateProxyValueInputs(selectedValues) {
     this.#clearProxyValueInputs();
+    if (typeof this.#internals?.setFormValue === 'function') {
+      this.#proxy.removeAttribute('name');
+      return;
+    }
     const name = this.getAttribute('name');
     if (!name) {
       this.#proxy.removeAttribute('name');
