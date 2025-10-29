@@ -50,7 +50,23 @@ class CapsModal extends withLocaleDir(HTMLElement) {
     this._onKeyDown = (e) => {
       if (e.key === 'Escape') this.removeAttribute('open');
       if (e.key === 'Tab') {
-        const focusables = Array.from(this.shadowRoot.querySelectorAll('.modal a[href], .modal button:not([disabled]), .modal textarea:not([disabled]), .modal input:not([disabled]), .modal select:not([disabled]), .modal [tabindex]:not([tabindex="-1"])'));
+        const modal = this.shadowRoot.querySelector('.modal');
+        if (!modal) return;
+        const focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        const focusables = [];
+        const collectFocusables = (node) => {
+          if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
+          if (node.matches?.(focusableSelector)) {
+            focusables.push(node);
+          }
+          if (node.localName === 'slot') {
+            const assigned = node.assignedElements?.({ flatten: true }) ?? [];
+            assigned.forEach((el) => collectFocusables(el));
+            return;
+          }
+          Array.from(node.children ?? []).forEach((child) => collectFocusables(child));
+        };
+        collectFocusables(modal);
         if (!focusables.length) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
