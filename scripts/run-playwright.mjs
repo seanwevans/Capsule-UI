@@ -40,7 +40,9 @@ async function ensureChromiumRunnable() {
     process.platform === 'win32' ? 'playwright.cmd' : 'playwright'
   );
 
-  const child = spawn(playwrightBinary, ['test'], {
+  const args = process.argv.slice(2);
+
+  const child = spawn(playwrightBinary, ['test', ...args], {
     stdio: 'inherit',
     env: {
       ...process.env,
