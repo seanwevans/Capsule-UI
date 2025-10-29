@@ -34,9 +34,12 @@ export function parseVariantsFromContent(content: string): VariantGroupMap {
   return componentVariants;
 }
 
+// eslint-disable-next-line no-unused-vars
+type VariantLoadErrorHandler = (fileName: string, err: unknown) => void;
+
 export function loadVariantsFromDirectory(
   coreDir: string,
-  onError?: (file: string, error: unknown) => void
+  onError?: VariantLoadErrorHandler
 ): VariantMap {
   const resolvedDir = path.resolve(coreDir);
   const result: VariantMap = {};

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export interface DispatchEventOptions {
   bubbles?: boolean;
   composed?: boolean;

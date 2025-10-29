@@ -7,7 +7,7 @@ test('enableAnalytics sets up and disableAnalytics tears down interval and liste
   const originalSetInterval = global.setInterval;
   const originalClearInterval = global.clearInterval;
 
-  global.setInterval = (fn, time) => {
+  global.setInterval = (_handler, time) => {
     intervalSet = time;
     return 123;
   };
@@ -62,7 +62,7 @@ test('in-flight analytics send preserves new increments', async () => {
     return promise;
   };
 
-  global.setInterval = (fn) => {
+  global.setInterval = () => {
     return 1;
   };
   global.clearInterval = () => {};

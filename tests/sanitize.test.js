@@ -44,5 +44,5 @@ test('sanitizeHTML removes dangerous SVG references', async () => {
   const sanitized = sanitizeHTML(dirty);
   assert.match(sanitized, /<use\b[^>]*>/);
   assert.ok(!/xlink:href=/.test(sanitized));
-  assert.ok(!/href=\"javascript:evil\"/.test(sanitized));
+  assert.ok(!/href="javascript:evil"/.test(sanitized));
 });

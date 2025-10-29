@@ -68,7 +68,6 @@ class CapsInput extends withLocaleDir(HTMLElement) {
       this._formProxy.setAttribute('aria-hidden', 'true');
       this._formProxy.tabIndex = -1;
       this._formProxy.hidden = true;
-      this._formProxy.style.display = 'none';
     }
 
     this._syncFormName(this.getAttribute('name'));
