@@ -222,7 +222,7 @@ export async function scaffoldComponent(rawName, baseDir = 'packages/components'
     const testDir = join(componentDir, '__tests__');
     await mkdir(testDir, { recursive: true });
 
-    const componentFile = join(componentDir, `${name}.ts`);
+    const componentFile = join(componentDir, `${name}.tsx`);
     const styleFile = join(componentDir, 'style.ts');
     const indexFile = join(componentDir, 'index.ts');
     const testFile = join(testDir, `${name}.test.ts`);
