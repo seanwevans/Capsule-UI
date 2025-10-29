@@ -6,6 +6,7 @@ class CapsSelect extends HTMLElement {
 
   #proxy;
   #internals;
+  #proxyValueInputs = new Set();
 
   #onSelectChange = () => {
     const select = this.shadowRoot.querySelector('select');
@@ -88,9 +89,11 @@ class CapsSelect extends HTMLElement {
       select.toggleAttribute('disabled', value !== null);
       select.setAttribute('aria-disabled', value !== null ? 'true' : 'false');
       this.#proxy?.toggleAttribute('disabled', value !== null);
+      this.#syncProxySelection();
     } else if (name === 'multiple') {
       select.toggleAttribute('multiple', value !== null);
       this.#proxy?.toggleAttribute('multiple', value !== null);
+      this.#syncProxySelection();
     } else if (name === 'required') {
       select.toggleAttribute('required', value !== null);
       this.#proxy?.toggleAttribute('required', value !== null);
@@ -102,8 +105,11 @@ class CapsSelect extends HTMLElement {
     } else if (name === 'name') {
       if (value !== null) select.setAttribute('name', value);
       else select.removeAttribute('name');
-      if (value !== null) this.#proxy?.setAttribute('name', value);
-      else this.#proxy?.removeAttribute('name');
+      if (!select.multiple) {
+        if (value !== null) this.#proxy?.setAttribute('name', value);
+        else this.#proxy?.removeAttribute('name');
+      }
+      this.#syncProxySelection();
     } else if (name === 'value') {
       select.value = value ?? '';
       if (this.#proxy) {
@@ -229,8 +235,27 @@ class CapsSelect extends HTMLElement {
       return;
     }
     this.#internals.states?.delete('disabled');
-    const value = select.value ?? '';
-    this.#internals.setFormValue?.(value === '' ? null : value);
+    if (select.multiple) {
+      const name = this.getAttribute('name') ?? '';
+      const selectedValues = [...select.selectedOptions].map((opt) => opt.value);
+      if (!name || selectedValues.length === 0) {
+        this.#internals.setFormValue?.(null);
+      } else {
+        const FormDataCtor = this.ownerDocument?.defaultView?.FormData ?? globalThis.FormData;
+        if (FormDataCtor) {
+          const formData = new FormDataCtor();
+          for (const value of selectedValues) {
+            formData.append(name, value);
+          }
+          this.#internals.setFormValue?.(formData);
+        } else {
+          this.#internals.setFormValue?.(selectedValues.join(','));
+        }
+      }
+    } else {
+      const value = select.value ?? '';
+      this.#internals.setFormValue?.(value === '' ? null : value);
+    }
     if (select.checkValidity()) {
       this.#internals.setValidity?.({});
     } else {
@@ -249,8 +274,42 @@ class CapsSelect extends HTMLElement {
       for (const option of this.#proxy.options) {
         option.selected = selectedValues.has(option.value);
       }
+      this.#updateProxyValueInputs(selectedValues);
     } else {
+      this.#clearProxyValueInputs();
+      const name = this.getAttribute('name');
+      if (name) this.#proxy.setAttribute('name', name);
+      else this.#proxy.removeAttribute('name');
       this.#proxy.value = select.value ?? '';
+    }
+  }
+
+  #clearProxyValueInputs() {
+    for (const input of this.#proxyValueInputs) {
+      input.remove();
+    }
+    this.#proxyValueInputs.clear();
+  }
+
+  #updateProxyValueInputs(selectedValues) {
+    this.#clearProxyValueInputs();
+    const name = this.getAttribute('name');
+    if (!name) {
+      this.#proxy.removeAttribute('name');
+      return;
+    }
+    this.#proxy.removeAttribute('name');
+    if (selectedValues.size === 0) return;
+    for (const value of selectedValues) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      input.setAttribute('slot', 'proxy');
+      input.setAttribute('data-caps-select-proxy-value', '');
+      input.disabled = this.disabled;
+      this.append(input);
+      this.#proxyValueInputs.add(input);
     }
   }
 }
