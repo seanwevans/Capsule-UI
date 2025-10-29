@@ -54,13 +54,27 @@ test('listeners only update when handler changes', async () => {
   assert.equal(addCount, 1);
   assert.equal(removeCount, 0);
 
-  // Change event handler
-  const handler2 = () => {};
+  // Rename event prop should tear down the old listener and bind the new event
   await act(async () => {
-    root.render(React.createElement(CapsButton, { onClick: handler2, label: 'b' }));
+    root.render(React.createElement(CapsButton, { onFocus: handler1, label: 'b' }));
   });
   assert.equal(addCount, 2);
   assert.equal(removeCount, 1);
+
+  // Change handler for the renamed event
+  const handler2 = () => {};
+  await act(async () => {
+    root.render(React.createElement(CapsButton, { onFocus: handler2, label: 'b' }));
+  });
+  assert.equal(addCount, 3);
+  assert.equal(removeCount, 2);
+
+  // Toggle back to the original event name
+  await act(async () => {
+    root.render(React.createElement(CapsButton, { onClick: handler2, label: 'b' }));
+  });
+  assert.equal(addCount, 4);
+  assert.equal(removeCount, 3);
   root.unmount();
   window.HTMLElement.prototype.addEventListener = origAdd;
   window.HTMLElement.prototype.removeEventListener = origRemove;

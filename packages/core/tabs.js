@@ -73,11 +73,22 @@ class CapsTabs extends withLocaleDir(HTMLElement) {
       const tabs = tabSlot.assignedElements();
       const panels = panelSlot.assignedElements();
       const isRtl = this.getAttribute('dir') === 'rtl';
+      let activeIndex = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+      if (activeIndex === -1) {
+        const activePanel = panels.find((panel) => panel.hasAttribute('data-active'));
+        if (activePanel) activeIndex = panels.indexOf(activePanel);
+      }
+      if (tabs.length > 0) {
+        if (activeIndex < 0) activeIndex = 0;
+        if (activeIndex >= tabs.length) activeIndex = tabs.length - 1;
+      } else {
+        activeIndex = -1;
+      }
       tabs.forEach((tab, i) => {
         sanitizeNode(tab);
         tab.setAttribute('role', 'tab');
-        tab.setAttribute('tabindex', i === 0 ? '0' : '-1');
-        tab.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        tab.setAttribute('tabindex', i === activeIndex ? '0' : '-1');
+        tab.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
         const panel = panels[i];
         if (panel) {
           sanitizeNode(panel);
@@ -119,7 +130,11 @@ class CapsTabs extends withLocaleDir(HTMLElement) {
       });
       panels.forEach((p, i) => {
         p.setAttribute('role', 'tabpanel');
-        if (i === 0) p.setAttribute('data-active', '');
+        if (i === activeIndex) {
+          p.setAttribute('data-active', '');
+        } else {
+          p.removeAttribute('data-active');
+        }
       });
     };
     tabSlot.addEventListener('slotchange', assign);

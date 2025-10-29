@@ -6,9 +6,9 @@ export function getTheme(el = typeof document !== 'undefined' ? document.documen
 }
 
 export function setTheme(theme, el = typeof document !== 'undefined' ? document.documentElement : undefined) {
+  current = theme;
   if (!el) return;
   el.setAttribute('data-theme', theme);
-  current = theme;
 }
 
 export function onThemeChange(callback, el = typeof document !== 'undefined' ? document.documentElement : undefined) {

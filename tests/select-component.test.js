@@ -14,11 +14,16 @@ async function setupDom() {
     global.Node = dom.window.Node;
     global.Element = dom.window.Element;
     global.Event = dom.window.Event;
+    global.FormData = dom.window.FormData;
     await import('../packages/core/select.js');
   } else {
     dom.window.document.body.innerHTML = '';
   }
   return dom;
+}
+
+async function loadCapsSelect() {
+  await setupDom();
 }
 
 test('caps-select reflects value and disabled', async () => {
@@ -79,6 +84,40 @@ test('caps-select multi-select submissions include every selected value with Ele
     return {
       setFormValue(value, state) {
         recordedFormValues.push({ value, state });
+test('caps-select multiple submits all selected values when posting a form', async () => {
+  await setupDom();
+
+  const form = document.createElement('form');
+  const select = document.createElement('caps-select');
+  select.setAttribute('multiple', '');
+  select.setAttribute('name', 'flavor');
+  select.innerHTML = `
+    <option value="vanilla" selected>Vanilla</option>
+    <option value="chocolate" selected>Chocolate</option>
+    <option value="strawberry">Strawberry</option>
+  `;
+  form.appendChild(select);
+  document.body.appendChild(form);
+
+  await Promise.resolve();
+
+  const entries = [...new window.FormData(form).entries()];
+  assert.deepEqual(entries, [
+    ['flavor', 'vanilla'],
+    ['flavor', 'chocolate'],
+  ]);
+});
+
+test('caps-select multiple uses FormData with all selections when ElementInternals is available', async () => {
+  await setupDom();
+
+  const proto = window.HTMLElement.prototype;
+  const originalAttachInternals = proto.attachInternals;
+  const calls = [];
+  proto.attachInternals = function attachInternals() {
+    return {
+      setFormValue(value) {
+        calls.push(value);
       },
       setValidity() {},
       states: {
@@ -118,6 +157,21 @@ test('caps-select multi-select submissions include every selected value with Ele
     assert.deepEqual(lastFormDataCall.state, ['vanilla', 'chocolate']);
   } finally {
     window.HTMLElement.prototype.attachInternals = originalAttachInternals;
+    await Promise.resolve();
+
+    const lastCall = calls.at(-1);
+    assert.ok(lastCall instanceof window.FormData);
+    const entries = [...lastCall.entries()];
+    assert.deepEqual(entries, [
+      ['flavor', 'vanilla'],
+      ['flavor', 'chocolate'],
+    ]);
+  } finally {
+    if (originalAttachInternals) {
+      proto.attachInternals = originalAttachInternals;
+    } else {
+      delete proto.attachInternals;
+    }
   }
 });
 
