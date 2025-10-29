@@ -311,13 +311,30 @@ async function updateComponentsIndex(name, componentsDir) {
   try {
     const current = await readFile(indexPath, 'utf8');
     lines = current.split(/\r?\n/).filter(Boolean);
-  } catch {
+  } catch (err) {
+    if (err?.code === 'EISDIR') {
+      throw new Error(
+        `Components index path "${indexPath}" is a directory; remove or replace it with a file.`
+      );
+    }
+    if (err?.code !== 'ENOENT') {
+      throw err;
+    }
     // index.ts does not exist yet
   }
   lines.push(exportLine);
   const uniqueSorted = Array.from(new Set(lines)).sort();
   const content = uniqueSorted.join('\n') + '\n';
-  await writeFile(indexPath, content, 'utf8');
+  try {
+    await writeFile(indexPath, content, 'utf8');
+  } catch (err) {
+    if (err?.code === 'EISDIR') {
+      throw new Error(
+        `Components index path "${indexPath}" is a directory; remove or replace it with a file.`
+      );
+    }
+    throw err;
+  }
 }
 
 function toPascalCase(str) {

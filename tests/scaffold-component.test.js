@@ -306,7 +306,18 @@ test('cleans up generated files on failure', async () => {
     const indexPath = path.join(componentsDir, 'index.ts');
     await mkdir(indexPath, { recursive: true });
     const { scaffoldComponent } = await import('../packages/capsule-cli/bin/capsule.js');
-    const result = await scaffoldComponent('broken-component');
+    const originalError = console.error;
+    const errors = [];
+    console.error = (...args) => {
+      errors.push(args.join(' '));
+      return originalError.apply(console, args);
+    };
+    let result;
+    try {
+      result = await scaffoldComponent('broken-component');
+    } finally {
+      console.error = originalError;
+    }
     assert.equal(result, false);
     const baseDir = path.join(componentsDir, 'BrokenComponent');
     await assert.rejects(() => access(baseDir));
@@ -314,6 +325,12 @@ test('cleans up generated files on failure', async () => {
     const adrDir = path.join(tempDir, 'docs', 'adr');
     const entries = await readdir(adrDir);
     assert.ok(!entries.some((f) => /broken-component\.md$/.test(f)));
+    assert.ok(
+      errors.some((message) =>
+        message.includes('Components index path') && message.includes('is a directory')
+      ),
+      'logs a helpful error when the components index is a directory'
+    );
   } finally {
     process.chdir(originalCwd);
     await rm(tempDir, { recursive: true, force: true });
