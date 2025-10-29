@@ -111,15 +111,23 @@ const toKebabCase = (event) =>
     .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
     .toLowerCase();
 
-const toEventName = (propName, element) => {
+const toEventNames = (propName, element) => {
   const event = propName.slice(2);
-  if (!event) return '';
+  if (!event) return [];
   const lower = event.toLowerCase();
-  if (element && `on${lower}` in element) return lower;
-  if (typeof window !== 'undefined' && `on${lower}` in window) return lower;
-  if (STANDARD_DOM_EVENTS.has(lower)) return lower;
-  if (event === lower) return event;
-  return toKebabCase(event);
+
+  if (element && `on${lower}` in element) return [lower];
+  if (typeof window !== 'undefined' && `on${lower}` in window) return [lower];
+  if (STANDARD_DOM_EVENTS.has(lower)) return [lower];
+
+  const names = new Set();
+  if (event === lower) {
+    names.add(event);
+  } else {
+    names.add(toKebabCase(event));
+    names.add(event[0].toLowerCase() + event.slice(1));
+  }
+  return Array.from(names).filter(Boolean);
 };
 
 const createComponent = (tag) =>
@@ -138,10 +146,7 @@ const createComponent = (tag) =>
 
     const eventEntries = Object.entries(eventHandlers);
     const eventDeps = eventEntries.flat();
-    const memoizedEventListeners = useMemo(
-      () => eventEntries.map(([key, handler]) => [key.slice(2).toLowerCase(), handler]),
-      eventDeps
-    );
+    const memoizedEventEntries = useMemo(() => eventEntries, eventDeps);
 
     const restDeps = Object.entries(rest).flat();
     const memoizedRest = useMemo(() => rest, restDeps);
@@ -150,18 +155,20 @@ const createComponent = (tag) =>
       const el = innerRef.current;
       if (!el) return;
       const listeners = [];
-      for (const [key, value] of Object.entries(eventHandlers)) {
-        const evt = toEventName(key, el);
-        if (!evt) continue;
-        el.addEventListener(evt, value);
-        listeners.push([evt, value]);
+      for (const [key, value] of memoizedEventEntries) {
+        const events = toEventNames(key, el);
+        for (const evt of events) {
+          if (!evt) continue;
+          el.addEventListener(evt, value);
+          listeners.push([evt, value]);
+        }
       }
       return () => {
-        memoizedEventListeners.forEach(([evt, handler]) => {
+        listeners.forEach(([evt, handler]) => {
           el.removeEventListener(evt, handler);
         });
       };
-    }, [memoizedEventListeners]);
+    }, [memoizedEventEntries]);
 
     return createElement(tag, {
       ...memoizedRest,
