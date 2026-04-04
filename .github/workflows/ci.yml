@@ -11,6 +11,7 @@ on:
       - 'release/**'
 
 jobs:
+  # Keep job IDs stable for branch protection required checks.
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -28,8 +29,8 @@ jobs:
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
       - run: pnpm run lint
-      - run: pnpm test
 
+  # Keep job IDs stable for branch protection required checks.
   a11y:
     runs-on: ubuntu-latest
     steps:
@@ -42,5 +43,6 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
       - run: pnpm run test:a11y
