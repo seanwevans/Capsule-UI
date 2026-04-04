@@ -18,11 +18,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.5.2
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run tokens:build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run tokens:build
       - run: cp examples/index.html dist/index.html
       - run: cp examples/booking-widget.js dist/booking-widget.js
       - run: sed -i 's|./dist/|./|g' dist/index.html
