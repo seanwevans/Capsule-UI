@@ -104,6 +104,18 @@ Each forwards attributes and events and keeps the same Style API for
 [framework adapter docs](docs/framework-adapters.md) for usage examples.
 
 
+## Docs deployment environment variables
+
+When building or deploying the Docusaurus site in `website/`, set these environment variables:
+
+- `DOCS_SITE_URL` (**required in production**) – Full docs origin (for example, `https://docs.capsule-ui.dev`).
+- `DOCS_ORGANIZATION_NAME` (**required in production**) – Git host organization/user for edit/deploy metadata.
+- `DOCS_PROJECT_NAME` (**required in production**) – Repository/project name.
+- `DOCS_BASE_URL` (optional, default `/`) – Base path where the docs app is served.
+- `DOCS_GTAG_ID` (optional) – Google Analytics measurement ID. If unset, gtag config is omitted from the build.
+
+`website/docusaurus.config.ts` now throws at startup/build time when `NODE_ENV=production` and required metadata is missing, preventing placeholder deployments.
+
 ## Quick start (vanilla, using the demo widget)
 Drop this into any HTML page:
 
