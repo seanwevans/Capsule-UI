@@ -158,3 +158,27 @@ test('caps-select multiple uses ElementInternals FormData when available', async
     }
   }
 });
+
+test('caps-select restores change handling after reconnect', async () => {
+  await setupDom();
+
+  const el = document.createElement('caps-select');
+  el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+  document.body.appendChild(el);
+
+  const receivedChanges = [];
+  el.addEventListener('change', () => {
+    receivedChanges.push(el.value);
+  });
+
+  el.remove();
+  document.body.appendChild(el);
+
+  const internalSelect = el.shadowRoot.querySelector('select');
+  internalSelect.value = 'b';
+  internalSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+  assert.equal(el.getAttribute('value'), 'b');
+  assert.equal(receivedChanges.length, 1);
+  assert.equal(receivedChanges[0], 'b');
+});
