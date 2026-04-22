@@ -98,3 +98,49 @@ test('caps-tabs keeps active tab when slots mutate', async () => {
   assert.equal(t3.getAttribute('aria-selected'), 'false');
   assert.equal(p3.hasAttribute('data-active'), false);
 });
+
+
+test('caps-tabs generates unique panel ids per instance and links tabs correctly', async () => {
+  await setup();
+
+  const tabsA = document.createElement('caps-tabs');
+  const aTab1 = document.createElement('button');
+  aTab1.setAttribute('slot', 'tab');
+  aTab1.textContent = 'A1';
+  const aTab2 = document.createElement('button');
+  aTab2.setAttribute('slot', 'tab');
+  aTab2.textContent = 'A2';
+  const aPanel1 = document.createElement('div');
+  aPanel1.setAttribute('slot', 'panel');
+  aPanel1.textContent = 'Panel A1';
+  const aPanel2 = document.createElement('div');
+  aPanel2.setAttribute('slot', 'panel');
+  aPanel2.textContent = 'Panel A2';
+  tabsA.append(aTab1, aTab2, aPanel1, aPanel2);
+
+  const tabsB = document.createElement('caps-tabs');
+  const bTab1 = document.createElement('button');
+  bTab1.setAttribute('slot', 'tab');
+  bTab1.textContent = 'B1';
+  const bTab2 = document.createElement('button');
+  bTab2.setAttribute('slot', 'tab');
+  bTab2.textContent = 'B2';
+  const bPanel1 = document.createElement('div');
+  bPanel1.setAttribute('slot', 'panel');
+  bPanel1.textContent = 'Panel B1';
+  const bPanel2 = document.createElement('div');
+  bPanel2.setAttribute('slot', 'panel');
+  bPanel2.textContent = 'Panel B2';
+  tabsB.append(bTab1, bTab2, bPanel1, bPanel2);
+
+  document.body.append(tabsA, tabsB);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  const generatedPanelIds = [aPanel1.id, aPanel2.id, bPanel1.id, bPanel2.id];
+  assert.equal(new Set(generatedPanelIds).size, generatedPanelIds.length);
+
+  assert.equal(aTab1.getAttribute('aria-controls'), aPanel1.id);
+  assert.equal(aTab2.getAttribute('aria-controls'), aPanel2.id);
+  assert.equal(bTab1.getAttribute('aria-controls'), bPanel1.id);
+  assert.equal(bTab2.getAttribute('aria-controls'), bPanel2.id);
+});

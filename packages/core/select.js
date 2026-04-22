@@ -6,11 +6,13 @@ class CapsSelect extends HTMLElement {
 
   #proxy;
   #internals;
+  #selectEl;
+  #isSelectChangeBound = false;
   #proxyValueInputs = new Set();
   #onSlotChange = () => this.#syncOptions();
 
   #onSelectChange = () => {
-    const select = this.shadowRoot.querySelector('select');
+    const select = this.#selectEl;
     if (!select) return;
     this.#reflectValue(select.value);
     this.#syncProxySelection();
@@ -66,10 +68,14 @@ class CapsSelect extends HTMLElement {
     this.#proxy.setAttribute('aria-hidden', 'true');
     this.#proxy.hidden = true;
     this.#proxy.tabIndex = -1;
-    this.shadowRoot.querySelector('select')?.addEventListener('change', this.#onSelectChange);
+    this.#selectEl = this.shadowRoot.querySelector('select');
   }
 
   connectedCallback() {
+    if (this.#selectEl && !this.#isSelectChangeBound) {
+      this.#selectEl.addEventListener('change', this.#onSelectChange);
+      this.#isSelectChangeBound = true;
+    }
     if (this.#proxy && !this.contains(this.#proxy)) {
       this.append(this.#proxy);
     }
@@ -83,6 +89,10 @@ class CapsSelect extends HTMLElement {
   disconnectedCallback() {
     this.shadowRoot.querySelector('slot')?.removeEventListener('slotchange', this.#onSlotChange);
     this.shadowRoot.querySelector('select')?.removeEventListener('change', this.#onSelectChange);
+    if (this.#selectEl && this.#isSelectChangeBound) {
+      this.#selectEl.removeEventListener('change', this.#onSelectChange);
+      this.#isSelectChangeBound = false;
+    }
   }
 
   attributeChangedCallback(name, _old, value) {
