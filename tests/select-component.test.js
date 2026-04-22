@@ -159,6 +159,52 @@ test('caps-select multiple uses ElementInternals FormData when available', async
   }
 });
 
+test('caps-select reconnect does not duplicate slotchange sync handlers', async () => {
+  const window = await setupDom();
+  const proto = window.HTMLElement.prototype;
+  const originalAttachInternals = proto.attachInternals;
+  let setFormValueCalls = 0;
+
+  proto.attachInternals = function attachInternals() {
+    return {
+      setFormValue() {
+        setFormValueCalls += 1;
+      },
+      setValidity() {},
+      states: {
+        add() {},
+        delete() {},
+      },
+    };
+  };
+
+  try {
+    const select = document.createElement('caps-select');
+    select.innerHTML = '<option value="a">A</option>';
+    document.body.appendChild(select);
+
+    const slot = select.shadowRoot.querySelector('slot');
+    assert.ok(slot);
+
+    document.body.removeChild(select);
+    document.body.appendChild(select);
+
+    await Promise.resolve();
+
+    const callsBeforeMutation = setFormValueCalls;
+    select.innerHTML = '<option value="b">B</option>';
+    await Promise.resolve();
+
+    assert.equal(setFormValueCalls - callsBeforeMutation, 1);
+    assert.equal(select.shadowRoot.querySelectorAll('select option').length, 1);
+    assert.equal(select.shadowRoot.querySelector('select').value, 'b');
+  } finally {
+    if (originalAttachInternals) {
+      proto.attachInternals = originalAttachInternals;
+    } else {
+      delete proto.attachInternals;
+    }
+  }
 test('caps-select restores change handling after reconnect', async () => {
   await setupDom();
 
