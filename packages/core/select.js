@@ -7,6 +7,7 @@ class CapsSelect extends HTMLElement {
   #proxy;
   #internals;
   #proxyValueInputs = new Set();
+  #onSlotChange = () => this.#syncOptions();
 
   #onSelectChange = () => {
     const select = this.shadowRoot.querySelector('select');
@@ -73,12 +74,14 @@ class CapsSelect extends HTMLElement {
       this.append(this.#proxy);
     }
     const slot = this.shadowRoot.querySelector('slot');
-    slot.addEventListener('slotchange', () => this.#syncOptions());
+    slot?.removeEventListener('slotchange', this.#onSlotChange);
+    slot?.addEventListener('slotchange', this.#onSlotChange);
     this.#syncOptions();
     this.#syncInternals();
   }
 
   disconnectedCallback() {
+    this.shadowRoot.querySelector('slot')?.removeEventListener('slotchange', this.#onSlotChange);
     this.shadowRoot.querySelector('select')?.removeEventListener('change', this.#onSelectChange);
   }
 
