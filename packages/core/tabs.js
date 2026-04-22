@@ -3,8 +3,11 @@ import { instrumentComponent } from './instrument.js';
 import { sanitizeNode } from './sanitize.js';
 
 class CapsTabs extends withLocaleDir(HTMLElement) {
+  static instanceCount = 0;
+
   constructor() {
     super();
+    this._instanceId = `inst-${CapsTabs.instanceCount++}`;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
@@ -92,7 +95,7 @@ class CapsTabs extends withLocaleDir(HTMLElement) {
         const panel = panels[i];
         if (panel) {
           sanitizeNode(panel);
-          if (!panel.id) panel.id = `caps-panel-${i}`;
+          if (!panel.id) panel.id = `caps-panel-${this._instanceId}-${i}`;
           tab.setAttribute('aria-controls', panel.id);
         }
         const existingClick = handlers.get(tab);
