@@ -43,7 +43,8 @@ test('ThemeManager loads and switches tenant themes at runtime', async () => {
 
   const { ThemeManager } = await import('../packages/core/theme-manager.js');
 
-  await ThemeManager.load('t1', 'themes.json');
+  const loaded = await ThemeManager.load('t1', 'themes.json');
+  assert.equal(loaded, true);
 
   const el = document.createElement('div');
   document.body.append(el);
@@ -59,6 +60,44 @@ test('ThemeManager loads and switches tenant themes at runtime', async () => {
   assert.equal(el.getAttribute('data-theme'), 'dark');
   style = document.getElementById('caps-theme-t1-dark').textContent;
   assert.ok(style.includes('--caps-btn-bg: black'));
+});
+
+test('ThemeManager.load gracefully fails for malformed payload roots', async () => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>');
+  global.window = dom.window;
+  global.document = dom.window.document;
+
+  const { ThemeManager } = await import('../packages/core/theme-manager.js');
+
+  for (const payload of [null, [], 'bad']) {
+    global.fetch = async () => ({
+      ok: true,
+      json: async () => payload,
+    });
+
+    const loaded = await ThemeManager.load('t1', 'themes.json');
+    assert.equal(loaded, false);
+    assert.equal(document.querySelectorAll('style[id^="caps-theme-t1-"]').length, 0);
+  }
+});
+
+test('ThemeManager.load gracefully fails for malformed theme variable entries', async () => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>');
+  global.window = dom.window;
+  global.document = dom.window.document;
+  global.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      light: { 'caps-btn-bg': 'white' },
+      dark: null,
+    }),
+  });
+
+  const { ThemeManager } = await import('../packages/core/theme-manager.js');
+  const loaded = await ThemeManager.load('t1', 'themes.json');
+
+  assert.equal(loaded, false);
+  assert.equal(document.querySelectorAll('style[id^="caps-theme-t1-"]').length, 0);
 });
 
 test('ThemeManager sanitizes invalid tenant names', async () => {
@@ -119,4 +158,3 @@ test('ThemeManager can unregister themes and reset attributes', async () => {
   style = document.getElementById('caps-theme-acme-dark');
   assert.equal(style, null);
 });
-
