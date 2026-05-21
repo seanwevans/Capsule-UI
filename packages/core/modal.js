@@ -48,6 +48,7 @@ class CapsModal extends withLocaleDir(HTMLElement) {
       <div class="modal" part="modal" role="dialog" aria-modal="true" tabindex="-1"><slot></slot></div>
     `;
     this._onKeyDown = (e) => {
+      if (!this.hasAttribute('open')) return;
       if (e.key === 'Escape') this.removeAttribute('open');
       if (e.key === 'Tab') {
         const modal = this.shadowRoot.querySelector('.modal');
