@@ -23,6 +23,10 @@ function sanitize(vars) {
   }, {});
 }
 
+function isPlainObject(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 function _injectStyle(id, selector, vars) {
   let style = document.getElementById(id);
   if (!style) {
@@ -65,6 +69,16 @@ export class ThemeManager {
         return false;
       }
       const themes = await res.json();
+      if (!isPlainObject(themes)) {
+        console.error(`Invalid themes payload from ${url}: expected an object keyed by theme names.`);
+        return false;
+      }
+      for (const [, vars] of Object.entries(themes)) {
+        if (!isPlainObject(vars)) {
+          console.error(`Invalid themes payload from ${url}: each theme entry must be an object of CSS variables.`);
+          return false;
+        }
+      }
       for (const [theme, vars] of Object.entries(themes)) {
         this.registerTheme(tenant, theme, vars);
       }
