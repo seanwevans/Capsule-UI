@@ -205,6 +205,74 @@ test('caps-select reconnect does not duplicate slotchange sync handlers', async 
       delete proto.attachInternals;
     }
   }
+});
+
+test('caps-select size attribute accepts valid numeric value', async () => {
+  await setupDom();
+
+  const el = document.createElement('caps-select');
+  el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+  document.body.appendChild(el);
+
+  el.setAttribute('size', '3');
+
+  const internalSelect = el.shadowRoot.querySelector('select');
+  const proxySelect = el.querySelector('select[slot="proxy"]');
+  assert.equal(internalSelect.getAttribute('size'), '3');
+  assert.equal(proxySelect?.getAttribute('size'), '3');
+});
+
+test('caps-select size attribute rejects non-numeric value', async () => {
+  await setupDom();
+
+  const el = document.createElement('caps-select');
+  el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+  document.body.appendChild(el);
+
+  el.setAttribute('size', 'not-a-number');
+
+  const internalSelect = el.shadowRoot.querySelector('select');
+  const proxySelect = el.querySelector('select[slot="proxy"]');
+  assert.equal(internalSelect.hasAttribute('size'), false);
+  assert.equal(proxySelect?.hasAttribute('size'), false);
+});
+
+test('caps-select size attribute rejects zero and negative values', async () => {
+  await setupDom();
+
+  const el = document.createElement('caps-select');
+  el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+  document.body.appendChild(el);
+
+  el.setAttribute('size', '0');
+  let internalSelect = el.shadowRoot.querySelector('select');
+  let proxySelect = el.querySelector('select[slot="proxy"]');
+  assert.equal(internalSelect.hasAttribute('size'), false);
+  assert.equal(proxySelect?.hasAttribute('size'), false);
+
+  el.setAttribute('size', '-2');
+  internalSelect = el.shadowRoot.querySelector('select');
+  proxySelect = el.querySelector('select[slot="proxy"]');
+  assert.equal(internalSelect.hasAttribute('size'), false);
+  assert.equal(proxySelect?.hasAttribute('size'), false);
+});
+
+test('caps-select size attribute is removed from internal and proxy selects', async () => {
+  await setupDom();
+
+  const el = document.createElement('caps-select');
+  el.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+  document.body.appendChild(el);
+
+  el.setAttribute('size', '4');
+  el.removeAttribute('size');
+
+  const internalSelect = el.shadowRoot.querySelector('select');
+  const proxySelect = el.querySelector('select[slot="proxy"]');
+  assert.equal(internalSelect.hasAttribute('size'), false);
+  assert.equal(proxySelect?.hasAttribute('size'), false);
+});
+
 test('caps-select restores change handling after reconnect', async () => {
   await setupDom();
 

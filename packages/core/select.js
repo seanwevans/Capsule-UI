@@ -111,10 +111,22 @@ class CapsSelect extends HTMLElement {
       select.toggleAttribute('required', value !== null);
       this.#proxy?.toggleAttribute('required', value !== null);
     } else if (name === 'size') {
-      if (value !== null) select.setAttribute('size', value);
-      else select.removeAttribute('size');
-      if (value !== null) this.#proxy?.setAttribute('size', value);
-      else this.#proxy?.removeAttribute('size');
+      if (value === null) {
+        select.removeAttribute('size');
+        this.#proxy?.removeAttribute('size');
+      } else {
+        const parsed = Number.parseInt(value, 10);
+        const normalized = Number.isFinite(parsed) && Number.isInteger(parsed) && parsed >= 1
+          ? String(parsed)
+          : null;
+        if (normalized === null) {
+          select.removeAttribute('size');
+          this.#proxy?.removeAttribute('size');
+        } else {
+          select.setAttribute('size', normalized);
+          this.#proxy?.setAttribute('size', normalized);
+        }
+      }
     } else if (name === 'name') {
       if (value !== null) select.setAttribute('name', value);
       else select.removeAttribute('name');
